@@ -4,10 +4,12 @@ let tm = new_term_manager ()
 
 let solver = new_solver tm
 
-let t = mk_true tm
+let _true_term = mk_true tm
+
+let false_term = mk_false tm
 
 let () =
-  ignore (assert_formula solver t);
+  ignore (assert_formula solver false_term);
   let r = check_sat solver in
   let b = result_is_sat r tm in
   match b with

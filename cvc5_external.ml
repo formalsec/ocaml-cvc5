@@ -35,13 +35,12 @@ external result_is_sat : ptr -> term_manager -> bool = "ocaml_cvc5_stub_result_i
 external result_is_unsat : ptr -> bool = "ocaml_cvc5_stub_result_is_unsat"
 external result_is_unknown : ptr -> bool = "ocaml_cvc5_stub_result_is_unknown"
 external mk_true : term_manager -> term = "ocaml_cvc5_stub_mk_true"
+external mk_false : term_manager -> term = "ocaml_cvc5_stub_mk_false"
 external new_solver : term_manager -> solver = "ocaml_cvc5_stub_new_solver"
 external new_term_manager : unit -> term_manager = "ocaml_cvc5_stub_new_term_manager"
 external delete_term_manager : term_manager -> unit = "ocaml_cvc5_stub_delete_term_manager"
 external delete : solver -> unit = "ocaml_cvc5_stub_delete"
 external assert_formula : solver -> term -> unit = "ocaml_cvc5_stub_assert_formula"
 external check_sat : solver -> result = "ocaml_cvc5_stub_check_sat"
-(* external foo : term_manager -> term -> result = "stub_foo" *)
-(* external term_to_string : term -> string = "ocaml_cvc5_stub_term_to_string" *)
 
 (**/**)

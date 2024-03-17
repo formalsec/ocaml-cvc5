@@ -134,12 +134,18 @@ extern "C" CAMLprim value ocaml_cvc5_stub_mk_true(value v){
   CVC5_TRY_CATCH_END;
 }
 
+extern "C" CAMLprim value ocaml_cvc5_stub_mk_false(value v){
+  cvc5::TermManager* term_manager = Val_term_manager(v);
+  CVC5_TRY_CATCH_BEGIN;
+  value vt = caml_alloc_custom(&term_operations, sizeof(cvc5::Term*), 0, 1);
+  Val_term(vt) = new cvc5::Term(term_manager->mkFalse());
+  return vt;
+  CVC5_TRY_CATCH_END;
+}
+
 extern "C" CAMLprim value ocaml_cvc5_stub_assert_formula(value v, value t){
-  // cvc5::Term* term = Val_term(t);
   CVC5_TRY_CATCH_BEGIN;
   Val_cvc5(v)->assertFormula(*Val_term(t));
-  // cvc5::Result result = solver->checkSat();
-  // std::cout << "result in c++: " << result.toString() << std::endl;
   return Val_unit;
   CVC5_TRY_CATCH_END;
 }
@@ -152,13 +158,8 @@ extern "C" CAMLprim value ocaml_cvc5_stub_check_sat(value v){
   return vt;
 }
 
-extern "C" CAMLprim value ocaml_cvc5_stub_result_is_sat(value v, value t){
-  bool is_sat = Val_result(v)->isSat();
-  std::cout << "is_sat: " << is_sat << std::endl;
-  cvc5::TermManager* term_manager = Val_term_manager(t);
-  cvc5::Term x = term_manager->mkTrue();
-  std::cout << "x: " << x.toString() << std::endl;
-  return Val_bool(is_sat);
+extern "C" CAMLprim value ocaml_cvc5_stub_result_is_sat(value v){
+  return Val_bool(Val_result(v)->isSat());
 }
 
 extern "C" CAMLprim value ocaml_cvc5_stub_result_is_unsat(value v){
