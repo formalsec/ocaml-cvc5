@@ -125,14 +125,6 @@ extern "C" CAMLprim value ocaml_cvc5_stub_delete_term_manager(value v){
   return Val_unit;
 }
 
-extern "C" CAMLprim value stub_foo(value v){
-  cvc5::TermManager* term_manager = Val_term_manager(v);
-  cvc5::Solver* solver = new cvc5::Solver(*term_manager);
-  // cvc5::Term x = term_manager->mkTrue();
-  //solver->assertFormula(*term);
-  return Val_unit;
-}
-
 extern "C" CAMLprim value ocaml_cvc5_stub_mk_true(value v){
   cvc5::TermManager* term_manager = Val_term_manager(v);
   CVC5_TRY_CATCH_BEGIN;
@@ -155,7 +147,7 @@ extern "C" CAMLprim value ocaml_cvc5_stub_assert_formula(value v, value t){
 extern "C" CAMLprim value ocaml_cvc5_stub_check_sat(value v){
   cvc5::Solver* solver = Val_cvc5(v);
   cvc5::Result result = solver->checkSat();
-  value vt = caml_alloc_custom(&cvc5_operations, sizeof(cvc5::Result*), 0, 1);
+  value vt = caml_alloc_custom(&result_operations, sizeof(cvc5::Result*), 0, 1);
   Val_result(vt) = new cvc5::Result(result);
   return vt;
 }
