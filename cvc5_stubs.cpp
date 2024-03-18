@@ -145,12 +145,38 @@ extern "C" CAMLprim value ocaml_cvc5_stub_delete_term_manager(value v){
   return Val_unit;
 }
 
+class Term : public cvc5::Term {
+public:
+  Term(cvc5::Term t) : cvc5::Term(t) {}
+  ~Term() {}
+  void * operator new(size_t size,
+        struct custom_operations *ops,
+        value *custom){
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void *ptr) {}
+};
+
+class Sort : public cvc5::Sort {
+public:
+  Sort(cvc5::Sort t) : cvc5::Sort(t) {}
+  ~Sort() {}
+  void * operator new(size_t size,
+        struct custom_operations *ops,
+        value *custom){
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Sort_val(*custom);
+  }
+  void operator delete(void *ptr) {}
+};
+
 extern "C" CAMLprim value ocaml_cvc5_stub_mk_true(value v){
   cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  value vt = caml_alloc_custom(&term_operations, sizeof(cvc5::Term*), 0, 1);
-  Term_val(vt) = new cvc5::Term(term_manager->mkTrue());
-  return vt;
+  new(&term_operations, &custom) Term(term_manager->mkTrue());
+  return custom;
   CVC5_TRY_CATCH_END;
 }
 
@@ -203,17 +229,24 @@ extern "C" CAMLprim value ocaml_cvc5_stub_mk_string(value v, value s){
   CVC5_TRY_CATCH_END;
 }
 
-class Sort : public cvc5::Sort {
-public:
-  Sort(cvc5::Sort t) : cvc5::Sort(t) {}
-  ~Sort() {}
-  void * operator new(size_t size,
-        struct custom_operations *ops,
-        value *custom){
-    *custom = caml_alloc_custom(ops, size, 0, 1);
-    return Sort_val(*custom);
-  }
-};
+extern "C" CAMLprim value ocaml_cvc5_stub_mk_term(value v, value kind, value t){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> args;
+  size_t arity = Wosize_val(t);
+  args.reserve(arity);
+  for (size_t i = 0; i < arity; i++)
+    args.emplace_back(*Term_val(Field(t, i)));
+
+  value vt = caml_alloc_custom(&term_operations, sizeof(cvc5::Term*), 0, 1);
+  Term_val(vt) = new cvc5::Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+
+  // new(&term_operations, &custom) Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+
+  return vt;
+  CVC5_TRY_CATCH_END;
+}
 
 extern "C" CAMLprim value ocaml_cvc5_stub_get_boolean_sort(value v){
   cvc5::TermManager* term_manager = TermManager_val(v);
