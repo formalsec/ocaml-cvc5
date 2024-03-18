@@ -19,8 +19,8 @@ let () =
   ignore (assert_formula solver x_lt_zero);
   let r = check_sat solver in
   let b = result_is_sat r tm in
-  (* ignore (delete solver); *)
-  (* ignore (delete_term_manager tm); *)
+  ignore (delete solver);
+  ignore (delete_term_manager tm);
   match b with
   | true -> print_endline "sat OCaml"
   | false -> print_endline "unsat OCaml"
