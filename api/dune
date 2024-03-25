@@ -1,0 +1,15 @@
+(executable
+ (name kind)
+ (modules kind)
+ (libraries build_enum_kind))
+
+(library
+ (name build_enum_kind)
+ (modules build_enum_kind)
+ (foreign_stubs
+  (language cxx)
+  (names build_enum_kind)
+  (flags :standard -std=c++17)
+  (include_dirs 
+   ../vendor/cvc5/include))
+ (c_library_flags :standard -std=c++17 -lcvc5))

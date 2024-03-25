@@ -5,13 +5,21 @@
 
 (library
  (name cvc5_cxx)
- (modules cvc5_external)
+ (modules kind cvc5_external)
  (foreign_stubs 
   (language cxx)
   (names cvc5_stubs)
-  (flags :standard -std=c++17 -I/usr/local/include)
+  (flags :standard -std=c++17)
   (include_dirs 
    vendor/cvc5/include
    vendor/cvc5/src
    vendor/cvc5/src/lib))
- (c_library_flags :standard -L/usr/local/bin -I/usr/local/include -lcvc5))
+ (c_library_flags :standard -lcvc5))
+
+(rule
+ (deps (:executable api/kind.exe))
+ (target kind.ml)
+ (action
+  (with-stdout-to
+   %{target}
+   (run %{deps}))))
