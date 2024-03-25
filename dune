@@ -1,11 +1,11 @@
 (executable
  (name toy)
- (libraries cvc5_cxx)
+ (libraries cvc5)
  (modules toy))
 
 (library
- (name cvc5_cxx)
- (modules kind cvc5_external)
+ (name cvc5)
+ (modules cvc5 kind cvc5_external)
  (foreign_stubs 
   (language cxx)
   (names cvc5_stubs)
