@@ -1,6 +1,6 @@
 exception Error of string
 
-module Kind = Kind
+module Kind = Cvc5_enums.Kind
 
 module TermManager :
 sig 

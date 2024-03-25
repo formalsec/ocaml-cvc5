@@ -1,3 +1,5 @@
+open Cvc5_enums
+
 exception Error of string
 
 let _ = Callback.register_exception "cvc5Exception" (Error "")
