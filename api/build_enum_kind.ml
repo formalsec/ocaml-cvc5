@@ -1,1 +1,0 @@
-external build_enum_kind : unit -> unit = "build_enum_kind"

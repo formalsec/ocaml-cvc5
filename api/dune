@@ -1,14 +1,14 @@
 (executable
- (name kind)
- (modules kind)
- (libraries build_enum_kind))
+ (name cvc5_enums)
+ (modules cvc5_enums)
+ (libraries build_enums))
 
 (library
- (name build_enum_kind)
- (modules build_enum_kind)
+ (name build_enums)
+ (modules build_enums)
  (foreign_stubs
   (language cxx)
-  (names build_enum_kind)
+  (names build_enums)
   (flags :standard -std=c++17)
   (include_dirs 
    ../vendor/cvc5/include))

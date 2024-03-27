@@ -356,13 +356,24 @@ CAMLprim value ocaml_cvc5_stub_get_string_sort(value v){
   CVC5_TRY_CATCH_END;
 }
 
-CAMLprim value ocaml_cvc5_stub_mk_const(value v, value sort, value n){
+CAMLprim value ocaml_cvc5_stub_mk_const_s(value v, value sort, value n){
   cvc5::TermManager* term_manager = TermManager_val(v);
   cvc5::Sort* s = Sort_val(sort);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
     Term(term_manager->mkConst(*s, String_val(n)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_const(value v, value sort){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  cvc5::Sort* s = Sort_val(sort);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkConst(*s));
   return custom;
   CVC5_TRY_CATCH_END;
 }

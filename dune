@@ -1,11 +1,11 @@
 (executable
  (name toy)
- (libraries cvc5_cxx)
+ (libraries cvc5)
  (modules toy))
 
 (library
- (name cvc5_cxx)
- (modules kind cvc5_external)
+ (name cvc5)
+ (modules cvc5 cvc5_enums cvc5_external)
  (foreign_stubs 
   (language cxx)
   (names cvc5_stubs)
@@ -17,8 +17,8 @@
  (c_library_flags :standard -lcvc5))
 
 (rule
- (deps (:executable api/kind.exe))
- (target kind.ml)
+ (deps (:executable api/cvc5_enums.exe))
+ (target cvc5_enums.ml)
  (action
   (with-stdout-to
    %{target}
