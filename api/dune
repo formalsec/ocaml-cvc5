@@ -12,4 +12,6 @@
   (flags :standard -std=c++17)
   (include_dirs 
    ../vendor/cvc5/include))
+ (foreign_archives
+  ../vendor/cadical/cadical)
  (c_library_flags :standard -std=c++17 -lcvc5))

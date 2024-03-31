@@ -9,11 +9,13 @@
  (foreign_stubs 
   (language cxx)
   (names cvc5_stubs)
-  (flags :standard -std=c++17)
+  (flags :standard -std=c++17 -I/usr/local/include)
   (include_dirs 
    vendor/cvc5/include
    vendor/cvc5/src
    vendor/cvc5/src/lib))
+ (foreign_archives
+  vendor/cadical/cadical)
  (c_library_flags :standard -lcvc5))
 
 (rule

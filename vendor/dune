@@ -1,0 +1,16 @@
+(data_only_dirs cvc5 cadical)
+
+(env
+ (_
+  (cxx_flags :standard -I/usr/local/include)))
+
+(subdir
+ cadical
+ (include_subdirs unqualified)
+ (dirs src)
+ (foreign_library
+  (archive_name cadical)
+  (language cxx)
+  (names :standard \ mobical cadical)
+  (include_dirs src)
+  (flags :standard -std=c++11 -DNDEBUG -DNBUILD)))
