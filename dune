@@ -26,15 +26,25 @@
    (run %{deps}))))
 
 (rule 
+ (enabled_if (= %{ocaml-config:system} macosx))
  (deps
-  (source_tree cvc5)
- )
+  (source_tree cvc5))
  (targets libcvc5.dylib libcadical.a)
  (action
    (bash
     "\ncd vendor/cvc5 && ./configure.sh --auto-download\ncd build && make\n
     cd ../../..\ncp vendor/cvc5/build/src/libcvc5.dylib libcvc5.dylib\n
-    cp vendor/cvc5/build/deps/lib/libcadical.a libcadical.a"
-   )
- )
+    cp vendor/cvc5/build/deps/lib/libcadical.a libcadical.a"))
+)
+
+(rule 
+ (enabled_if (= %{ocaml-config:system} linux))
+ (deps
+  (source_tree cvc5))
+ (targets libcvc5.so libcadical.a)
+ (action
+   (bash
+    "\ncd vendor/cvc5 && ./configure.sh --auto-download\ncd build && make\n
+    cd ../../..\ncp vendor/cvc5/build/src/libcvc5.so libcvc5.so\n
+    cp vendor/cvc5/build/deps/lib/libcadical.a libcadical.a"))
 )
