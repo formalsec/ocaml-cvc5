@@ -5,6 +5,12 @@
   (source_tree cvc5))
  (targets libcvc5.a libcadical.a libpicpoly.a libpicpolyxx.a)
  (action
-   (bash
-    "\ncd cvc5 && ./configure.sh --auto-download --static\ncd build && make\ncd ../../\ncp cvc5/build/src/libcvc5.a libcvc5.a\ncp cvc5/build/deps/lib/libcadical.a libcadical.a\n cp cvc5/build/deps/lib/libpicpoly.a libpicpoly.a\ncp cvc5/build/deps/lib/libpicpolyxx.a libpicpolyxx.a\n"))
-)
+  (chdir cvc5
+   (progn
+    ; (run pipx install -r contrib/requirements_build.txt)
+    (run ./configure.sh --auto-download --static)
+    (run make -C build -j 4)
+    (bash "cp build/src/libcvc5.a ../libcvc5.a")
+    (bash "cp build/deps/lib/libcadical.a ../libcadical.a")
+    (bash "cp build/deps/lib/libpicpoly.a ../libpicpoly.a")
+    (bash "cp build/deps/lib/libpicpolyxx.a ../libpicpolyxx.a")))))

@@ -1,16 +1,12 @@
-(executable
- (name toy)
- (libraries cvc5)
- (modules toy))
-
 (library
+ (public_name cvc5)
  (name cvc5)
  (modules cvc5 cvc5_enums cvc5_external)
- (foreign_stubs 
+ (foreign_stubs
   (language cxx)
   (names cvc5_stubs)
   (flags :standard -std=c++17 -I/opt/homebrew/include)
-  (include_dirs 
+  (include_dirs
    vendor/cvc5/include
    vendor/cvc5/src
    vendor/cvc5/src/lib))
@@ -22,9 +18,14 @@
  (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
 
 (rule
- (deps (:executable api/cvc5_enums.exe))
+ (deps ./api/cvc5_enums.exe)
  (target cvc5_enums.ml)
  (action
   (with-stdout-to
    %{target}
    (run %{deps}))))
+
+(executable
+ (name toy)
+ (libraries cvc5)
+ (modules toy))

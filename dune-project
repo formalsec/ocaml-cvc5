@@ -1,3 +1,24 @@
-(lang dune 3.7)
+(lang dune 3.10)
 
-(name cvc5_cxx)
+(name cvc5)
+
+(generate_opam_files true)
+
+(source
+ (github formalsec/ocaml-cvc5))
+
+(authors "João Pereira <email>")
+
+(maintainers "João Pereira <email>")
+
+(package
+  (name cvc5)
+  (synopsis "OCaml bindings for the CVC5 SMT solver")
+  (description "OCaml bindings for the CVC5 SMT solver")
+  (depends
+   dune
+   (ocaml (>= 4.12))
+   (conf-gcc :build)
+   (conf-g++ :build)
+   (conf-gmp :build)
+   (conf-python-3 :build)))
