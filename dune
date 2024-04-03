@@ -9,13 +9,17 @@
  (foreign_stubs 
   (language cxx)
   (names cvc5_stubs)
-  (flags :standard -std=c++17 -I/usr/local/include)
+  (flags :standard -std=c++17 -I/opt/homebrew/include)
   (include_dirs 
    vendor/cvc5/include
    vendor/cvc5/src
    vendor/cvc5/src/lib))
- (c_library_flags :standard -lcvc5)
- (library_flags -linkall))
+ (foreign_archives
+  vendor/cadical
+  vendor/cvc5
+  vendor/picpoly
+  vendor/picpolyxx)
+ (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
 
 (rule
  (deps (:executable api/cvc5_enums.exe))
@@ -24,27 +28,3 @@
   (with-stdout-to
    %{target}
    (run %{deps}))))
-
-(rule 
- (enabled_if (= %{ocaml-config:system} macosx))
- (deps
-  (source_tree cvc5))
- (targets libcvc5.dylib libcadical.a)
- (action
-   (bash
-    "\ncd vendor/cvc5 && ./configure.sh --auto-download\ncd build && make\n
-    cd ../../..\ncp vendor/cvc5/build/src/libcvc5.dylib libcvc5.dylib\n
-    cp vendor/cvc5/build/deps/lib/libcadical.a libcadical.a"))
-)
-
-(rule 
- (enabled_if (= %{ocaml-config:system} linux))
- (deps
-  (source_tree cvc5))
- (targets libcvc5.so libcadical.a)
- (action
-   (bash
-    "\ncd vendor/cvc5 && ./configure.sh --auto-download\ncd build && make\n
-    cd ../../..\ncp vendor/cvc5/build/src/libcvc5.so libcvc5.so\n
-    cp vendor/cvc5/build/deps/lib/libcadical.a libcadical.a"))
-)

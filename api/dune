@@ -9,7 +9,12 @@
  (foreign_stubs
   (language cxx)
   (names build_enums)
-  (flags :standard -std=c++17)
+  (flags :standard -std=c++17 -I/opt/homebrew/include)
   (include_dirs 
    ../vendor/cvc5/include))
- (c_library_flags :standard -std=c++17 -lcvc5))
+ (foreign_archives
+  ../vendor/cvc5
+  ../vendor/cadical
+  ../vendor/picpoly
+  ../vendor/picpolyxx)
+ (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
