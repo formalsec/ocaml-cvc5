@@ -12,9 +12,12 @@
   (flags :standard -std=c++17 -I/opt/homebrew/include)
   (include_dirs 
    ../vendor/cvc5/include))
- (foreign_archives
-  ../vendor/cvc5
-  ../vendor/cadical
-  ../vendor/picpoly
-  ../vendor/picpolyxx)
- (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
+ (c_library_flags 
+  :standard -std=c++17 
+  -L/opt/homebrew/lib 
+  -lgmp
+  -lcvc5
+  -lcadical
+  -lpicpoly
+  -lpicpolyxx
+  -L%{project_root}/_build/default/))

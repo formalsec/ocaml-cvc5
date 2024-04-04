@@ -1,3 +1,21 @@
+(rule
+ (deps
+  (source_tree vendor))
+ (targets libpicpolyxx.a libpicpoly.a libcadical.a libcvc5.a)
+ (action
+  (no-infer
+   (progn
+    (chdir vendor
+     (chdir cvc5
+      (progn
+       ; (run pipx install -r contrib/requirements_build.txt)
+       (run ./configure.sh --auto-download --static)
+       (run make -C build -j 4))))
+    (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
+    (copy vendor/cvc5/build/deps/lib/libcadical.a libcadical.a)
+    (copy vendor/cvc5/build/deps/lib/libpicpoly.a libpicpoly.a)
+    (copy vendor/cvc5/build/deps/lib/libpicpolyxx.a libpicpolyxx.a)))))
+
 (library
  (public_name cvc5)
  (name cvc5)
@@ -10,12 +28,15 @@
    vendor/cvc5/include
    vendor/cvc5/src
    vendor/cvc5/src/lib))
- (foreign_archives
-  vendor/cadical
-  vendor/cvc5
-  vendor/picpoly
-  vendor/picpolyxx)
- (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
+ (c_library_flags 
+  :standard -std=c++17 
+  -L/opt/homebrew/lib 
+  -lgmp
+  -lcvc5
+  -lcadical
+  -lpicpoly
+  -lpicpolyxx
+  -L%{project_root}/_build/default/))
 
 (rule
  (deps ./api/cvc5_enums.exe)

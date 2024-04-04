@@ -7,9 +7,9 @@
 (source
  (github formalsec/ocaml-cvc5))
 
-(authors "João Pereira <email>")
+(authors "João Pereira <joaomhmpereira@tecnico.ulisboa.pt>")
 
-(maintainers "João Pereira <email>")
+(maintainers "João Pereira <joaomhmpereira@tecnico.ulisboa.pt>")
 
 (package
   (name cvc5)
