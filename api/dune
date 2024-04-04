@@ -6,18 +6,19 @@
 (library
  (name build_enums)
  (modules build_enums)
+ (no_dynlink)
  (foreign_stubs
   (language cxx)
   (names build_enums)
   (flags :standard -std=c++17 -I/opt/homebrew/include)
   (include_dirs 
    ../vendor/cvc5/include))
+ (foreign_archives
+  ../cvc5
+  ../cadical
+  ../picpoly
+  ../picpolyxx)
  (c_library_flags 
   :standard -std=c++17 
   -L/opt/homebrew/lib 
-  -lgmp
-  -lcvc5
-  -lcadical
-  -lpicpoly
-  -lpicpolyxx
-  -L%{project_root}/_build/default/))
+  -lgmp))

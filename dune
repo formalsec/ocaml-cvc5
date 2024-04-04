@@ -1,7 +1,7 @@
 (rule
  (deps
   (source_tree vendor))
- (targets libpicpolyxx.a libpicpoly.a libcadical.a libcvc5.a)
+ (targets libpicpolyxx.a libpicpoly.a libcadical.a libcvc5.a cvc5_export.h)
  (action
   (no-infer
    (progn
@@ -14,29 +14,29 @@
     (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
     (copy vendor/cvc5/build/deps/lib/libcadical.a libcadical.a)
     (copy vendor/cvc5/build/deps/lib/libpicpoly.a libpicpoly.a)
-    (copy vendor/cvc5/build/deps/lib/libpicpolyxx.a libpicpolyxx.a)))))
+    (copy vendor/cvc5/build/deps/lib/libpicpolyxx.a libpicpolyxx.a)
+    (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
 
 (library
  (public_name cvc5)
  (name cvc5)
  (modules cvc5 cvc5_enums cvc5_external)
+ (no_dynlink)
  (foreign_stubs
   (language cxx)
   (names cvc5_stubs)
+  (extra_deps cvc5_export.h)
   (flags :standard -std=c++17 -I/opt/homebrew/include)
   (include_dirs
    vendor/cvc5/include
    vendor/cvc5/src
    vendor/cvc5/src/lib))
- (c_library_flags 
-  :standard -std=c++17 
-  -L/opt/homebrew/lib 
-  -lgmp
-  -lcvc5
-  -lcadical
-  -lpicpoly
-  -lpicpolyxx
-  -L%{project_root}/_build/default/))
+ (foreign_archives
+  cadical
+  cvc5
+  picpoly
+  picpolyxx)
+ (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
 
 (rule
  (deps ./api/cvc5_enums.exe)
