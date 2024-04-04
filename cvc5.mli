@@ -1,6 +1,7 @@
 exception Error of string
 
 module Kind = Cvc5_enums.Kind
+module RoundingMode = Cvc5_enums.RoundingMode
 
 module TermManager :
 sig 
@@ -25,6 +26,10 @@ module Term :
 sig 
   type term
 
+  val id : term -> int
+  val equal : term -> term -> bool
+  val kind : term -> Kind.t
+  val sort : term -> Sort.sort
   val to_string : term -> string
   val mk_const : TermManager.tm -> Sort.sort -> term
   val mk_const_s : TermManager.tm -> Sort.sort -> string -> term
@@ -33,6 +38,7 @@ sig
   val mk_false : TermManager.tm -> term
   val mk_bool : TermManager.tm -> bool -> term
   val mk_int : TermManager.tm -> int -> term
+  val mk_rm : TermManager.tm -> RoundingMode.t -> term
 end
 
 module Result : 

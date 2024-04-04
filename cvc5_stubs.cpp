@@ -221,6 +221,27 @@ CAMLprim value ocaml_cvc5_stub_delete_term_manager(value v){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_term_equal(value t1, value t2){
+  return Val_bool(*Term_val(t1) == *Term_val(t2));
+}
+
+CAMLprim value ocaml_cvc5_stub_term_id(value v){
+  return Val_int(Term_val(v)->getId());
+}
+
+CAMLprim value ocaml_cvc5_stub_term_kind(value v){
+  return Val_int(Term_val(v)->getKind());
+}
+
+CAMLprim value ocaml_cvc5_stub_term_sort(value v){
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom) 
+    Sort(Term_val(v)->getSort());
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_mk_true(value v){
   cvc5::TermManager* term_manager = TermManager_val(v);
   value custom = Val_unit;
@@ -302,6 +323,16 @@ CAMLprim value ocaml_cvc5_stub_mk_term(value v, value kind, value t){
 
   new(&term_operations, &custom) 
     Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_rounding_mode(value v, value rm){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkRoundingMode((cvc5::RoundingMode)Int_val(rm)));
   return custom;
   CVC5_TRY_CATCH_END;
 }
