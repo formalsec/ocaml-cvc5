@@ -59,11 +59,14 @@ and block_model_mode = ptr
 and find_synth_target = ptr
 
 external result_is_sat : result -> bool = "ocaml_cvc5_stub_result_is_sat"
+[@@noalloc]
 
 external result_is_unsat : result -> bool = "ocaml_cvc5_stub_result_is_unsat"
+[@@noalloc]
 
 external result_is_unknown : result -> bool
   = "ocaml_cvc5_stub_result_is_unknown"
+[@@noalloc]
 
 external mk_true : term_manager -> term = "ocaml_cvc5_stub_mk_true"
 
@@ -102,7 +105,19 @@ external mk_const_s : term_manager -> sort -> string -> term
 
 external mk_const : term_manager -> sort -> term = "ocaml_cvc5_stub_mk_const"
 
+external mk_roundingmode : term_manager -> int -> term
+  = "ocaml_cvc5_stub_mk_rounding_mode"
+
 external term_to_string : term -> string = "ocaml_cvc5_stub_term_to_string"
+
+external term_equal : term -> term -> bool = "ocaml_cvc5_stub_term_equal"
+[@@noalloc]
+
+external term_id : term -> int = "ocaml_cvc5_stub_term_id" [@@noalloc]
+
+external term_kind : term -> int = "ocaml_cvc5_stub_term_kind" [@@noalloc]
+
+external term_sort : term -> sort = "ocaml_cvc5_stub_term_sort"
 
 external new_solver : term_manager -> solver = "ocaml_cvc5_stub_new_solver"
 
@@ -116,17 +131,20 @@ external delete : solver -> unit = "ocaml_cvc5_stub_delete"
 
 external assert_formula : solver -> term -> unit
   = "ocaml_cvc5_stub_assert_formula"
+[@@noalloc]
 
 external check_sat : solver -> result = "ocaml_cvc5_stub_check_sat"
 
 external set_logic : solver -> string -> unit = "ocaml_cvc5_stub_set_logic"
+[@@noalloc]
 
 external simplify : solver -> term -> term = "ocaml_cvc5_stub_simplify"
 
-external push : solver -> int -> unit = "ocaml_cvc5_stub_push"
+external push : solver -> int -> unit = "ocaml_cvc5_stub_push" [@@noalloc]
 
-external pop : solver -> int -> unit = "ocaml_cvc5_stub_pop"
+external pop : solver -> int -> unit = "ocaml_cvc5_stub_pop" [@@noalloc]
 
 external reset_assertions : solver -> unit = "ocaml_cvc5_stub_reset_assertions"
+[@@noalloc]
 
 (**/**)

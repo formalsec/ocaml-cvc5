@@ -1,10 +1,9 @@
-open Cvc5_enums
-
 exception Error of string
 
 let _ = Callback.register_exception "cvc5Exception" (Error "")
 
-module Kind = Kind
+module Kind = Cvc5_enums.Kind
+module RoundingMode = Cvc5_enums.RoundingMode
 
 module TermManager = struct
   type tm = Cvc5_external.term_manager
@@ -31,6 +30,14 @@ end
 module Term = struct
   type term = Cvc5_external.term
 
+  let id = Cvc5_external.term_id
+
+  let equal = Cvc5_external.term_equal
+
+  let kind t = Kind.of_cpp @@ Cvc5_external.term_kind t
+
+  let sort = Cvc5_external.term_sort
+
   let to_string = Cvc5_external.term_to_string
 
   let mk_const = Cvc5_external.mk_const
@@ -47,6 +54,9 @@ module Term = struct
   let mk_bool = Cvc5_external.mk_bool
 
   let mk_int = Cvc5_external.mk_int
+
+  let mk_rm (tm : TermManager.tm) (rm : RoundingMode.t) =
+    Cvc5_external.mk_roundingmode tm (RoundingMode.to_cpp rm)
 end
 
 module Result = struct
