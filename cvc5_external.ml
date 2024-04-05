@@ -138,6 +138,10 @@ external check_sat : solver -> result = "ocaml_cvc5_stub_check_sat"
 external set_logic : solver -> string -> unit = "ocaml_cvc5_stub_set_logic"
 [@@noalloc]
 
+external set_option : solver -> string -> string -> unit
+  = "ocaml_cvc5_stub_set_option"
+[@@noalloc]
+
 external simplify : solver -> term -> term = "ocaml_cvc5_stub_simplify"
 
 external push : solver -> int -> unit = "ocaml_cvc5_stub_push" [@@noalloc]

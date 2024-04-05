@@ -78,6 +78,8 @@ module Solver : sig
 
   val set_logic : solver -> string -> unit
 
+  val set_option : solver -> string -> string -> unit
+
   val simplify : solver -> Term.term -> Term.term
 
   val push : solver -> int -> unit

@@ -451,6 +451,13 @@ CAMLprim value ocaml_cvc5_stub_set_logic(value v, value s){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_set_option(value s, value opt, value v){
+  CVC5_TRY_CATCH_BEGIN;
+  Solver_val(s)->setOption(String_val(opt), String_val(v));
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_simplify(value v, value t){
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;

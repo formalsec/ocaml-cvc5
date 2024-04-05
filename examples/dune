@@ -1,0 +1,4 @@
+(executable
+ (name toy)
+ (libraries cvc5)
+ (modules toy))

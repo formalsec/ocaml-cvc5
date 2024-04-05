@@ -40,8 +40,3 @@
   (with-stdout-to
    %{target}
    (run %{deps}))))
-
-(executable
- (name toy)
- (libraries cvc5)
- (modules toy))

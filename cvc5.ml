@@ -82,6 +82,8 @@ module Solver = struct
 
   let set_logic = Cvc5_external.set_logic
 
+  let set_option = Cvc5_external.set_option
+
   let simplify = Cvc5_external.simplify
 
   let push = Cvc5_external.push
