@@ -10,6 +10,7 @@
  (foreign_stubs
   (language cxx)
   (names build_enums)
+  (extra_deps ../cvc5_export.h)
   (flags :standard -std=c++17 -I/opt/homebrew/include)
   (include_dirs 
    ../vendor/cvc5/include))

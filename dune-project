@@ -13,12 +13,13 @@
 
 (package
   (name cvc5)
-  (synopsis "OCaml bindings for the CVC5 SMT solver")
-  (description "OCaml bindings for the CVC5 SMT solver")
+  (synopsis "OCaml bindings for the cvc5 SMT solver")
+  (description "OCaml bindings for the cvc5 SMT solver")
   (depends
    dune
    (ocaml (>= 4.12))
    (conf-gcc :build)
    (conf-g++ :build)
    (conf-gmp :build)
+   (conf-cmake :build)
    (conf-python-3 :build)))
