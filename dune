@@ -5,16 +5,18 @@
  (action
   (no-infer
    (progn
-    (chdir vendor
-     (chdir cvc5
-      (progn
-       (run ./configure.sh --auto-download --static)
-       (run make -C build -j 4))))
+    (chdir
+     vendor/cvc5
+     (progn
+      (run ./configure.sh --auto-download --static)
+      (run make -C build -j 4)))
     (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
     (copy vendor/cvc5/build/deps/lib/libcadical.a libcadical.a)
     (copy vendor/cvc5/build/deps/lib/libpicpoly.a libpicpoly.a)
     (copy vendor/cvc5/build/deps/lib/libpicpolyxx.a libpicpolyxx.a)
-    (copy vendor/cvc5/build/include/cvc5/cvc5_export.h vendor/cvc5/include/cvc5/cvc5_export.h)
+    (copy
+     vendor/cvc5/build/include/cvc5/cvc5_export.h
+     vendor/cvc5/include/cvc5/cvc5_export.h)
     (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
 
 (library
@@ -27,15 +29,8 @@
   (names cvc5_stubs)
   (extra_deps cvc5_export.h)
   (flags :standard -std=c++17 -I/opt/homebrew/include)
-  (include_dirs
-   vendor/cvc5/include
-   vendor/cvc5/src
-   vendor/cvc5/src/lib))
- (foreign_archives
-  cadical
-  cvc5
-  picpoly
-  picpolyxx)
+  (include_dirs vendor/cvc5/include vendor/cvc5/src vendor/cvc5/src/lib))
+ (foreign_archives cadical cvc5 picpoly picpolyxx)
  (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
 
 (rule
