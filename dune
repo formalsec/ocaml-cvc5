@@ -14,10 +14,15 @@
     (copy vendor/cvc5/build/deps/lib/libcadical.a libcadical.a)
     (copy vendor/cvc5/build/deps/lib/libpicpoly.a libpicpoly.a)
     (copy vendor/cvc5/build/deps/lib/libpicpolyxx.a libpicpolyxx.a)
-    (copy
-     vendor/cvc5/build/include/cvc5/cvc5_export.h
-     vendor/cvc5/include/cvc5/cvc5_export.h)
     (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
+
+(subdir
+ vendor/cvc5/include/cvc5
+ (rule
+  (deps ../../../../cvc5_export.h)
+  (targets cvc5_export.h)
+  (action
+   (copy %{deps} %{targets}))))
 
 (library
  (public_name cvc5)
@@ -27,10 +32,9 @@
  (foreign_stubs
   (language cxx)
   (names cvc5_stubs)
-  (extra_deps cvc5_export.h)
   (flags :standard -std=c++17 -I/opt/homebrew/include)
   (include_dirs vendor/cvc5/include vendor/cvc5/src vendor/cvc5/src/lib))
- (foreign_archives cadical cvc5 picpoly picpolyxx)
+ (foreign_archives cvc5 cadical picpoly picpolyxx)
  (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
 
 (rule
