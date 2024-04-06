@@ -32,10 +32,9 @@
  (foreign_stubs
   (language cxx)
   (names cvc5_stubs)
-  (extra_deps cvc5_export.h)
   (flags :standard -std=c++17 -I/opt/homebrew/include)
   (include_dirs vendor/cvc5/include vendor/cvc5/src vendor/cvc5/src/lib))
- (foreign_archives cadical cvc5 picpoly picpolyxx)
+ (foreign_archives cvc5 cadical picpoly picpolyxx)
  (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
 
 (rule
