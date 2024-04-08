@@ -353,11 +353,11 @@ CAMLprim value ocaml_cvc5_stub_term_to_string(value v){
   return caml_copy_string(Term_val(v)->toString().c_str());
 }
 
-CAMLprim value ocaml_cvc5_stub_mk_string(value v, value s){
+CAMLprim value ocaml_cvc5_stub_mk_string(value v, value s, value b){
   cvc5::TermManager* term_manager = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkString(String_val(s)));
+  new(&term_operations, &custom) Term(term_manager->mkString(String_val(s), Bool_val(b)));
   return custom;
   CVC5_TRY_CATCH_END;
 }

@@ -69,6 +69,9 @@ module Term = struct
 
   let mk_int = Cvc5_external.mk_int
 
+  let mk_string tm ?(useEscSequences = false) s =
+    Cvc5_external.mk_string tm s useEscSequences
+
   let mk_real_s = Cvc5_external.mk_real_s
 
   let mk_real_i = Cvc5_external.mk_real_i
@@ -104,7 +107,18 @@ module Term = struct
 
   let get_int t = int_of_string (Cvc5_external.term_get_int_val t)
 
-  let get_real t = float_of_string (Cvc5_external.term_get_real_val t)
+  let get_real t =
+    let real_str = Cvc5_external.term_get_real_val t in
+    (* cvc5 returns string o float in fraction format *)
+    let fraction_to_float str =
+      match String.split_on_char '/' str with
+      | [ numerator; denominator ] ->
+        let num = float_of_string numerator in
+        let denom = float_of_string denominator in
+        num /. denom
+      | _ -> assert false
+    in
+    fraction_to_float real_str
 
   let get_int32 = Cvc5_external.term_get_int32_val
 

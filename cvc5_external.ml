@@ -98,7 +98,7 @@ external mk_bv_s :
   term_manager -> (int[@untagged]) -> string -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_bv_s" "native_cvc5_stub_mk_bv_s"
 
-external mk_string : term_manager -> string -> term
+external mk_string : term_manager -> string -> bool -> term
   = "ocaml_cvc5_stub_mk_string"
 
 external mk_term : term_manager -> int -> term array -> term
@@ -146,7 +146,8 @@ external term_get_uint64_val : term -> int64
 external term_is_bv_val : term -> bool = "ocaml_cvc5_stub_is_bv_value"
 [@@noalloc]
 
-external term_get_bv_val : term -> int32 -> string = "ocaml_cvc5_stub_get_bv_value"
+external term_get_bv_val : term -> int32 -> string
+  = "ocaml_cvc5_stub_get_bv_value"
 
 external term_is_rm_val : term -> bool = "ocaml_cvc5_stub_is_rm_value"
 [@@noalloc]

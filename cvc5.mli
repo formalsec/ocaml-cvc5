@@ -66,6 +66,8 @@ module Term : sig
 
   val mk_int : TermManager.tm -> int -> term
 
+  val mk_string : TermManager.tm -> ?useEscSequences:bool -> string -> term
+
   val mk_real_s : TermManager.tm -> string -> term
 
   val mk_real_i : TermManager.tm -> int -> term
