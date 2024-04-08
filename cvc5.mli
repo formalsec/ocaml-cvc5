@@ -28,6 +28,8 @@ module Sort : sig
 
   val mk_bv_sort : TermManager.tm -> int -> sort
 
+  val bv_size : sort -> int32
+
   val mk_rm_sort : TermManager.tm -> sort
 
   val mk_fp_sort : TermManager.tm -> int -> int -> sort
@@ -75,6 +77,44 @@ module Term : sig
   val mk_bv_s : TermManager.tm -> int -> string -> int -> term
 
   val mk_rm : TermManager.tm -> RoundingMode.t -> term
+
+  val is_int : term -> bool
+
+  val is_real : term -> bool
+
+  val is_string : term -> bool
+
+  val is_bool : term -> bool
+
+  val is_int32 : term -> bool
+
+  val is_bv : term -> bool
+
+  val is_int64 : term -> bool
+
+  val is_uint32 : term -> bool
+
+  val is_uint64 : term -> bool
+
+  val is_rm : term -> bool
+
+  val get_int : term -> int
+
+  val get_real : term -> float
+
+  val get_bool : term -> bool
+
+  val get_int32 : term -> int32
+
+  val get_int64 : term -> int64
+
+  val get_uint32 : term -> int32
+
+  val get_uint64 : term -> int64
+
+  val get_bv : term -> int32 -> string
+
+  val get_rm : term -> RoundingMode.t
 end
 
 module Result : sig

@@ -379,6 +379,100 @@ CAMLprim value ocaml_cvc5_stub_mk_term(value v, value kind, value t){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_get_int_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_string(Term_val(t)->getIntegerValue().c_str());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_int_value(value t){
+  return Val_bool(Term_val(t)->isIntegerValue());
+}
+
+CAMLprim value ocaml_cvc5_stub_get_real_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_string(Term_val(t)->getRealValue().c_str());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_real_value(value t){
+  return Val_bool(Term_val(t)->isRealValue());
+}
+
+CAMLprim value ocaml_cvc5_stub_is_string_value(value t){
+  return Val_bool(Term_val(t)->isStringValue());
+}
+
+CAMLprim value ocaml_cvc5_stub_get_int32_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_int32(Term_val(t)->getInt32Value());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_int32_value(value t){
+  return Val_bool(Term_val(t)->isInt32Value());
+}
+
+CAMLprim value ocaml_cvc5_stub_get_int64_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_int64(Term_val(t)->getInt64Value());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_int64_value(value t){
+  return Val_bool(Term_val(t)->isInt64Value());
+}
+
+CAMLprim value ocaml_cvc5_stub_get_uint32_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_int32(Term_val(t)->getUInt32Value());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_uint32_value(value t){
+  return Val_bool(Term_val(t)->isUInt32Value());
+}
+
+CAMLprim value ocaml_cvc5_stub_get_uint64_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_int64(Term_val(t)->getUInt64Value());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_uint64_value(value t){
+  return Val_bool(Term_val(t)->isUInt64Value());
+}
+
+CAMLprim value ocaml_cvc5_stub_get_bv_value(value t, value base){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_string(Term_val(t)->getBitVectorValue(Int32_val(base)).c_str());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_bv_value(value t){
+  return Val_bool(Term_val(t)->isBitVectorValue());
+}
+
+CAMLprim value ocaml_cvc5_stub_get_rm_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_int((int)(Term_val(t)->getRoundingModeValue()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_rm_value(value t){
+  return Val_bool(Term_val(t)->isRoundingModeValue());
+}
+
+CAMLprim value ocaml_cvc5_stub_is_bool_value(value t){
+  return Val_bool(Term_val(t)->isBooleanValue());
+}
+
+CAMLprim value ocaml_cvc5_stub_get_bool_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Term_val(t)->getBooleanValue());
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_mk_rounding_mode(value v, value rm){
   cvc5::TermManager* term_manager = TermManager_val(v);
   value custom = Val_unit;
@@ -446,6 +540,12 @@ CAMLprim value ocaml_cvc5_stub_get_rm_sort(value v){
   new(&sort_operations, &custom) 
     Sort(term_manager->getRoundingModeSort());
   return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_get_bv_size(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_int32(Sort_val(v)->getBitVectorSize());
   CVC5_TRY_CATCH_END;
 }
 

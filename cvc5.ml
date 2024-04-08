@@ -30,6 +30,8 @@ module Sort = struct
 
   let mk_bv_sort = Cvc5_external.mk_bitvector_sort
 
+  let bv_size = Cvc5_external.sort_get_bv_size
+
   let mk_rm_sort = Cvc5_external.get_rm_sort
 
   let mk_fp_sort = Cvc5_external.mk_fp_sort
@@ -79,6 +81,44 @@ module Term = struct
 
   let mk_rm (tm : TermManager.tm) (rm : RoundingMode.t) =
     Cvc5_external.mk_roundingmode tm (RoundingMode.to_cpp rm)
+
+  let is_int = Cvc5_external.term_is_int_val
+
+  let is_real = Cvc5_external.term_is_real_val
+
+  let is_string = Cvc5_external.term_is_string_val
+
+  let is_bv = Cvc5_external.term_is_bv_val
+
+  let is_int32 = Cvc5_external.term_is_int32_val
+
+  let is_int64 = Cvc5_external.term_is_int64_val
+
+  let is_uint32 = Cvc5_external.term_is_uint32_val
+
+  let is_uint64 = Cvc5_external.term_is_uint64_val
+
+  let is_rm = Cvc5_external.term_is_rm_val
+
+  let is_bool = Cvc5_external.term_is_bool_val
+
+  let get_int t = int_of_string (Cvc5_external.term_get_int_val t)
+
+  let get_real t = float_of_string (Cvc5_external.term_get_real_val t)
+
+  let get_int32 = Cvc5_external.term_get_int32_val
+
+  let get_int64 = Cvc5_external.term_get_int64_val
+
+  let get_bv = Cvc5_external.term_get_bv_val
+
+  let get_uint32 = Cvc5_external.term_get_uint32_val
+
+  let get_uint64 = Cvc5_external.term_get_uint64_val
+
+  let get_rm t = RoundingMode.of_cpp @@ Cvc5_external.term_get_rm_val t
+
+  let get_bool = Cvc5_external.term_get_bool_val
 end
 
 module Result = struct
