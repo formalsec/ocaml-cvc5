@@ -16,6 +16,10 @@ end
 module Sort = struct
   type sort = Cvc5_external.sort
 
+  let equal = Cvc5_external.sort_equal
+
+  let to_string = Cvc5_external.sort_to_string
+
   let mk_bool_sort = Cvc5_external.get_boolean_sort
 
   let mk_int_sort = Cvc5_external.get_integer_sort
@@ -25,6 +29,14 @@ module Sort = struct
   let mk_string_sort = Cvc5_external.get_string_sort
 
   let mk_bv_sort = Cvc5_external.mk_bitvector_sort
+
+  let mk_rm_sort = Cvc5_external.get_rm_sort
+
+  let mk_fp_sort = Cvc5_external.mk_fp_sort
+
+  let mk_seq_sort = Cvc5_external.mk_seq_sort
+
+  let mk_uninterpreted_sort = Cvc5_external.mk_uninterpreted_sort
 end
 
 module Term = struct
@@ -55,12 +67,26 @@ module Term = struct
 
   let mk_int = Cvc5_external.mk_int
 
+  let mk_real_s = Cvc5_external.mk_real_s
+
+  let mk_real_i = Cvc5_external.mk_real_i
+
+  let mk_real = Cvc5_external.mk_real
+
+  let mk_bv = Cvc5_external.mk_bv
+
+  let mk_bv_s = Cvc5_external.mk_bv_s
+
   let mk_rm (tm : TermManager.tm) (rm : RoundingMode.t) =
     Cvc5_external.mk_roundingmode tm (RoundingMode.to_cpp rm)
 end
 
 module Result = struct
   type result = Cvc5_external.result
+
+  let equal = Cvc5_external.result_equal
+
+  let to_string = Cvc5_external.result_to_string
 
   let is_sat = Cvc5_external.result_is_sat
 

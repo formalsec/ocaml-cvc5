@@ -68,6 +68,14 @@ external result_is_unknown : result -> bool
   = "ocaml_cvc5_stub_result_is_unknown"
 [@@noalloc]
 
+external result_equal : result -> result -> bool
+  = "ocaml_cvc5_stub_result_equal"
+[@@noalloc]
+
+external result_to_string : result -> string
+  = "ocaml_cvc5_stub_result_to_string"
+[@@noalloc]
+
 external mk_true : term_manager -> term = "ocaml_cvc5_stub_mk_true"
 
 external mk_false : term_manager -> term = "ocaml_cvc5_stub_mk_false"
@@ -76,9 +84,21 @@ external mk_bool : term_manager -> bool -> term = "ocaml_cvc5_stub_mk_bool"
 
 external mk_int : term_manager -> int -> term = "ocaml_cvc5_stub_mk_int"
 
-external mk_bv : term_manager -> int -> int64 -> term = "ocaml_cvc5_stub_mk_bv"
+external mk_real_s : term_manager -> string -> term
+  = "ocaml_cvc5_stub_mk_real_s"
 
-external mk_real : term_manager -> string -> term = "ocaml_cvc5_stub_mk_real"
+external mk_real_i : term_manager -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_real_i" "native_cvc5_stub_mk_real_i"
+
+external mk_real : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_real" "native_cvc5_stub_mk_real"
+
+external mk_bv : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_bv" "native_cvc5_stub_mk_bv"
+
+external mk_bv_s :
+  term_manager -> (int[@untagged]) -> string -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_bv_s" "native_cvc5_stub_mk_bv_s"
 
 external mk_string : term_manager -> string -> term
   = "ocaml_cvc5_stub_mk_string"
@@ -99,6 +119,24 @@ external get_string_sort : term_manager -> sort
 
 external mk_bitvector_sort : term_manager -> int -> sort
   = "ocaml_cvc5_stub_mk_bitvector_sort"
+
+external get_rm_sort : term_manager -> sort = "ocaml_cvc5_stub_get_rm_sort"
+
+external mk_fp_sort :
+  term_manager -> (int[@untagged]) -> (int[@untagged]) -> sort
+  = "ocaml_cvc5_stub_mk_fp_sort" "native_cvc5_stub_mk_fp_sort"
+
+external mk_seq_sort : term_manager -> sort -> sort
+  = "ocaml_cvc5_stub_mk_seq_sort"
+
+external mk_uninterpreted_sort : term_manager -> string -> sort
+  = "ocaml_cvc5_stub_mk_uninterpreted_sort"
+
+external sort_to_string : sort -> string = "ocaml_cvc5_stub_sort_to_string"
+[@@noalloc]
+
+external sort_equal : sort -> sort -> bool = "ocaml_cvc5_stub_sort_equal"
+[@@noalloc]
 
 external mk_const_s : term_manager -> sort -> string -> term
   = "ocaml_cvc5_stub_mk_const_s"

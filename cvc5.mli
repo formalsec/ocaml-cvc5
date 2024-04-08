@@ -14,6 +14,10 @@ end
 module Sort : sig
   type sort
 
+  val equal : sort -> sort -> bool
+
+  val to_string : sort -> string
+
   val mk_bool_sort : TermManager.tm -> sort
 
   val mk_int_sort : TermManager.tm -> sort
@@ -23,6 +27,14 @@ module Sort : sig
   val mk_string_sort : TermManager.tm -> sort
 
   val mk_bv_sort : TermManager.tm -> int -> sort
+
+  val mk_rm_sort : TermManager.tm -> sort
+
+  val mk_fp_sort : TermManager.tm -> int -> int -> sort
+
+  val mk_seq_sort : TermManager.tm -> sort -> sort
+
+  val mk_uninterpreted_sort : TermManager.tm -> string -> sort
 end
 
 module Term : sig
@@ -52,11 +64,25 @@ module Term : sig
 
   val mk_int : TermManager.tm -> int -> term
 
+  val mk_real_s : TermManager.tm -> string -> term
+
+  val mk_real_i : TermManager.tm -> int -> term
+
+  val mk_real : TermManager.tm -> int -> int -> term
+
+  val mk_bv : TermManager.tm -> int -> int -> term
+
+  val mk_bv_s : TermManager.tm -> int -> string -> int -> term
+
   val mk_rm : TermManager.tm -> RoundingMode.t -> term
 end
 
 module Result : sig
   type result
+
+  val equal : result -> result -> bool
+
+  val to_string : result -> string
 
   val is_sat : result -> bool
 
