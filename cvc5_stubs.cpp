@@ -626,6 +626,22 @@ CAMLprim value ocaml_cvc5_stub_check_sat(value v){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_check_sat_assuming(value v, value t){
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> assumptions;
+  size_t arity = Wosize_val(t);
+  assumptions.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    assumptions.emplace_back(*Term_val(Field(t, i)));
+
+  new(&result_operations, &custom)
+    Result(Solver_val(v)->checkSatAssuming(assumptions));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_result_is_sat(value v){
   CVC5_TRY_CATCH_BEGIN;
   return Val_bool(Result_val(v)->isSat());

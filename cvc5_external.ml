@@ -231,6 +231,9 @@ external assert_formula : solver -> term -> unit
 
 external check_sat : solver -> result = "ocaml_cvc5_stub_check_sat"
 
+external check_sat_assuming : solver -> term array -> result
+  = "ocaml_cvc5_stub_check_sat_assuming"
+
 external set_logic : solver -> string -> unit = "ocaml_cvc5_stub_set_logic"
 [@@noalloc]
 

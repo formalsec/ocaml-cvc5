@@ -144,6 +144,8 @@ module Solver : sig
 
   val check_sat : solver -> Result.result
 
+  val check_sat_assuming : solver -> Term.term array -> Result.result
+
   val set_logic : solver -> string -> unit
 
   val set_option : solver -> string -> string -> unit

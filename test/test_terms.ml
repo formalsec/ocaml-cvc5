@@ -10,21 +10,28 @@ let zero = Term.mk_int tm 0
 
 let x = Term.mk_const_s tm int_sort "x"
 
-let x_gt_zero = Term.mk_term tm Kind.Geq [| x; zero |]
+let x_geq_zero = Term.mk_term tm Kind.Geq [| x; zero |]
 
 (* x >= 0 and ~(~(x >= 0) should be considered equal terms after simplications *)
 let () =
-  let x_gt_zero_not = Term.mk_term tm Kind.Not [| x_gt_zero |] in
-  let x_gt_zero_not_not = Term.mk_term tm Kind.Not [| x_gt_zero_not |] in
-  let simplified = Solver.simplify solver x_gt_zero_not_not in
-  assert (Term.equal x_gt_zero simplified)
+  let x_geq_zero_not = Term.mk_term tm Kind.Not [| x_geq_zero |] in
+  let x_geq_zero_not_not = Term.mk_term tm Kind.Not [| x_geq_zero_not |] in
+  let simplified = Solver.simplify solver x_geq_zero_not_not in
+  assert (Term.equal x_geq_zero simplified)
 
 (* Different terms should not be considered equal *)
 let () =
   let false_const = Term.mk_false tm in
-  assert (not (Term.equal false_const x_gt_zero))
+  assert (not (Term.equal false_const x_geq_zero))
 
 (* Term.kind returns the correct Kind of a term *)
 let () =
-  assert (Term.kind x_gt_zero = Kind.Geq);
-  assert (not (Term.kind x_gt_zero = Kind.Not))
+  assert (Term.kind x_geq_zero = Kind.Geq);
+  assert (not (Term.kind x_geq_zero = Kind.Not))
+
+(* Test checking the satisfiability with assumptions *)
+let () =
+  let x_lt_one = Term.mk_term tm Kind.Lt [| x; Term.mk_int tm 1 |] in
+  Solver.assert_formula solver x_geq_zero;
+  let result = Solver.check_sat_assuming solver [| x_lt_one |] in
+  assert (Result.is_sat result)

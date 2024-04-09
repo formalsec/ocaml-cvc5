@@ -109,7 +109,7 @@ module Term = struct
 
   let get_real t =
     let real_str = Cvc5_external.term_get_real_val t in
-    (* cvc5 returns string o float in fraction format *)
+    (* cvc5 returns string of float in fraction format *)
     let fraction_to_float str =
       match String.split_on_char '/' str with
       | [ numerator; denominator ] ->
@@ -159,6 +159,8 @@ module Solver = struct
   let assert_formula = Cvc5_external.assert_formula
 
   let check_sat = Cvc5_external.check_sat
+
+  let check_sat_assuming = Cvc5_external.check_sat_assuming
 
   let set_logic = Cvc5_external.set_logic
 
