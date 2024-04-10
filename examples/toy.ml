@@ -33,5 +33,5 @@ let () =
   | false -> Printf.printf "unsat\n" );
 
   (* Delete the TermManager and the Solver *)
-  TermManager.delete_tm tm;
-  Solver.delete_solver solver
+  TermManager.delete tm;
+  Solver.delete solver

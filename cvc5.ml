@@ -10,13 +10,15 @@ module TermManager = struct
 
   let mk_tm = Cvc5_external.new_term_manager
 
-  let delete_tm = Cvc5_external.delete_term_manager
+  let delete = Cvc5_external.delete_term_manager
 end
 
 module Sort = struct
   type sort = Cvc5_external.sort
 
   let equal = Cvc5_external.sort_equal
+
+  let delete = Cvc5_external.delete_sort
 
   let to_string = Cvc5_external.sort_to_string
 
@@ -45,6 +47,8 @@ module Term = struct
   type term = Cvc5_external.term
 
   let id = Cvc5_external.term_id
+
+  let delete = Cvc5_external.delete_term
 
   let equal = Cvc5_external.term_equal
 
@@ -138,6 +142,8 @@ end
 module Result = struct
   type result = Cvc5_external.result
 
+  let delete = Cvc5_external.delete_result
+
   let equal = Cvc5_external.result_equal
 
   let to_string = Cvc5_external.result_to_string
@@ -154,7 +160,7 @@ module Solver = struct
 
   let mk_solver = Cvc5_external.new_solver
 
-  let delete_solver = Cvc5_external.delete
+  let delete = Cvc5_external.delete
 
   let assert_formula = Cvc5_external.assert_formula
 

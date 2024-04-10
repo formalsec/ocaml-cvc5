@@ -221,6 +221,27 @@ CAMLprim value ocaml_cvc5_stub_delete_term_manager(value v){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_delete_term(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  term_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_sort(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  sort_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_result(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  result_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_term_equal(value t1, value t2){
   return Val_bool(*Term_val(t1) == *Term_val(t2));
 }

@@ -250,4 +250,10 @@ external pop : solver -> int -> unit = "ocaml_cvc5_stub_pop" [@@noalloc]
 external reset_assertions : solver -> unit = "ocaml_cvc5_stub_reset_assertions"
 [@@noalloc]
 
+external delete_term : term -> unit = "ocaml_cvc5_stub_delete_term"
+
+external delete_sort : sort -> unit = "ocaml_cvc5_stub_delete_sort"
+
+external delete_result : result -> unit = "ocaml_cvc5_stub_delete_result"
+
 (**/**)

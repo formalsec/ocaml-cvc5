@@ -8,11 +8,13 @@ module TermManager : sig
 
   val mk_tm : unit -> tm
 
-  val delete_tm : tm -> unit
+  val delete : tm -> unit
 end
 
 module Sort : sig
   type sort
+
+  val delete : sort -> unit
 
   val equal : sort -> sort -> bool
 
@@ -41,6 +43,8 @@ end
 
 module Term : sig
   type term
+
+  val delete : term -> unit
 
   val id : term -> int
 
@@ -122,6 +126,8 @@ end
 module Result : sig
   type result
 
+  val delete : result -> unit
+
   val equal : result -> result -> bool
 
   val to_string : result -> string
@@ -138,7 +144,7 @@ module Solver : sig
 
   val mk_solver : TermManager.tm -> solver
 
-  val delete_solver : solver -> unit
+  val delete : solver -> unit
 
   val assert_formula : solver -> Term.term -> unit
 
