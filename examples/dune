@@ -1,4 +1,4 @@
-(executable
- (name toy)
- (libraries cvc5)
- (modules toy))
+(executables
+ (names toy incremental)
+ (modules toy incremental)
+ (libraries cvc5))
