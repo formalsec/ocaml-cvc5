@@ -729,5 +729,71 @@ CAMLprim value ocaml_cvc5_stub_reset_assertions(value v){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_solver_get_value(value v, value t){
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(Solver_val(v)->getValue(*Term_val(t)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_get_values(value v, value ts){
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> terms;
+  size_t arity = Wosize_val(ts);
+  terms.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    terms.emplace_back(*Term_val(Field(ts, i)));
+
+  std::vector<cvc5::Term> values = Solver_val(v)->getValue(terms);
+  CAMLparam0();
+  CAMLlocal1(result);
+  size_t n = values.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; i += 1) {
+    value custom = Val_unit;
+    new(&sort_operations, &custom) Term(values[i]);
+    caml_modify(&Field(result, i), custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_model_domain_elements(value v, value s){
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> elements = Solver_val(v)->getModelDomainElements(*Sort_val(s));
+  CAMLparam0();
+  CAMLlocal1(result);
+  size_t n = elements.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; i += 1) {
+    value custom = Val_unit;
+    new(&sort_operations, &custom) Term(elements[i]);
+    caml_modify(&Field(result, i), custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_unsat_core(value v){
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> core = Solver_val(v)->getUnsatCore();
+  CAMLparam0();
+  CAMLlocal1(result);
+  size_t n = core.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; i += 1) {
+    value custom = Val_unit;
+    new(&sort_operations, &custom) Term(core[i]);
+    caml_modify(&Field(result, i), custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
 
 } // extern "C"

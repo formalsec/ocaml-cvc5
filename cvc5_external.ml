@@ -256,4 +256,16 @@ external delete_sort : sort -> unit = "ocaml_cvc5_stub_delete_sort"
 
 external delete_result : result -> unit = "ocaml_cvc5_stub_delete_result"
 
+external solver_get_value : solver -> term -> term
+  = "ocaml_cvc5_stub_solver_get_value"
+
+external solver_get_values : solver -> term array -> term array
+  = "ocaml_cvc5_stub_solver_get_values"
+
+external solver_get_model_domain_elements : solver -> sort -> term array
+  = "ocaml_cvc5_stub_get_model_domain_elements"
+
+external solver_get_unsat_core : solver -> term array
+  = "ocaml_cvc5_stub_get_unsat_core"
+
 (**/**)

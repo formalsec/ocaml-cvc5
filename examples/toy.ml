@@ -7,6 +7,8 @@ let () =
   let tm = TermManager.mk_tm () in
   (* Create a Solver *)
   let solver = Solver.mk_solver tm in
+  (* Set solver option to produce models *)
+  Solver.set_option solver "produce-models" "true";
   (* Create an integer sort *)
   let int_sort = Sort.mk_int_sort tm in
   (* Create an integer constant term 'x' *)
@@ -31,6 +33,10 @@ let () =
   ( match Result.is_sat result with
   | true -> Printf.printf "sat\n"
   | false -> Printf.printf "unsat\n" );
+
+  (* Obtain the value for term 'x' *)
+  let value = Solver.get_value solver x in
+  Printf.printf "Value of x: %s\n" (Term.to_string value);
 
   (* Delete the TermManager and the Solver *)
   TermManager.delete tm;

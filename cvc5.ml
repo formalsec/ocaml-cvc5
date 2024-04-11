@@ -179,4 +179,12 @@ module Solver = struct
   let pop = Cvc5_external.pop
 
   let reset = Cvc5_external.reset_assertions
+
+  let get_value = Cvc5_external.solver_get_value
+
+  let get_values = Cvc5_external.solver_get_values
+
+  let get_model_domain_elements = Cvc5_external.solver_get_model_domain_elements
+
+  let get_unsat_core = Cvc5_external.solver_get_unsat_core
 end

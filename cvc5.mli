@@ -163,4 +163,12 @@ module Solver : sig
   val pop : solver -> int -> unit
 
   val reset : solver -> unit
+
+  val get_value : solver -> Term.term -> Term.term
+
+  val get_values : solver -> Term.term array -> Term.term array
+
+  val get_model_domain_elements : solver -> Sort.sort -> Term.term array
+
+  val get_unsat_core : solver -> Term.term array
 end
