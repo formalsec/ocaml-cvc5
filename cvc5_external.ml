@@ -91,7 +91,7 @@ external mk_real_i : term_manager -> (int[@untagged]) -> term
 external mk_real : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_real" "native_cvc5_stub_mk_real"
 
-external mk_bv : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+external mk_bv : term_manager -> (int[@untagged]) -> (int64[@unboxed]) -> term
   = "ocaml_cvc5_stub_mk_bv" "native_cvc5_stub_mk_bv"
 
 external mk_bv_s :
@@ -101,7 +101,8 @@ external mk_bv_s :
 external mk_string : term_manager -> string -> bool -> term
   = "ocaml_cvc5_stub_mk_string"
 
-external mk_fp : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term -> term
+external mk_fp :
+  term_manager -> (int[@untagged]) -> (int[@untagged]) -> term -> term
   = "ocaml_cvc5_stub_mk_fp" "native_cvc5_stub_mk_fp"
 
 external mk_term : term_manager -> int -> term array -> term
@@ -129,8 +130,7 @@ external term_get_int32_val : term -> int32 = "ocaml_cvc5_stub_get_int32_value"
 external term_is_uint32_val : term -> bool = "ocaml_cvc5_stub_is_uint32_value"
 [@@noalloc]
 
-external term_get_uint32_val : term -> int
-  = "ocaml_cvc5_stub_get_uint32_value"
+external term_get_uint32_val : term -> int = "ocaml_cvc5_stub_get_uint32_value"
 [@@noalloc]
 
 external term_is_int64_val : term -> bool = "ocaml_cvc5_stub_is_int64_value"
@@ -142,8 +142,7 @@ external term_get_int64_val : term -> int64 = "ocaml_cvc5_stub_get_int64_value"
 external term_is_uint64_val : term -> bool = "ocaml_cvc5_stub_is_uint64_value"
 [@@noalloc]
 
-external term_get_uint64_val : term -> int
-  = "ocaml_cvc5_stub_get_uint64_value"
+external term_get_uint64_val : term -> int = "ocaml_cvc5_stub_get_uint64_value"
 [@@noalloc]
 
 external term_is_bv_val : term -> bool = "ocaml_cvc5_stub_is_bv_value"
@@ -273,5 +272,30 @@ external solver_get_unsat_core : solver -> term array
 
 external solver_get_model : solver -> sort array -> term array -> string
   = "ocaml_cvc5_stub_get_model"
+
+external mk_op : term_manager -> int -> int array -> op
+  = "ocaml_cvc5_stub_mk_op"
+
+external op_to_string : op -> string = "ocaml_cvc5_stub_op_to_string"
+[@@noalloc]
+
+external op_equal : op -> op -> bool = "ocaml_cvc5_stub_op_equal" [@@noalloc]
+
+external op_get_kind : op -> int = "ocaml_cvc5_stub_op_get_kind" [@@noalloc]
+
+external op_get_num_indices : op -> int = "ocaml_cvc5_stub_op_get_num_indices"
+[@@noalloc]
+
+external op_get_index : op -> int -> term = "ocaml_cvc5_stub_op_get_index"
+[@@noalloc]
+
+external op_is_indexed : op -> bool = "ocaml_cvc5_stub_op_is_indexed"
+[@@noalloc]
+
+external op_hash : op -> (int[@untagged])
+  = "ocaml_cvc5_stub_op_hash" "native_cvc5_stub_op_hash"
+[@@noalloc]
+
+external op_delete : op -> unit = "ocaml_cvc5_stub_op_delete"
 
 (**/**)

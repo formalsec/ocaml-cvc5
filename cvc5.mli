@@ -78,7 +78,7 @@ module Term : sig
 
   val mk_real : TermManager.tm -> int -> int -> term
 
-  val mk_bv : TermManager.tm -> int -> int -> term
+  val mk_bv : TermManager.tm -> int -> int64 -> term
 
   val mk_bv_s : TermManager.tm -> int -> string -> int -> term
 
@@ -175,4 +175,26 @@ module Solver : sig
   val get_unsat_core : solver -> Term.term array
 
   val get_model : solver -> Sort.sort array -> Term.term array -> string
+end
+
+module Op : sig
+  type op
+
+  val mk_op : TermManager.tm -> Kind.t -> int array -> op
+
+  val equal : op -> op -> bool
+
+  val to_string : op -> string
+
+  val delete : op -> unit
+
+  val is_indexed : op -> bool
+
+  val get_index : op -> int -> Term.term
+
+  val kind : op -> Kind.t
+
+  val hash : op -> int
+
+  val get_num_indices : op -> int
 end

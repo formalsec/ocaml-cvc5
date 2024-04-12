@@ -894,4 +894,50 @@ CAMLprim value ocaml_cvc5_stub_mk_op(value v, value kind, value args){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_op_equal(value o1, value o2){
+  return Val_bool(*OP_val(o1) == *OP_val(o2));
+}
+
+CAMLprim value ocaml_cvc5_stub_op_to_string(value v){
+  return caml_copy_string(OP_val(v)->toString().c_str());
+}
+
+CAMLprim value ocaml_cvc5_stub_op_get_kind(value v){
+  return Val_int(OP_val(v)->getKind());
+}
+
+CAMLprim value ocaml_cvc5_stub_op_get_num_indices(value v){
+  return Val_int(OP_val(v)->getNumIndices());
+}
+
+CAMLprim value ocaml_cvc5_stub_op_get_index(value v, value i){
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  cvc5::Op op = *OP_val(v);
+  size_t index = Int_val(i);
+  new(&term_operations, &custom) 
+    Term(op[index]);
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_op_is_indexed(value v){
+  return Val_bool(OP_val(v)->isIndexed());
+}
+
+CAMLprim intnat native_cvc5_stub_op_hash(value v){
+  return std::hash<cvc5::Op>{}(*OP_val(v));
+}
+
+CAMLprim value ocaml_cvc5_stub_op_hash(value v){
+  return Val_long(native_cvc5_stub_op_hash(v));
+}
+
+CAMLprim value ocaml_cvc5_stub_op_delete(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  op_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
 } // extern "C"
