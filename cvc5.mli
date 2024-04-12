@@ -78,11 +78,13 @@ module Term : sig
 
   val mk_real : TermManager.tm -> int -> int -> term
 
-  val mk_bv : TermManager.tm -> int -> int -> term
+  val mk_bv : TermManager.tm -> int32 -> int64 -> term
 
-  val mk_bv_s : TermManager.tm -> int -> string -> int -> term
+  val mk_bv_s : TermManager.tm -> int32 -> string -> int32 -> term
 
   val mk_rm : TermManager.tm -> RoundingMode.t -> term
+
+  val mk_fp : TermManager.tm -> int32 -> int32 -> term -> term
 
   val is_int : term -> bool
 
@@ -171,4 +173,6 @@ module Solver : sig
   val get_model_domain_elements : solver -> Sort.sort -> Term.term array
 
   val get_unsat_core : solver -> Term.term array
+
+  val get_model : solver -> Sort.sort array -> Term.term array -> string
 end

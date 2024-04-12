@@ -796,4 +796,42 @@ CAMLprim value ocaml_cvc5_stub_get_unsat_core(value v){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_mk_fp_from_terms(value v, value sign, value exp, value sig){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkFloatingPoint(*Term_val(sign), *Term_val(exp), *Term_val(sig)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_fp(value v, value sign, value exp, value sig){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkFloatingPoint(Int32_val(sign), Int32_val(exp), *Term_val(sig)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_model(value v, value sorts, value vars){
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec;
+  std::vector<cvc5::Term> term_vec;
+  size_t arity = Wosize_val(sorts);
+  sort_vec.reserve(arity);
+  term_vec.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    sort_vec.emplace_back(*Sort_val(Field(sorts, i)));
+
+  for (size_t i = 0; i < arity; i++)
+    term_vec.emplace_back(*Term_val(Field(vars, i)));
+
+  return caml_copy_string(Solver_val(v)->getModel(sort_vec, term_vec).c_str());
+  CVC5_TRY_CATCH_END;
+}
+
 } // extern "C"

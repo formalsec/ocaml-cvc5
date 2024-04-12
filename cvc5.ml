@@ -89,6 +89,8 @@ module Term = struct
   let mk_rm (tm : TermManager.tm) (rm : RoundingMode.t) =
     Cvc5_external.mk_roundingmode tm (RoundingMode.to_cpp rm)
 
+  let mk_fp = Cvc5_external.mk_fp
+
   let is_int = Cvc5_external.term_is_int_val
 
   let is_real = Cvc5_external.term_is_real_val
@@ -187,4 +189,6 @@ module Solver = struct
   let get_model_domain_elements = Cvc5_external.solver_get_model_domain_elements
 
   let get_unsat_core = Cvc5_external.solver_get_unsat_core
+
+  let get_model = Cvc5_external.solver_get_model
 end

@@ -91,15 +91,18 @@ external mk_real_i : term_manager -> (int[@untagged]) -> term
 external mk_real : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_real" "native_cvc5_stub_mk_real"
 
-external mk_bv : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+external mk_bv : term_manager -> int32 -> int64 -> term
   = "ocaml_cvc5_stub_mk_bv" "native_cvc5_stub_mk_bv"
 
 external mk_bv_s :
-  term_manager -> (int[@untagged]) -> string -> (int[@untagged]) -> term
+  term_manager -> int32 -> string -> int32 -> term
   = "ocaml_cvc5_stub_mk_bv_s" "native_cvc5_stub_mk_bv_s"
 
 external mk_string : term_manager -> string -> bool -> term
   = "ocaml_cvc5_stub_mk_string"
+
+external mk_fp : term_manager -> int32 -> int32 -> term -> term
+  = "ocaml_cvc5_stub_mk_fp"
 
 external mk_term : term_manager -> int -> term array -> term
   = "ocaml_cvc5_stub_mk_term"
@@ -267,5 +270,8 @@ external solver_get_model_domain_elements : solver -> sort -> term array
 
 external solver_get_unsat_core : solver -> term array
   = "ocaml_cvc5_stub_get_unsat_core"
+
+external solver_get_model : solver -> sort array -> term array -> string
+  = "ocaml_cvc5_stub_get_model"
 
 (**/**)
