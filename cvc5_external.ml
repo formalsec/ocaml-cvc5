@@ -91,18 +91,18 @@ external mk_real_i : term_manager -> (int[@untagged]) -> term
 external mk_real : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_real" "native_cvc5_stub_mk_real"
 
-external mk_bv : term_manager -> int32 -> int64 -> term
+external mk_bv : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_bv" "native_cvc5_stub_mk_bv"
 
 external mk_bv_s :
-  term_manager -> int32 -> string -> int32 -> term
+  term_manager -> (int[@untagged]) -> string -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_bv_s" "native_cvc5_stub_mk_bv_s"
 
 external mk_string : term_manager -> string -> bool -> term
   = "ocaml_cvc5_stub_mk_string"
 
-external mk_fp : term_manager -> int32 -> int32 -> term -> term
-  = "ocaml_cvc5_stub_mk_fp"
+external mk_fp : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term -> term
+  = "ocaml_cvc5_stub_mk_fp" "native_cvc5_stub_mk_fp"
 
 external mk_term : term_manager -> int -> term array -> term
   = "ocaml_cvc5_stub_mk_term"
@@ -129,7 +129,7 @@ external term_get_int32_val : term -> int32 = "ocaml_cvc5_stub_get_int32_value"
 external term_is_uint32_val : term -> bool = "ocaml_cvc5_stub_is_uint32_value"
 [@@noalloc]
 
-external term_get_uint32_val : term -> int32
+external term_get_uint32_val : term -> int
   = "ocaml_cvc5_stub_get_uint32_value"
 [@@noalloc]
 
@@ -142,15 +142,15 @@ external term_get_int64_val : term -> int64 = "ocaml_cvc5_stub_get_int64_value"
 external term_is_uint64_val : term -> bool = "ocaml_cvc5_stub_is_uint64_value"
 [@@noalloc]
 
-external term_get_uint64_val : term -> int64
+external term_get_uint64_val : term -> int
   = "ocaml_cvc5_stub_get_uint64_value"
 [@@noalloc]
 
 external term_is_bv_val : term -> bool = "ocaml_cvc5_stub_is_bv_value"
 [@@noalloc]
 
-external term_get_bv_val : term -> int32 -> string
-  = "ocaml_cvc5_stub_get_bv_value"
+external term_get_bv_val : term -> (int[@untagged]) -> string
+  = "ocaml_cvc5_stub_get_bv_value" "native_cvc5_stub_get_bv_value"
 
 external term_is_rm_val : term -> bool = "ocaml_cvc5_stub_is_rm_value"
 [@@noalloc]

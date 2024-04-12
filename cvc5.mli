@@ -78,13 +78,13 @@ module Term : sig
 
   val mk_real : TermManager.tm -> int -> int -> term
 
-  val mk_bv : TermManager.tm -> int32 -> int64 -> term
+  val mk_bv : TermManager.tm -> int -> int -> term
 
-  val mk_bv_s : TermManager.tm -> int32 -> string -> int32 -> term
+  val mk_bv_s : TermManager.tm -> int -> string -> int -> term
 
   val mk_rm : TermManager.tm -> RoundingMode.t -> term
 
-  val mk_fp : TermManager.tm -> int32 -> int32 -> term -> term
+  val mk_fp : TermManager.tm -> int -> int -> term -> term
 
   val is_int : term -> bool
 
@@ -116,11 +116,11 @@ module Term : sig
 
   val get_int64 : term -> int64
 
-  val get_uint32 : term -> int32
+  val get_uint32 : term -> int
 
-  val get_uint64 : term -> int64
+  val get_uint64 : term -> int
 
-  val get_bv : term -> int32 -> string
+  val get_bv : term -> int -> string
 
   val get_rm : term -> RoundingMode.t
 end

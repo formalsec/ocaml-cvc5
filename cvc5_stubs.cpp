@@ -188,6 +188,41 @@ static struct custom_operations result_operations =
 };
 
 /*============================================================================
+ *                              Op            
+ ============================================================================*/
+
+class Op : public cvc5::Op {
+public:
+  Op(cvc5::Op t) : cvc5::Op(t) {}
+  ~Op() {}
+  void * operator new(size_t size,
+        struct custom_operations *ops,
+        value *custom){
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void *ptr) {}
+};
+
+#define OP_val(v) ((Op*)Data_custom_val(v))
+
+static void op_delete(value v){
+  delete OP_val(v);
+}
+
+static struct custom_operations op_operations =
+{
+   "https://cvc5.github.io/",
+   &op_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+/*============================================================================
  *                              Stubs            
  ============================================================================*/
 
@@ -353,7 +388,7 @@ CAMLprim value native_cvc5_stub_mk_bv(value v, uint32_t size, uint64_t i){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_bv(value v, value size, value i){
-  return native_cvc5_stub_mk_bv(v, (uint32_t)Int32_val(size), (uint64_t)Int64_val(i));
+  return native_cvc5_stub_mk_bv(v, Int_val(size), Long_val(i));
 }
 
 CAMLprim value native_cvc5_stub_mk_bv_s(value v, uint32_t size, value s, uint32_t base){
@@ -367,7 +402,7 @@ CAMLprim value native_cvc5_stub_mk_bv_s(value v, uint32_t size, value s, uint32_
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_bv_s(value v, value size, value s, value base){
-  return native_cvc5_stub_mk_bv_s(v, (uint32_t)Int32_val(size), s, (uint32_t)Int32_val(base));
+  return native_cvc5_stub_mk_bv_s(v, Int_val(size), s, Int_val(base));
 }
 
 CAMLprim value ocaml_cvc5_stub_term_to_string(value v){
@@ -446,7 +481,7 @@ CAMLprim value ocaml_cvc5_stub_is_int64_value(value t){
 
 CAMLprim value ocaml_cvc5_stub_get_uint32_value(value t){
   CVC5_TRY_CATCH_BEGIN;
-  return caml_copy_int32(Term_val(t)->getUInt32Value());
+  return Val_int(Term_val(t)->getUInt32Value());
   CVC5_TRY_CATCH_END;
 }
 
@@ -464,10 +499,14 @@ CAMLprim value ocaml_cvc5_stub_is_uint64_value(value t){
   return Val_bool(Term_val(t)->isUInt64Value());
 }
 
-CAMLprim value ocaml_cvc5_stub_get_bv_value(value t, value base){
+CAMLprim value native_cvc5_stub_get_bv_value(value t, uint32_t base){
   CVC5_TRY_CATCH_BEGIN;
-  return caml_copy_string(Term_val(t)->getBitVectorValue(Int32_val(base)).c_str());
+  return caml_copy_string(Term_val(t)->getBitVectorValue(Int_val(base)).c_str());
   CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_bv_value(value t, value base){
+  return native_cvc5_stub_get_bv_value(t, Int_val(base));
 }
 
 CAMLprim value ocaml_cvc5_stub_is_bv_value(value t){
@@ -566,7 +605,7 @@ CAMLprim value ocaml_cvc5_stub_get_rm_sort(value v){
 
 CAMLprim value ocaml_cvc5_stub_sort_get_bv_size(value v){
   CVC5_TRY_CATCH_BEGIN;
-  return caml_copy_int32(Sort_val(v)->getBitVectorSize());
+  return Val_int(Sort_val(v)->getBitVectorSize());
   CVC5_TRY_CATCH_END;
 }
 
@@ -806,14 +845,18 @@ CAMLprim value ocaml_cvc5_stub_mk_fp_from_terms(value v, value sign, value exp, 
   CVC5_TRY_CATCH_END;
 }
 
-CAMLprim value ocaml_cvc5_stub_mk_fp(value v, value sign, value exp, value sig){
+CAMLprim value native_cvc5_stub_mk_fp(value v, uint32_t sign, uint32_t exp, value sig){
   cvc5::TermManager* term_manager = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPoint(Int32_val(sign), Int32_val(exp), *Term_val(sig)));
+    Term(term_manager->mkFloatingPoint(Int_val(sign), Int_val(exp), *Term_val(sig)));
   return custom;
   CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_fp(value v, value sign, value exp, value sig){
+  return native_cvc5_stub_mk_fp(v, Int_val(sign), Int_val(exp), sig);
 }
 
 CAMLprim value ocaml_cvc5_stub_get_model(value v, value sorts, value vars){
@@ -831,6 +874,23 @@ CAMLprim value ocaml_cvc5_stub_get_model(value v, value sorts, value vars){
     term_vec.emplace_back(*Term_val(Field(vars, i)));
 
   return caml_copy_string(Solver_val(v)->getModel(sort_vec, term_vec).c_str());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_op(value v, value kind, value args){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<uint32_t> term_vec;
+  size_t arity = Wosize_val(args);
+  term_vec.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    term_vec.emplace_back(Int_val(Field(args, i)));
+
+  new(&op_operations, &custom) 
+    Op(term_manager->mkOp((cvc5::Kind)Int_val(kind), term_vec));
+  return custom;
   CVC5_TRY_CATCH_END;
 }
 
