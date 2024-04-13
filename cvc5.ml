@@ -43,6 +43,29 @@ module Sort = struct
   let mk_uninterpreted_sort = Cvc5_external.mk_uninterpreted_sort
 end
 
+module Op = struct
+  type op = Cvc5_external.op
+
+  let mk_op tm kind args = Cvc5_external.mk_op tm (Kind.to_cpp kind) args
+
+  let equal = Cvc5_external.op_equal
+
+  let delete = Cvc5_external.op_delete
+
+  let to_string = Cvc5_external.op_to_string
+
+  let is_indexed = Cvc5_external.op_is_indexed
+
+  (* let get_index = Cvc5_external.op_get_index *)
+
+  let kind o = Kind.of_cpp @@ Cvc5_external.op_get_kind o
+
+  let hash = Cvc5_external.op_hash
+
+  let get_num_indices = Cvc5_external.op_get_num_indices
+end
+
+
 module Term = struct
   type term = Cvc5_external.term
 
@@ -64,6 +87,9 @@ module Term = struct
 
   let mk_term (tm : TermManager.tm) (k : Kind.t) (terms : term array) =
     Cvc5_external.mk_term tm (Kind.to_cpp k) terms
+  
+  let mk_term_op (tm : TermManager.tm) (op : Op.op) (terms : term array) =
+    Cvc5_external.mk_term_op tm op terms
 
   let mk_true = Cvc5_external.mk_true
 
@@ -191,26 +217,4 @@ module Solver = struct
   let get_unsat_core = Cvc5_external.solver_get_unsat_core
 
   let get_model = Cvc5_external.solver_get_model
-end
-
-module Op = struct
-  type op = Cvc5_external.op
-
-  let mk_op tm kind args = Cvc5_external.mk_op tm (Kind.to_cpp kind) args
-
-  let equal = Cvc5_external.op_equal
-
-  let delete = Cvc5_external.op_delete
-
-  let to_string = Cvc5_external.op_to_string
-
-  let is_indexed = Cvc5_external.op_is_indexed
-
-  let get_index = Cvc5_external.op_get_index
-
-  let kind o = Kind.of_cpp @@ Cvc5_external.op_get_kind o
-
-  let hash = Cvc5_external.op_hash
-
-  let get_num_indices = Cvc5_external.op_get_num_indices
 end

@@ -41,6 +41,29 @@ module Sort : sig
   val mk_uninterpreted_sort : TermManager.tm -> string -> sort
 end
 
+module Op : sig
+  type op
+
+  val mk_op : TermManager.tm -> Kind.t -> int array -> op
+
+  val equal : op -> op -> bool
+
+  val to_string : op -> string
+
+  val delete : op -> unit
+
+  val is_indexed : op -> bool
+
+  (* val get_index : op -> int -> Term.term *)
+
+  val kind : op -> Kind.t
+
+  val hash : op -> int
+
+  val get_num_indices : op -> int
+end
+
+
 module Term : sig
   type term
 
@@ -61,6 +84,8 @@ module Term : sig
   val mk_const_s : TermManager.tm -> Sort.sort -> string -> term
 
   val mk_term : TermManager.tm -> Kind.t -> term array -> term
+
+  val mk_term_op : TermManager.tm -> Op.op -> term array -> term
 
   val mk_true : TermManager.tm -> term
 
@@ -175,26 +200,4 @@ module Solver : sig
   val get_unsat_core : solver -> Term.term array
 
   val get_model : solver -> Sort.sort array -> Term.term array -> string
-end
-
-module Op : sig
-  type op
-
-  val mk_op : TermManager.tm -> Kind.t -> int array -> op
-
-  val equal : op -> op -> bool
-
-  val to_string : op -> string
-
-  val delete : op -> unit
-
-  val is_indexed : op -> bool
-
-  val get_index : op -> int -> Term.term
-
-  val kind : op -> Kind.t
-
-  val hash : op -> int
-
-  val get_num_indices : op -> int
 end

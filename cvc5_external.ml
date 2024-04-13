@@ -108,6 +108,9 @@ external mk_fp :
 external mk_term : term_manager -> int -> term array -> term
   = "ocaml_cvc5_stub_mk_term"
 
+external mk_term_op : term_manager -> op -> term array -> term
+  = "ocaml_cvc5_stub_mk_term_with_op"
+
 external term_get_int_val : term -> string = "ocaml_cvc5_stub_get_int_value"
 
 external term_is_int_val : term -> bool = "ocaml_cvc5_stub_is_int_value"
@@ -203,7 +206,7 @@ external mk_const_s : term_manager -> sort -> string -> term
 
 external mk_const : term_manager -> sort -> term = "ocaml_cvc5_stub_mk_const"
 
-external mk_roundingmode : term_manager -> int -> term
+external mk_roundingmode : term_manager -> int -> rounding_mode
   = "ocaml_cvc5_stub_mk_rounding_mode"
 
 external term_to_string : term -> string = "ocaml_cvc5_stub_term_to_string"

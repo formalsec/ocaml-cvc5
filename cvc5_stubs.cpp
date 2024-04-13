@@ -435,6 +435,23 @@ CAMLprim value ocaml_cvc5_stub_mk_term(value v, value kind, value t){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_mk_term_with_op(value v, value op, value t){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> args;
+  size_t arity = Wosize_val(t);
+  args.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    args.emplace_back(*Term_val(Field(t, i)));
+
+  new(&term_operations, &custom) 
+    Term(term_manager->mkTerm(*OP_val(op), args));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_get_int_value(value t){
   CVC5_TRY_CATCH_BEGIN;
   return caml_copy_string(Term_val(t)->getIntegerValue().c_str());
