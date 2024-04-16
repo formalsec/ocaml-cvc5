@@ -35,7 +35,8 @@ let () =
 (* Check string values construction and interpretation *)
 let () =
   let str = Term.mk_string tm "abc" in
-  assert (Term.is_string str)
+  assert (Term.is_string str);
+  assert (Term.get_string str = "abc")
 
 (* Check bit-vector values construction and interpretation *)
 (* TODO *)

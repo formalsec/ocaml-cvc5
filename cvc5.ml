@@ -152,6 +152,8 @@ module Term = struct
     in
     fraction_to_float real_str
 
+  let get_string = Cvc5_external.term_get_string_val
+
   let get_int32 = Cvc5_external.term_get_int32_val
 
   let get_int64 = Cvc5_external.term_get_int64_val

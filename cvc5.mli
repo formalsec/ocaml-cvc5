@@ -135,6 +135,8 @@ module Term : sig
 
   val get_real : term -> float
 
+  val get_string : term -> string
+
   val get_bool : term -> bool
 
   val get_int32 : term -> int32

@@ -121,6 +121,8 @@ external term_get_real_val : term -> string = "ocaml_cvc5_stub_get_real_value"
 external term_is_real_val : term -> bool = "ocaml_cvc5_stub_is_real_value"
 [@@noalloc]
 
+external term_get_string_val : term -> string = "ocaml_cvc5_stub_get_string_value"
+
 external term_is_string_val : term -> bool = "ocaml_cvc5_stub_is_string_value"
 [@@noalloc]
 

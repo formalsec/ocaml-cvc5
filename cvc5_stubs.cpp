@@ -476,6 +476,17 @@ CAMLprim value ocaml_cvc5_stub_is_string_value(value t){
   return Val_bool(Term_val(t)->isStringValue());
 }
 
+CAMLprim value ocaml_cvc5_stub_get_string_value(value t){
+  CVC5_TRY_CATCH_BEGIN;
+  std::wstring ws = Term_val(t)->getStringValue();
+  std::string to_return;
+  std::transform(ws.begin(), ws.end(), std::back_inserter(to_return), [] (wchar_t c) {
+    return (char)c;
+  });
+  return caml_copy_string(to_return.c_str());
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_get_int32_value(value t){
   CVC5_TRY_CATCH_BEGIN;
   return caml_copy_int32(Term_val(t)->getInt32Value());
