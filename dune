@@ -8,6 +8,7 @@
     (chdir
      vendor/cvc5
      (progn
+      (run pip install -r contrib/requirements_build.txt)
       (run ./configure.sh --auto-download --static)
       (run make -C build -j 4)))
     (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
