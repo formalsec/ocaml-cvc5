@@ -82,7 +82,6 @@ module Op : sig
   val get_num_indices : op -> int
 end
 
-
 module Term : sig
   type term
 
