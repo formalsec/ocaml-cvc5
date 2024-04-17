@@ -11,6 +11,8 @@
 
 (maintainers "João Pereira <joaomhmpereira@tecnico.ulisboa.pt>")
 
+(license "GPL-3.0-only")
+
 (package
   (name cvc5)
   (synopsis "OCaml bindings for the cvc5 SMT solver")
