@@ -1,3 +1,22 @@
+(*------------------------------------------------------------------------*)
+(*  Copyright (C) 2024 João Pereira                                       *)
+(*                                                                        *)
+(*  This file is part of ocaml-cvc5                                       *)
+(*                                                                        *)
+(*  ocaml-cvc5 is free software: you can redistribute it and/or modify    *)
+(*  it under the terms of the GNU General Public License as published     *)
+(*  by the Free Software Foundation, either version 3 of the License,     *)
+(*  or (at your option) any later version.                                *)
+(*                                                                        *)
+(*  ocaml-cvc5 is distributed in the hope that it will be useful,         *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *)
+(*  See the GNU General Public License for more details.                  *)
+(*                                                                        *)
+(*  You should have received a copy of the GNU General Public License     *)
+(*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
+(*------------------------------------------------------------------------*)
+
 (** External declarations for cvc5's OCaml bindings. *)
 
 (**/**)
@@ -121,7 +140,8 @@ external term_get_real_val : term -> string = "ocaml_cvc5_stub_get_real_value"
 external term_is_real_val : term -> bool = "ocaml_cvc5_stub_is_real_value"
 [@@noalloc]
 
-external term_get_string_val : term -> string = "ocaml_cvc5_stub_get_string_value"
+external term_get_string_val : term -> string
+  = "ocaml_cvc5_stub_get_string_value"
 
 external term_is_string_val : term -> bool = "ocaml_cvc5_stub_is_string_value"
 [@@noalloc]

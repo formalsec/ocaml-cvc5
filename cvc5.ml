@@ -1,3 +1,22 @@
+(*------------------------------------------------------------------------*)
+(*  Copyright (C) 2024 João Pereira                                       *)
+(*                                                                        *)
+(*  This file is part of ocaml-cvc5                                       *)
+(*                                                                        *)
+(*  ocaml-cvc5 is free software: you can redistribute it and/or modify    *)
+(*  it under the terms of the GNU General Public License as published     *)
+(*  by the Free Software Foundation, either version 3 of the License,     *)
+(*  or (at your option) any later version.                                *)
+(*                                                                        *)
+(*  ocaml-cvc5 is distributed in the hope that it will be useful,         *)
+(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
+(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  *)
+(*  See the GNU General Public License for more details.                  *)
+(*                                                                        *)
+(*  You should have received a copy of the GNU General Public License     *)
+(*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
+(*------------------------------------------------------------------------*)
+
 exception Error of string
 
 let _ = Callback.register_exception "cvc5Exception" (Error "")
@@ -65,7 +84,6 @@ module Op = struct
   let get_num_indices = Cvc5_external.op_get_num_indices
 end
 
-
 module Term = struct
   type term = Cvc5_external.term
 
@@ -87,7 +105,7 @@ module Term = struct
 
   let mk_term (tm : TermManager.tm) (k : Kind.t) (terms : term array) =
     Cvc5_external.mk_term tm (Kind.to_cpp k) terms
-  
+
   let mk_term_op (tm : TermManager.tm) (op : Op.op) (terms : term array) =
     Cvc5_external.mk_term_op tm op terms
 
