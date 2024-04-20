@@ -1,5 +1,5 @@
 (*------------------------------------------------------------------------*)
-(*  Copyright (C) 2024 João Pereira                                       *)
+(*  Copyright (C) 2024 formalsec                                       *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
 (*                                                                        *)

@@ -4,6 +4,7 @@ synopsis: "OCaml bindings for the cvc5 SMT solver"
 description: "OCaml bindings for the cvc5 SMT solver"
 maintainer: ["João Pereira <joaomhmpereira@tecnico.ulisboa.pt>"]
 authors: ["João Pereira <joaomhmpereira@tecnico.ulisboa.pt>"]
+license: "GPL-3.0-only"
 homepage: "https://github.com/formalsec/ocaml-cvc5"
 bug-reports: "https://github.com/formalsec/ocaml-cvc5/issues"
 depends: [
