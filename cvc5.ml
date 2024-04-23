@@ -206,7 +206,13 @@ end
 module Solver = struct
   type solver = Cvc5_external.solver
 
-  let mk_solver = Cvc5_external.new_solver
+  let mk_solver ?logic tm  = 
+    let slv = Cvc5_external.new_solver tm in
+    match logic with
+    | None -> slv
+    | Some logic ->
+      Cvc5_external.set_logic slv logic;
+      slv
 
   let delete = Cvc5_external.delete
 

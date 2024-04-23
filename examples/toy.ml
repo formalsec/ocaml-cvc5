@@ -25,7 +25,7 @@ let () =
   (* Create a TermManager *)
   let tm = TermManager.mk_tm () in
   (* Create a Solver *)
-  let solver = Solver.mk_solver tm in
+  let solver = Solver.mk_solver ~logic:"LIA" tm in
   (* Set solver option to produce models *)
   Solver.set_option solver "produce-models" "true";
   (* Create an integer sort *)

@@ -189,7 +189,7 @@ end
 module Solver : sig
   type solver
 
-  val mk_solver : TermManager.tm -> solver
+  val mk_solver : ?logic:string -> TermManager.tm -> solver
 
   val delete : solver -> unit
 
