@@ -7,3 +7,6 @@
 [submodule "vendor/libpoly"]
 	path = vendor/libpoly
 	url = https://github.com/SRI-CSL/libpoly.git
+[submodule "vendor/symfpu"]
+	path = vendor/symfpu
+	url = https://github.com/cvc5/symfpu.git
