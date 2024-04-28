@@ -1,3 +1,9 @@
+(env
+ (_
+  (env-vars
+   (CMAKE_INCLUDE_PATH "../../cadical/src/:../../libpoly/:../../")
+   (CMAKE_LIBRARY_PATH "../../cadical/build/:../../libpoly/build/src/"))))
+
 (rule
  (deps
   (source_tree vendor))
@@ -6,14 +12,32 @@
   (no-infer
    (progn
     (chdir
+     vendor/cadical
+     (progn
+      (run ./configure)
+      (run make -j 4)))
+    (copy vendor/cadical/build/libcadical.a libcadical.a)
+    (chdir
+     vendor/libpoly
+     (progn
+      (run
+       cmake
+       -B
+       build
+       -DCMAKE_BUILD_TYPE=$type
+       -DCMAKE_INSTALL_PREFIX=$prefix)
+      (chdir
+       build
+       (run make -j 4))
+      (run mv include poly)))
+    (copy vendor/libpoly/build/src/libpicpoly.a libpicpoly.a)
+    (copy vendor/libpoly/build/src/libpicpolyxx.a libpicpolyxx.a)
+    (chdir
      vendor/cvc5
      (progn
-      (run ./configure.sh --auto-download --static)
+      (run ./configure.sh --static)
       (run make -C build -j 4)))
     (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
-    (copy vendor/cvc5/build/deps/lib/libcadical.a libcadical.a)
-    (copy vendor/cvc5/build/deps/lib/libpicpoly.a libpicpoly.a)
-    (copy vendor/cvc5/build/deps/lib/libpicpolyxx.a libpicpolyxx.a)
     (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
 
 (subdir

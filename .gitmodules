@@ -1,3 +1,12 @@
 [submodule "vendor/cvc5"]
 	path = vendor/cvc5
 	url = https://github.com/cvc5/cvc5
+[submodule "vendor/cadical"]
+	path = vendor/cadical
+	url = https://github.com/arminbiere/cadical.git
+[submodule "vendor/libpoly"]
+	path = vendor/libpoly
+	url = https://github.com/SRI-CSL/libpoly.git
+[submodule "vendor/symfpu"]
+	path = vendor/symfpu
+	url = https://github.com/cvc5/symfpu.git
