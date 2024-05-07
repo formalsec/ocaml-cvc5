@@ -19,13 +19,13 @@
 
 open Cvc5
 
-(* This example demonstrates how to create a simple formula and check its
+(* This example demonstrates how to create a simple formulas and check their
    satisfiability. *)
 let () =
   (* Create a TermManager *)
   let tm = TermManager.mk_tm () in
   (* Create a Solver *)
-  let solver = Solver.mk_solver ~logic:"LIA" tm in
+  let solver = Solver.mk_solver ~logic:"ALL" tm in
   (* Set solver option to produce models *)
   Solver.set_option solver "produce-models" "true";
   (* Create an integer sort *)
@@ -43,9 +43,19 @@ let () =
   let formula = Term.mk_term tm Kind.And [| x_gt_zero; x_lt_zero |] in
   (* Print the created formula *)
   Printf.printf "Formula: %s\n" (Term.to_string formula);
-
   (* Assert the formula *)
   Solver.assert_formula solver formula;
+
+  (* Create an uninterpreted function that receives an argument with int_sort
+     and returns a value with int_sort *)
+  let uf = Solver.declare_fun solver "uf" [| int_sort |] int_sort in
+  (* Apply the uninterpreted function to constant term 'x' -> uf(x) *)
+  let x_uf = Term.mk_term tm Kind.Apply_uf [| uf; x |] in
+  (* Create the term: uf(x) == 0 *)
+  let x_uf_eq_zero = Term.mk_term tm Kind.Equal [| x_uf; zero |] in
+  Printf.printf "Formula: %s\n" (Term.to_string x_uf_eq_zero);
+  (* Assert the formula *)
+  Solver.assert_formula solver x_uf_eq_zero;
 
   (* Obtain the satisfiability result of the asserted formulas *)
   let result = Solver.check_sat solver in

@@ -220,4 +220,7 @@ module Solver : sig
   val get_unsat_core : solver -> Term.term array
 
   val get_model : solver -> Sort.sort array -> Term.term array -> string
+
+  val declare_fun :
+    solver -> string -> Sort.sort array -> Sort.sort -> Term.term
 end

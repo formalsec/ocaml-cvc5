@@ -471,6 +471,23 @@ CAMLprim value ocaml_cvc5_stub_mk_term_with_op(value v, value op, value t){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_declare_fun(value slv, value symbol, value sorts, value r) {
+  cvc5::Solver* solver = Solver_val(slv);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec;
+  size_t arity = Wosize_val(sorts);
+  sort_vec.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    sort_vec.emplace_back(*Sort_val(Field(sorts, i)));
+
+  new(&term_operations, &custom) 
+    Term(solver->declareFun(String_val(symbol), sort_vec, *Sort_val(r)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_get_int_value(value t){
   CVC5_TRY_CATCH_BEGIN;
   return caml_copy_string(Term_val(t)->getIntegerValue().c_str());
