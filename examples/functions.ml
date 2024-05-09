@@ -1,5 +1,5 @@
 (*------------------------------------------------------------------------*)
-(*  Copyright (C) 2024 formalsec                                       *)
+(*  Copyright (C) 2024 formalsec                                          *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
 (*                                                                        *)
@@ -30,32 +30,29 @@ let () =
   Solver.set_option solver "produce-models" "true";
   (* Create an integer sort *)
   let int_sort = Sort.mk_int_sort tm in
+  (* Create a free variable with integer sort *)
+  let var = Term.mk_var_s tm int_sort "var" in
   (* Create an integer constant term 'x' *)
   let x = Term.mk_const_s tm int_sort "x" in
-  (* Create an integer term with value 0 *)
-  let zero = Term.mk_int tm 0 in
+  (* Create an integer term with value 4 *)
+  let four = Term.mk_int tm 4 in
+  (* Create an integer term with value 2 *)
+  let two = Term.mk_int tm 2 in
 
-  (* Create the term: x >= 0 *)
-  let x_gt_zero = Term.mk_term tm Kind.Geq [| x; zero |] in
-  (* Create the term: x <= 0 *)
-  let x_lt_zero = Term.mk_term tm Kind.Leq [| x; zero |] in
-  (* Create a conjunction of both terms *)
-  let formula = Term.mk_term tm Kind.And [| x_gt_zero; x_lt_zero |] in
+  (* Create the term: 2 * var.
+     This term will be used as the body for the function we're going to define *)
+  let body = Term.mk_term tm Kind.Mult [| two; var |] in
+  (* Define a new function called "double" that has '2 * var' has a body and returns an integer *)
+  let func = Solver.define_fun solver "double" [| var |] int_sort body in
+  (* Apply the defined function to constant term 'x' *)
+  let func_app = Term.mk_term tm Kind.Apply_uf [| func; x |] in
+
+  (* Create a formula: double(x) = 4 *)
+  let formula = Term.mk_term tm Kind.Equal [| func_app; four |] in
   (* Print the created formula *)
   Printf.printf "Formula: %s\n" (Term.to_string formula);
   (* Assert the formula *)
   Solver.assert_formula solver formula;
-
-  (* Create an uninterpreted function that receives an argument with int_sort
-     and returns a value with int_sort *)
-  let uf = Solver.declare_fun solver "uf" [| int_sort |] int_sort in
-  (* Apply the uninterpreted function to constant term 'x' -> uf(x) *)
-  let x_uf = Term.mk_term tm Kind.Apply_uf [| uf; x |] in
-  (* Create the term: uf(x) == 0 *)
-  let x_uf_eq_zero = Term.mk_term tm Kind.Equal [| x_uf; zero |] in
-  Printf.printf "Formula: %s\n" (Term.to_string x_uf_eq_zero);
-  (* Assert the formula *)
-  Solver.assert_formula solver x_uf_eq_zero;
 
   (* Obtain the satisfiability result of the asserted formulas *)
   let result = Solver.check_sat solver in

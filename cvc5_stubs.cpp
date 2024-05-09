@@ -471,6 +471,63 @@ CAMLprim value ocaml_cvc5_stub_mk_term_with_op(value v, value op, value t){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_declare_fun(value slv, value symbol, value sorts, value r) {
+  cvc5::Solver* solver = Solver_val(slv);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec;
+  size_t arity = Wosize_val(sorts);
+  sort_vec.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    sort_vec.emplace_back(*Sort_val(Field(sorts, i)));
+
+  new(&term_operations, &custom) 
+    Term(solver->declareFun(String_val(symbol), sort_vec, *Sort_val(r)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_var_s(value v, value s, value n){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  cvc5::Sort* sort = Sort_val(s);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkVar(*sort, String_val(n)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_var(value v, value s){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  cvc5::Sort* sort = Sort_val(s);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkVar(*sort));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value 
+ocaml_cvc5_stub_define_fun(value slv, value symbol, value vars, value s, value body){
+  cvc5::Solver* solver = Solver_val(slv);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> var_vec;
+  size_t arity = Wosize_val(vars);
+  var_vec.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    var_vec.emplace_back(*Term_val(Field(vars, i)));
+
+  new(&term_operations, &custom) 
+    Term(solver->defineFun(String_val(symbol), var_vec, *Sort_val(s), *Term_val(body)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_get_int_value(value t){
   CVC5_TRY_CATCH_BEGIN;
   return caml_copy_string(Term_val(t)->getIntegerValue().c_str());

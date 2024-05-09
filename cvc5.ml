@@ -103,6 +103,10 @@ module Term = struct
 
   let mk_const_s = Cvc5_external.mk_const_s
 
+  let mk_var = Cvc5_external.mk_var
+
+  let mk_var_s = Cvc5_external.mk_var_s
+
   let mk_term (tm : TermManager.tm) (k : Kind.t) (terms : term array) =
     Cvc5_external.mk_term tm (Kind.to_cpp k) terms
 
@@ -206,7 +210,7 @@ end
 module Solver = struct
   type solver = Cvc5_external.solver
 
-  let mk_solver ?logic tm  = 
+  let mk_solver ?logic tm =
     let slv = Cvc5_external.new_solver tm in
     match logic with
     | None -> slv
@@ -243,4 +247,8 @@ module Solver = struct
   let get_unsat_core = Cvc5_external.solver_get_unsat_core
 
   let get_model = Cvc5_external.solver_get_model
+
+  let declare_fun = Cvc5_external.solver_declare_fun
+
+  let define_fun = Cvc5_external.solver_define_fun
 end

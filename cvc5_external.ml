@@ -323,4 +323,16 @@ external op_hash : op -> (int[@untagged])
 
 external op_delete : op -> unit = "ocaml_cvc5_stub_op_delete"
 
+external solver_declare_fun : solver -> string -> sort array -> sort -> term
+  = "ocaml_cvc5_stub_declare_fun"
+
+external mk_var_s : term_manager -> sort -> string -> term
+  = "ocaml_cvc5_stub_mk_var_s"
+
+external mk_var : term_manager -> sort -> term = "ocaml_cvc5_stub_mk_var"
+
+external solver_define_fun :
+  solver -> string -> term array -> sort -> term -> term
+  = "ocaml_cvc5_stub_define_fun"
+
 (**/**)

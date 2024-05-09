@@ -1,4 +1,4 @@
 (executables
- (names toy incremental)
- (modules toy incremental)
+ (names toy incremental functions)
+ (modules toy incremental functions)
  (libraries cvc5))
