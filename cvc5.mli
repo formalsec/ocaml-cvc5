@@ -101,6 +101,10 @@ module Term : sig
 
   val mk_const_s : TermManager.tm -> Sort.sort -> string -> term
 
+  val mk_var : TermManager.tm -> Sort.sort -> term
+
+  val mk_var_s : TermManager.tm -> Sort.sort -> string -> term
+
   val mk_term : TermManager.tm -> Kind.t -> term array -> term
 
   val mk_term_op : TermManager.tm -> Op.op -> term array -> term
@@ -223,4 +227,7 @@ module Solver : sig
 
   val declare_fun :
     solver -> string -> Sort.sort array -> Sort.sort -> Term.term
+
+  val define_fun :
+    solver -> string -> Term.term array -> Sort.sort -> Term.term -> Term.term
 end
