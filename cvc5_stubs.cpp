@@ -968,7 +968,7 @@ CAMLprim value native_cvc5_stub_mk_fp_pos_inf(value v, uint32_t sign, uint32_t e
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointPosInf(Int_val(sign), Int_val(exp)));
+    Term(term_manager->mkFloatingPointPosInf(sign, exp));
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -982,7 +982,7 @@ CAMLprim value native_cvc5_stub_mk_fp_neg_inf(value v, uint32_t sign, uint32_t e
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointNegInf(Int_val(sign), Int_val(exp)));
+    Term(term_manager->mkFloatingPointNegInf(sign, exp));
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -996,7 +996,7 @@ CAMLprim value native_cvc5_stub_mk_fp_nan(value v, uint32_t sign, uint32_t exp){
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointNaN(Int_val(sign), Int_val(exp)));
+    Term(term_manager->mkFloatingPointNaN(sign, exp));
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -1010,7 +1010,7 @@ CAMLprim value native_cvc5_stub_mk_fp_pos_zero(value v, uint32_t sign, uint32_t 
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointPosZero(Int_val(sign), Int_val(exp)));
+    Term(term_manager->mkFloatingPointPosZero(sign, exp));
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -1024,7 +1024,7 @@ CAMLprim value native_cvc5_stub_mk_fp_neg_zero(value v, uint32_t sign, uint32_t 
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointNegZero(Int_val(sign), Int_val(exp)));
+    Term(term_manager->mkFloatingPointNegZero(sign, exp));
   return custom;
   CVC5_TRY_CATCH_END;
 }
