@@ -91,7 +91,6 @@ external result_equal : result -> result -> bool
 
 external result_to_string : result -> string
   = "ocaml_cvc5_stub_result_to_string"
-[@@noalloc]
 
 external mk_true : term_manager -> term = "ocaml_cvc5_stub_mk_true"
 
@@ -218,7 +217,6 @@ external sort_get_bv_size : sort -> int32 = "ocaml_cvc5_stub_sort_get_bv_size"
 [@@noalloc]
 
 external sort_to_string : sort -> string = "ocaml_cvc5_stub_sort_to_string"
-[@@noalloc]
 
 external sort_equal : sort -> sort -> bool = "ocaml_cvc5_stub_sort_equal"
 [@@noalloc]
@@ -302,7 +300,6 @@ external mk_op : term_manager -> int -> int array -> op
   = "ocaml_cvc5_stub_mk_op"
 
 external op_to_string : op -> string = "ocaml_cvc5_stub_op_to_string"
-[@@noalloc]
 
 external op_equal : op -> op -> bool = "ocaml_cvc5_stub_op_equal" [@@noalloc]
 
