@@ -133,6 +133,8 @@ module Term : sig
 
   val mk_fp : TermManager.tm -> int -> int -> term -> term
 
+  val mk_fp_from_terms : TermManager.tm -> term -> term -> term -> term
+
   val mk_fp_pos_inf : TermManager.tm -> int -> int -> term
 
   val mk_fp_neg_inf : TermManager.tm -> int -> int -> term

@@ -123,6 +123,9 @@ external mk_fp :
   term_manager -> (int[@untagged]) -> (int[@untagged]) -> term -> term
   = "ocaml_cvc5_stub_mk_fp" "native_cvc5_stub_mk_fp"
 
+external mk_fp_terms : term_manager -> term -> term -> term -> term
+  = "ocaml_cvc5_stub_mk_fp_from_terms"
+
 external mk_fp_pos_inf :
   term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_fp_pos_inf" "native_cvc5_stub_mk_fp_pos_inf"

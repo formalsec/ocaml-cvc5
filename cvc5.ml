@@ -139,6 +139,8 @@ module Term = struct
 
   let mk_fp = Cvc5_external.mk_fp
 
+  let mk_fp_from_terms = Cvc5_external.mk_fp_terms
+
   let mk_fp_pos_inf = Cvc5_external.mk_fp_pos_inf
 
   let mk_fp_neg_inf = Cvc5_external.mk_fp_neg_inf

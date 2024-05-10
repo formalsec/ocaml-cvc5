@@ -39,8 +39,8 @@ let z = Term.mk_const_s tm fp_sort "z"
 let rm = Term.mk_const_s tm rm_sort "rm"
 
 let () =
-  let bv_one = Term.mk_bv_s tm 16 "1" 10 in
-  let bv_zero = Term.mk_bv_s tm 16 "0" 10 in
+  let bv_one = Term.mk_bv_s tm 32 "1" 10 in
+  let bv_zero = Term.mk_bv_s tm 32 "0" 10 in
 
   let fp_one = Term.mk_fp tm 8 24 bv_one in
   let fp_zero = Term.mk_fp tm 8 24 bv_zero in

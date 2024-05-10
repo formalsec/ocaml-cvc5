@@ -949,12 +949,12 @@ CAMLprim value ocaml_cvc5_stub_mk_fp_from_terms(value v, value sign, value exp, 
   CVC5_TRY_CATCH_END;
 }
 
-CAMLprim value native_cvc5_stub_mk_fp(value v, uint32_t sign, uint32_t exp, value sig){
+CAMLprim value native_cvc5_stub_mk_fp(value v, uint32_t exp, uint32_t sig, value val){
   cvc5::TermManager* term_manager = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPoint(Int_val(sign), Int_val(exp), *Term_val(sig)));
+    Term(term_manager->mkFloatingPoint(exp, sig, *Term_val(val)));
   return custom;
   CVC5_TRY_CATCH_END;
 }
