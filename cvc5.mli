@@ -133,6 +133,16 @@ module Term : sig
 
   val mk_fp : TermManager.tm -> int -> int -> term -> term
 
+  val mk_fp_pos_inf : TermManager.tm -> int -> int -> term
+
+  val mk_fp_neg_inf : TermManager.tm -> int -> int -> term
+
+  val mk_fp_nan : TermManager.tm -> int -> int -> term
+
+  val mk_fp_pos_zero : TermManager.tm -> int -> int -> term
+
+  val mk_fp_neg_zero : TermManager.tm -> int -> int -> term
+
   val is_int : term -> bool
 
   val is_real : term -> bool

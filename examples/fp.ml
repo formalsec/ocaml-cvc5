@@ -41,7 +41,7 @@ let rm = Term.mk_const_s tm rm_sort "rm"
 let () =
   let bv_one = Term.mk_bv_s tm 16 "1" 10 in
   let bv_zero = Term.mk_bv_s tm 16 "0" 10 in
-  
+
   let fp_one = Term.mk_fp tm 8 24 bv_one in
   let fp_zero = Term.mk_fp tm 8 24 bv_zero in
 
@@ -49,27 +49,24 @@ let () =
 
   let to_fp = Op.mk_op tm Kind.Floatingpoint_to_fp_from_fp [| 8; 24 |] in
 
-  let t1 = Term.mk_term tm Kind.Floatingpoint_eq [|
-    Term.mk_term tm Kind.Floatingpoint_add [|
-      rm; x;
-      Term.mk_term tm Kind.Floatingpoint_add [|
-        rm; y; z
+  Printf.printf "op: %s\n" (Op.to_string to_fp);
+
+  let t1 =
+    Term.mk_term tm Kind.Floatingpoint_eq
+      [| Term.mk_term tm Kind.Floatingpoint_add
+           [| rm; x; Term.mk_term tm Kind.Floatingpoint_add [| rm; y; z |] |]
+       ; Term.mk_term_op tm to_fp [| rne; fp_zero |]
       |]
-    |];
-    Term.mk_term_op tm to_fp [| rne; fp_zero |]
-  |] in
+  in
 
+  let t2 =
+    Term.mk_term tm Kind.Floatingpoint_eq
+      [| Term.mk_term tm Kind.Floatingpoint_add
+           [| rm; Term.mk_term tm Kind.Floatingpoint_add [| rm; x; y |]; z |]
+       ; Term.mk_term_op tm to_fp [| rne; fp_one |]
+      |]
+  in
 
-  let t2 = Term.mk_term tm Kind.Floatingpoint_eq [|
-    Term.mk_term tm Kind.Floatingpoint_add [|
-      rm;
-      Term.mk_term tm Kind.Floatingpoint_add [|
-        rm; x; y
-      |]; z
-    |];
-    Term.mk_term_op tm to_fp [| rne; fp_one |]
-  |] in
-  
   Printf.printf "t1: %s\n" (Term.to_string t1);
   Printf.printf "t2: %s\n" (Term.to_string t2);
 

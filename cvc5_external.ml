@@ -123,6 +123,26 @@ external mk_fp :
   term_manager -> (int[@untagged]) -> (int[@untagged]) -> term -> term
   = "ocaml_cvc5_stub_mk_fp" "native_cvc5_stub_mk_fp"
 
+external mk_fp_pos_inf :
+  term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_fp_pos_inf" "native_cvc5_stub_mk_fp_pos_inf"
+
+external mk_fp_neg_inf :
+  term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_fp_neg_inf" "native_cvc5_stub_mk_fp_neg_inf"
+
+external mk_fp_nan :
+  term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_fp_nan" "native_cvc5_stub_mk_fp_nan"
+
+external mk_fp_pos_zero :
+  term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_fp_pos_zero" "native_cvc5_stub_mk_fp_pos_zero"
+
+external mk_fp_neg_zero :
+  term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+  = "ocaml_cvc5_stub_mk_fp_neg_zero" "native_cvc5_stub_mk_fp_neg_zero"
+
 external mk_term : term_manager -> int -> term array -> term
   = "ocaml_cvc5_stub_mk_term"
 

@@ -139,6 +139,16 @@ module Term = struct
 
   let mk_fp = Cvc5_external.mk_fp
 
+  let mk_fp_pos_inf = Cvc5_external.mk_fp_pos_inf
+
+  let mk_fp_neg_inf = Cvc5_external.mk_fp_neg_inf
+
+  let mk_fp_nan = Cvc5_external.mk_fp_nan
+
+  let mk_fp_pos_zero = Cvc5_external.mk_fp_pos_zero
+
+  let mk_fp_neg_zero = Cvc5_external.mk_fp_neg_zero
+
   let is_int = Cvc5_external.term_is_int_val
 
   let is_real = Cvc5_external.term_is_real_val

@@ -963,6 +963,76 @@ CAMLprim value ocaml_cvc5_stub_mk_fp(value v, value sign, value exp, value sig){
   return native_cvc5_stub_mk_fp(v, Int_val(sign), Int_val(exp), sig);
 }
 
+CAMLprim value native_cvc5_stub_mk_fp_pos_inf(value v, uint32_t sign, uint32_t exp){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkFloatingPointPosInf(Int_val(sign), Int_val(exp)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_fp_pos_inf(value v, value sign, value exp){
+  return native_cvc5_stub_mk_fp_pos_inf(v, Int_val(sign), Int_val(exp));
+}
+
+CAMLprim value native_cvc5_stub_mk_fp_neg_inf(value v, uint32_t sign, uint32_t exp){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkFloatingPointNegInf(Int_val(sign), Int_val(exp)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_fp_neg_inf(value v, value sign, value exp){
+  return native_cvc5_stub_mk_fp_neg_inf(v, Int_val(sign), Int_val(exp));
+}
+
+CAMLprim value native_cvc5_stub_mk_fp_nan(value v, uint32_t sign, uint32_t exp){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkFloatingPointNaN(Int_val(sign), Int_val(exp)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_fp_nan(value v, value sign, value exp){
+  return native_cvc5_stub_mk_fp_nan(v, Int_val(sign), Int_val(exp));
+}
+
+CAMLprim value native_cvc5_stub_mk_fp_pos_zero(value v, uint32_t sign, uint32_t exp){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkFloatingPointPosZero(Int_val(sign), Int_val(exp)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_fp_pos_zero(value v, value sign, value exp){
+  return native_cvc5_stub_mk_fp_pos_zero(v, Int_val(sign), Int_val(exp));
+}
+
+CAMLprim value native_cvc5_stub_mk_fp_neg_zero(value v, uint32_t sign, uint32_t exp){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) 
+    Term(term_manager->mkFloatingPointNegZero(Int_val(sign), Int_val(exp)));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_fp_neg_zero(value v, value sign, value exp){
+  return native_cvc5_stub_mk_fp_neg_zero(v, Int_val(sign), Int_val(exp));
+}
+
 CAMLprim value ocaml_cvc5_stub_get_model(value v, value sorts, value vars){
   CVC5_TRY_CATCH_BEGIN;
   std::vector<cvc5::Sort> sort_vec;
