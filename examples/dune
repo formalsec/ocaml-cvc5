@@ -1,4 +1,4 @@
 (executables
- (names toy incremental functions bitv)
- (modules toy incremental functions bitv)
+ (names toy incremental functions bitv fp)
+ (modules toy incremental functions bitv fp)
  (libraries cvc5))
