@@ -33,11 +33,11 @@ let () =
   assert (Term.is_real one_float_s);
   assert (Term.get_real one_float_s = 1.0);
 
-  let one_float_nd = Term.mk_real tm 1 2 in
+  let one_float_nd = Term.mk_real tm 1L 2L in
   assert (Term.is_real one_float_nd);
   assert (Term.get_real one_float_nd = 0.5);
 
-  let one_float_i = Term.mk_real_i tm 1 in
+  let one_float_i = Term.mk_real_i tm 1L in
   assert (Term.is_real one_float_i);
   assert (Term.get_real one_float_i = 1.0)
 

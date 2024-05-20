@@ -99,13 +99,13 @@ external mk_int : term_manager -> int -> term = "ocaml_cvc5_stub_mk_int"
 external mk_real_s : term_manager -> string -> term
   = "ocaml_cvc5_stub_mk_real_s"
 
-external mk_real_i : term_manager -> (int[@untagged]) -> term
+external mk_real_i : term_manager -> (int64[@unboxed]) -> term
   = "ocaml_cvc5_stub_mk_real_i" "native_cvc5_stub_mk_real_i"
 
-external mk_real : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+external mk_real : term_manager -> (int64[@unboxed]) -> (int64[@unboxed]) -> term
   = "ocaml_cvc5_stub_mk_real" "native_cvc5_stub_mk_real"
 
-external mk_bv : term_manager -> (int[@untagged]) -> (int64[@unboxed]) -> term
+external mk_bv : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_bv" "native_cvc5_stub_mk_bv"
 
 external mk_bv_s :

@@ -407,7 +407,7 @@ CAMLprim value native_cvc5_stub_mk_bv(value v, uint32_t size, uint64_t i){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_bv(value v, value size, value i){
-  return native_cvc5_stub_mk_bv(v, Int_val(size), Long_val(i));
+  return native_cvc5_stub_mk_bv(v, Long_val(size), Long_val(i));
 }
 
 CAMLprim value native_cvc5_stub_mk_bv_s(value v, uint32_t size, value s, uint32_t base){
@@ -421,7 +421,7 @@ CAMLprim value native_cvc5_stub_mk_bv_s(value v, uint32_t size, value s, uint32_
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_bv_s(value v, value size, value s, value base){
-  return native_cvc5_stub_mk_bv_s(v, Int_val(size), s, Int_val(base));
+  return native_cvc5_stub_mk_bv_s(v, Long_val(size), s, Long_val(base));
 }
 
 CAMLprim value ocaml_cvc5_stub_term_to_string(value v){
@@ -605,12 +605,12 @@ CAMLprim value ocaml_cvc5_stub_is_uint64_value(value t){
 
 CAMLprim value native_cvc5_stub_get_bv_value(value t, uint32_t base){
   CVC5_TRY_CATCH_BEGIN;
-  return caml_copy_string(Term_val(t)->getBitVectorValue(Int_val(base)).c_str());
+  return caml_copy_string(Term_val(t)->getBitVectorValue(base).c_str());
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_get_bv_value(value t, value base){
-  return native_cvc5_stub_get_bv_value(t, Int_val(base));
+  return native_cvc5_stub_get_bv_value(t, Long_val(base));
 }
 
 CAMLprim value ocaml_cvc5_stub_is_bv_value(value t){
@@ -724,7 +724,7 @@ CAMLprim value native_cvc5_stub_mk_fp_sort(value v, uint32_t exp, uint32_t sig){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_fp_sort(value v, value exp, value sig){
-  return native_cvc5_stub_mk_fp_sort(v, Int_val(exp), Int_val(sig));
+  return native_cvc5_stub_mk_fp_sort(v, Long_val(exp), Long_val(sig));
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_seq_sort(value v, value sort){
@@ -960,7 +960,7 @@ CAMLprim value native_cvc5_stub_mk_fp(value v, uint32_t exp, uint32_t sig, value
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_fp(value v, value sign, value exp, value sig){
-  return native_cvc5_stub_mk_fp(v, Int_val(sign), Int_val(exp), sig);
+  return native_cvc5_stub_mk_fp(v, Long_val(sign), Long_val(exp), sig);
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_pos_inf(value v, uint32_t sign, uint32_t exp){
@@ -974,7 +974,7 @@ CAMLprim value native_cvc5_stub_mk_fp_pos_inf(value v, uint32_t sign, uint32_t e
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_fp_pos_inf(value v, value sign, value exp){
-  return native_cvc5_stub_mk_fp_pos_inf(v, Int_val(sign), Int_val(exp));
+  return native_cvc5_stub_mk_fp_pos_inf(v, Long_val(sign), Long_val(exp));
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_neg_inf(value v, uint32_t sign, uint32_t exp){
@@ -988,7 +988,7 @@ CAMLprim value native_cvc5_stub_mk_fp_neg_inf(value v, uint32_t sign, uint32_t e
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_fp_neg_inf(value v, value sign, value exp){
-  return native_cvc5_stub_mk_fp_neg_inf(v, Int_val(sign), Int_val(exp));
+  return native_cvc5_stub_mk_fp_neg_inf(v, Long_val(sign), Long_val(exp));
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_nan(value v, uint32_t sign, uint32_t exp){
@@ -1002,7 +1002,7 @@ CAMLprim value native_cvc5_stub_mk_fp_nan(value v, uint32_t sign, uint32_t exp){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_fp_nan(value v, value sign, value exp){
-  return native_cvc5_stub_mk_fp_nan(v, Int_val(sign), Int_val(exp));
+  return native_cvc5_stub_mk_fp_nan(v, Long_val(sign), Long_val(exp));
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_pos_zero(value v, uint32_t sign, uint32_t exp){
@@ -1016,7 +1016,7 @@ CAMLprim value native_cvc5_stub_mk_fp_pos_zero(value v, uint32_t sign, uint32_t 
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_fp_pos_zero(value v, value sign, value exp){
-  return native_cvc5_stub_mk_fp_pos_zero(v, Int_val(sign), Int_val(exp));
+  return native_cvc5_stub_mk_fp_pos_zero(v, Long_val(sign), Long_val(exp));
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_neg_zero(value v, uint32_t sign, uint32_t exp){
@@ -1030,7 +1030,7 @@ CAMLprim value native_cvc5_stub_mk_fp_neg_zero(value v, uint32_t sign, uint32_t 
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_fp_neg_zero(value v, value sign, value exp){
-  return native_cvc5_stub_mk_fp_neg_zero(v, Int_val(sign), Int_val(exp));
+  return native_cvc5_stub_mk_fp_neg_zero(v, Long_val(sign), Long_val(exp));
 }
 
 CAMLprim value ocaml_cvc5_stub_get_model(value v, value sorts, value vars){

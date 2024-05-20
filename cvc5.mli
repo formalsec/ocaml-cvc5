@@ -121,11 +121,11 @@ module Term : sig
 
   val mk_real_s : TermManager.tm -> string -> term
 
-  val mk_real_i : TermManager.tm -> int -> term
+  val mk_real_i : TermManager.tm -> int64 -> term
 
-  val mk_real : TermManager.tm -> int -> int -> term
+  val mk_real : TermManager.tm -> int64 -> int64 -> term
 
-  val mk_bv : TermManager.tm -> int -> int64 -> term
+  val mk_bv : TermManager.tm -> int -> int -> term
 
   val mk_bv_s : TermManager.tm -> int -> string -> int -> term
 
