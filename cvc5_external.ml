@@ -76,18 +76,14 @@ and block_model_mode = ptr
 and find_synth_target = ptr
 
 external result_is_sat : result -> bool = "ocaml_cvc5_stub_result_is_sat"
-[@@noalloc]
 
 external result_is_unsat : result -> bool = "ocaml_cvc5_stub_result_is_unsat"
-[@@noalloc]
 
 external result_is_unknown : result -> bool
   = "ocaml_cvc5_stub_result_is_unknown"
-[@@noalloc]
 
 external result_equal : result -> result -> bool
   = "ocaml_cvc5_stub_result_equal"
-[@@noalloc]
 
 external result_to_string : result -> string
   = "ocaml_cvc5_stub_result_to_string"
@@ -155,60 +151,44 @@ external mk_term_op : term_manager -> op -> term array -> term
 external term_get_int_val : term -> string = "ocaml_cvc5_stub_get_int_value"
 
 external term_is_int_val : term -> bool = "ocaml_cvc5_stub_is_int_value"
-[@@noalloc]
 
 external term_get_real_val : term -> string = "ocaml_cvc5_stub_get_real_value"
 
 external term_is_real_val : term -> bool = "ocaml_cvc5_stub_is_real_value"
-[@@noalloc]
 
 external term_get_string_val : term -> string
   = "ocaml_cvc5_stub_get_string_value"
 
 external term_is_string_val : term -> bool = "ocaml_cvc5_stub_is_string_value"
-[@@noalloc]
 
 external term_is_int32_val : term -> bool = "ocaml_cvc5_stub_is_int32_value"
-[@@noalloc]
 
 external term_get_int32_val : term -> int32 = "ocaml_cvc5_stub_get_int32_value"
-[@@noalloc]
 
 external term_is_uint32_val : term -> bool = "ocaml_cvc5_stub_is_uint32_value"
-[@@noalloc]
 
 external term_get_uint32_val : term -> int = "ocaml_cvc5_stub_get_uint32_value"
-[@@noalloc]
 
 external term_is_int64_val : term -> bool = "ocaml_cvc5_stub_is_int64_value"
-[@@noalloc]
 
 external term_get_int64_val : term -> int64 = "ocaml_cvc5_stub_get_int64_value"
-[@@noalloc]
 
 external term_is_uint64_val : term -> bool = "ocaml_cvc5_stub_is_uint64_value"
-[@@noalloc]
 
 external term_get_uint64_val : term -> int = "ocaml_cvc5_stub_get_uint64_value"
-[@@noalloc]
 
 external term_is_bv_val : term -> bool = "ocaml_cvc5_stub_is_bv_value"
-[@@noalloc]
 
 external term_get_bv_val : term -> (int[@untagged]) -> string
   = "ocaml_cvc5_stub_get_bv_value" "native_cvc5_stub_get_bv_value"
 
 external term_is_rm_val : term -> bool = "ocaml_cvc5_stub_is_rm_value"
-[@@noalloc]
 
 external term_get_rm_val : term -> int = "ocaml_cvc5_stub_get_rm_value"
-[@@noalloc]
 
 external term_is_bool_val : term -> bool = "ocaml_cvc5_stub_is_bool_value"
-[@@noalloc]
 
 external term_get_bool_val : term -> bool = "ocaml_cvc5_stub_get_bool_value"
-[@@noalloc]
 
 external get_boolean_sort : term_manager -> sort
   = "ocaml_cvc5_stub_get_boolean_sort"
@@ -237,12 +217,10 @@ external mk_uninterpreted_sort : term_manager -> string -> sort
   = "ocaml_cvc5_stub_mk_uninterpreted_sort"
 
 external sort_get_bv_size : sort -> int32 = "ocaml_cvc5_stub_sort_get_bv_size"
-[@@noalloc]
 
 external sort_to_string : sort -> string = "ocaml_cvc5_stub_sort_to_string"
 
 external sort_equal : sort -> sort -> bool = "ocaml_cvc5_stub_sort_equal"
-[@@noalloc]
 
 external mk_const_s : term_manager -> sort -> string -> term
   = "ocaml_cvc5_stub_mk_const_s"
@@ -255,11 +233,10 @@ external mk_roundingmode : term_manager -> int -> rounding_mode
 external term_to_string : term -> string = "ocaml_cvc5_stub_term_to_string"
 
 external term_equal : term -> term -> bool = "ocaml_cvc5_stub_term_equal"
-[@@noalloc]
 
-external term_id : term -> int = "ocaml_cvc5_stub_term_id" [@@noalloc]
+external term_id : term -> int = "ocaml_cvc5_stub_term_id"
 
-external term_kind : term -> int = "ocaml_cvc5_stub_term_kind" [@@noalloc]
+external term_kind : term -> int = "ocaml_cvc5_stub_term_kind"
 
 external term_sort : term -> sort = "ocaml_cvc5_stub_term_sort"
 
@@ -275,7 +252,6 @@ external delete : solver -> unit = "ocaml_cvc5_stub_delete"
 
 external assert_formula : solver -> term -> unit
   = "ocaml_cvc5_stub_assert_formula"
-[@@noalloc]
 
 external check_sat : solver -> result = "ocaml_cvc5_stub_check_sat"
 
@@ -283,20 +259,17 @@ external check_sat_assuming : solver -> term array -> result
   = "ocaml_cvc5_stub_check_sat_assuming"
 
 external set_logic : solver -> string -> unit = "ocaml_cvc5_stub_set_logic"
-[@@noalloc]
 
 external set_option : solver -> string -> string -> unit
   = "ocaml_cvc5_stub_set_option"
-[@@noalloc]
 
 external simplify : solver -> term -> term = "ocaml_cvc5_stub_simplify"
 
-external push : solver -> int -> unit = "ocaml_cvc5_stub_push" [@@noalloc]
+external push : solver -> int -> unit = "ocaml_cvc5_stub_push"
 
-external pop : solver -> int -> unit = "ocaml_cvc5_stub_pop" [@@noalloc]
+external pop : solver -> int -> unit = "ocaml_cvc5_stub_pop"
 
 external reset_assertions : solver -> unit = "ocaml_cvc5_stub_reset_assertions"
-[@@noalloc]
 
 external delete_term : term -> unit = "ocaml_cvc5_stub_delete_term"
 
@@ -324,22 +297,18 @@ external mk_op : term_manager -> int -> int array -> op
 
 external op_to_string : op -> string = "ocaml_cvc5_stub_op_to_string"
 
-external op_equal : op -> op -> bool = "ocaml_cvc5_stub_op_equal" [@@noalloc]
+external op_equal : op -> op -> bool = "ocaml_cvc5_stub_op_equal"
 
-external op_get_kind : op -> int = "ocaml_cvc5_stub_op_get_kind" [@@noalloc]
+external op_get_kind : op -> int = "ocaml_cvc5_stub_op_get_kind"
 
 external op_get_num_indices : op -> int = "ocaml_cvc5_stub_op_get_num_indices"
-[@@noalloc]
 
 external op_get_index : op -> int -> term = "ocaml_cvc5_stub_op_get_index"
-[@@noalloc]
 
 external op_is_indexed : op -> bool = "ocaml_cvc5_stub_op_is_indexed"
-[@@noalloc]
 
 external op_hash : op -> (int[@untagged])
   = "ocaml_cvc5_stub_op_hash" "native_cvc5_stub_op_hash"
-[@@noalloc]
 
 external op_delete : op -> unit = "ocaml_cvc5_stub_op_delete"
 
