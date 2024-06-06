@@ -1,5 +1,5 @@
-(*------------------------------------------------------------------------*)
-(*  Copyright (C) 2024 formalsec                                       *)
+(**************************************************************************)
+(*  Copyright (C) 2024 formalsec                                          *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
 (*                                                                        *)
@@ -15,6 +15,6 @@
 (*                                                                        *)
 (*  You should have received a copy of the GNU General Public License     *)
 (*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
-(*------------------------------------------------------------------------*)
+(**************************************************************************)
 
 external build_enums : unit -> unit = "build_enums"

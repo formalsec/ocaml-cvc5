@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------*
- *  Copyright (C) 2024 formalsec                                       *
+/**************************************************************************
+ *  Copyright (C) 2024 formalsec                                          *
  *                                                                        *
  *  This file is part of ocaml-cvc5                                       *
  *                                                                        *
@@ -15,7 +15,7 @@
  *                                                                        *
  *  You should have received a copy of the GNU General Public License     *
  *  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *
- *------------------------------------------------------------------------*/
+ **************************************************************************/
 
 #include <caml/mlvalues.h>
 #include <caml/alloc.h>
@@ -396,7 +396,8 @@ CAMLprim value ocaml_cvc5_stub_mk_real(value v, value num, value den){
   return native_cvc5_stub_mk_real(v, Int64_val(num), Int64_val(den));
 }
 
-CAMLprim value native_cvc5_stub_mk_bv(value v, uint32_t size, uint64_t i){
+CAMLprim value native_cvc5_stub_mk_bv(value v, uint32_t size, int64_t i){
+  std::cout << i << std::endl;
   cvc5::TermManager* term_manager = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
@@ -407,7 +408,7 @@ CAMLprim value native_cvc5_stub_mk_bv(value v, uint32_t size, uint64_t i){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_bv(value v, value size, value i){
-  return native_cvc5_stub_mk_bv(v, Long_val(size), Long_val(i));
+  return native_cvc5_stub_mk_bv(v, Long_val(size), Int64_val(i));
 }
 
 CAMLprim value native_cvc5_stub_mk_bv_s(value v, uint32_t size, value s, uint32_t base){
@@ -448,6 +449,39 @@ CAMLprim value ocaml_cvc5_stub_mk_term(value v, value kind, value t){
   for (size_t i = 0; i < arity; i++)
     args.emplace_back(*Term_val(Field(t, i)));
 
+  new(&term_operations, &custom) 
+    Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_term_1(value v, value kind, value t){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> args = {*Term_val(t)};
+  new(&term_operations, &custom) 
+    Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_term_2(value v, value kind, value t1, value t2){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> args = {*Term_val(t1), *Term_val(t2)};
+  new(&term_operations, &custom) 
+    Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+  return custom;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_term_3(value v, value kind, value t1, value t2, value t3){
+  cvc5::TermManager* term_manager = TermManager_val(v);
+  value custom = Val_unit;
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> args = {*Term_val(t1), *Term_val(t2), *Term_val(t3)};
   new(&term_operations, &custom) 
     Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
   return custom;

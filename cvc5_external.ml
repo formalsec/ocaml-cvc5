@@ -1,5 +1,5 @@
-(*------------------------------------------------------------------------*)
-(*  Copyright (C) 2024 formalsec                                       *)
+(**************************************************************************)
+(*  Copyright (C) 2024 formalsec                                          *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
 (*                                                                        *)
@@ -15,7 +15,7 @@
 (*                                                                        *)
 (*  You should have received a copy of the GNU General Public License     *)
 (*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
-(*------------------------------------------------------------------------*)
+(**************************************************************************)
 
 (** External declarations for cvc5's OCaml bindings. *)
 
@@ -105,7 +105,7 @@ external mk_real_i : term_manager -> (int64[@unboxed]) -> term
 external mk_real : term_manager -> (int64[@unboxed]) -> (int64[@unboxed]) -> term
   = "ocaml_cvc5_stub_mk_real" "native_cvc5_stub_mk_real"
 
-external mk_bv : term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
+external mk_bv : term_manager -> (int[@untagged]) -> (int64[@unboxed]) -> term
   = "ocaml_cvc5_stub_mk_bv" "native_cvc5_stub_mk_bv"
 
 external mk_bv_s :
@@ -323,5 +323,15 @@ external mk_var : term_manager -> sort -> term = "ocaml_cvc5_stub_mk_var"
 external solver_define_fun :
   solver -> string -> term array -> sort -> term -> term
   = "ocaml_cvc5_stub_define_fun"
+
+external mk_term_1 : term_manager -> int -> term -> term
+  = "ocaml_cvc5_stub_mk_term_1"
+
+external mk_term_2 : term_manager -> int -> term -> term -> term
+  = "ocaml_cvc5_stub_mk_term_2"
+
+external mk_term_3 :
+  term_manager -> int -> term -> term -> term -> term
+  = "ocaml_cvc5_stub_mk_term_3"
 
 (**/**)

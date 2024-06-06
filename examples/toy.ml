@@ -1,5 +1,5 @@
-(*------------------------------------------------------------------------*)
-(*  Copyright (C) 2024 formalsec                                       *)
+(**************************************************************************)
+(*  Copyright (C) 2024 formalsec                                          *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
 (*                                                                        *)
@@ -15,7 +15,7 @@
 (*                                                                        *)
 (*  You should have received a copy of the GNU General Public License     *)
 (*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
-(*------------------------------------------------------------------------*)
+(**************************************************************************)
 
 open Cvc5
 
@@ -25,7 +25,7 @@ let () =
   (* Create a TermManager *)
   let tm = TermManager.mk_tm () in
   (* Create a Solver *)
-  let solver = Solver.mk_solver ~logic:"ALL" tm in
+  let solver = Solver.mk_solver ~logic:"QF_UFLIA" tm in
   (* Set solver option to produce models *)
   Solver.set_option solver "produce-models" "true";
   (* Create an integer sort *)

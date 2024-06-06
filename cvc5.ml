@@ -1,5 +1,5 @@
-(*------------------------------------------------------------------------*)
-(*  Copyright (C) 2024 formalsec                                       *)
+(**************************************************************************)
+(*  Copyright (C) 2024 formalsec                                          *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
 (*                                                                        *)
@@ -15,7 +15,7 @@
 (*                                                                        *)
 (*  You should have received a copy of the GNU General Public License     *)
 (*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
-(*------------------------------------------------------------------------*)
+(**************************************************************************)
 
 exception Error of string
 
@@ -109,6 +109,15 @@ module Term = struct
 
   let mk_term (tm : TermManager.tm) (k : Kind.t) (terms : term array) =
     Cvc5_external.mk_term tm (Kind.to_cpp k) terms
+
+  let mk_term_1 (tm : TermManager.tm) (k : Kind.t) (t1 : term) =
+    Cvc5_external.mk_term_1 tm (Kind.to_cpp k) t1
+
+  let mk_term_2 (tm : TermManager.tm) (k : Kind.t) (t1 : term) (t2 : term) =
+    Cvc5_external.mk_term_2 tm (Kind.to_cpp k) t1 t2
+
+  let mk_term_3 (tm : TermManager.tm) (k : Kind.t) (t1 : term) (t2 : term) (t3 : term) =
+    Cvc5_external.mk_term_3 tm (Kind.to_cpp k) t1 t2 t3
 
   let mk_term_op (tm : TermManager.tm) (op : Op.op) (terms : term array) =
     Cvc5_external.mk_term_op tm op terms

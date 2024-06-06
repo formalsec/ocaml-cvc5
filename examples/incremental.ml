@@ -1,5 +1,5 @@
-(*------------------------------------------------------------------------*)
-(*  Copyright (C) 2024 formalsec                                       *)
+(**************************************************************************)
+(*  Copyright (C) 2024 formalsec                                          *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
 (*                                                                        *)
@@ -15,13 +15,13 @@
 (*                                                                        *)
 (*  You should have received a copy of the GNU General Public License     *)
 (*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
-(*------------------------------------------------------------------------*)
+(**************************************************************************)
 
 open Cvc5
 
 let start_val = 0
 
-let end_val = 1000
+let end_val = 5000
 
 let tm = TermManager.mk_tm ()
 
@@ -37,10 +37,10 @@ let () =
     let i_term = Term.mk_int tm i in
     (* Create new formula: x > i, where i is the loop's counter *)
     let x_gt_i = Term.mk_term tm Kind.Gt [| x; i_term |] in
-    Printf.printf "Asserting: %s\n" (Term.to_string x_gt_i);
-    Solver.assert_formula solver x_gt_i;
+    (* Printf.printf "Asserting: %s\n" (Term.to_string x_gt_i); *)
+    Solver.assert_formula solver x_gt_i
     (* Push new context *)
-    Solver.push solver 1
+    (* Solver.push solver 1 *)
   done;
 
   let r = Solver.check_sat solver in

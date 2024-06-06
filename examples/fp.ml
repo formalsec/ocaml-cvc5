@@ -1,4 +1,4 @@
-(*------------------------------------------------------------------------*)
+(**************************************************************************)
 (*  Copyright (C) 2024 formalsec                                          *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
@@ -15,7 +15,7 @@
 (*                                                                        *)
 (*  You should have received a copy of the GNU General Public License     *)
 (*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
-(*------------------------------------------------------------------------*)
+(**************************************************************************)
 
 (* Example taken from:
    https://github.com/florianschanda/smtlib_schanda/blob/master/crafted/QF_FP/assoc_1.smt2 *)

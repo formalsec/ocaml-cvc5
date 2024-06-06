@@ -1,5 +1,5 @@
-(*------------------------------------------------------------------------*)
-(*  Copyright (C) 2024 formalsec                                       *)
+(**************************************************************************)
+(*  Copyright (C) 2024 formalsec                                          *)
 (*                                                                        *)
 (*  This file is part of ocaml-cvc5                                       *)
 (*                                                                        *)
@@ -15,7 +15,7 @@
 (*                                                                        *)
 (*  You should have received a copy of the GNU General Public License     *)
 (*  along with ocaml-cvc5. If not, see <http://www.gnu.org/licenses/>.    *)
-(*------------------------------------------------------------------------*)
+(**************************************************************************)
 
 exception Error of string
 
@@ -107,6 +107,12 @@ module Term : sig
 
   val mk_term : TermManager.tm -> Kind.t -> term array -> term
 
+  val mk_term_1 : TermManager.tm -> Kind.t -> term -> term
+
+  val mk_term_2 : TermManager.tm -> Kind.t -> term -> term -> term
+
+  val mk_term_3 : TermManager.tm -> Kind.t -> term -> term -> term -> term
+
   val mk_term_op : TermManager.tm -> Op.op -> term array -> term
 
   val mk_true : TermManager.tm -> term
@@ -125,7 +131,7 @@ module Term : sig
 
   val mk_real : TermManager.tm -> int64 -> int64 -> term
 
-  val mk_bv : TermManager.tm -> int -> int -> term
+  val mk_bv : TermManager.tm -> int -> int64 -> term
 
   val mk_bv_s : TermManager.tm -> int -> string -> int -> term
 
