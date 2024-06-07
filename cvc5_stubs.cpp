@@ -397,7 +397,6 @@ CAMLprim value ocaml_cvc5_stub_mk_real(value v, value num, value den){
 }
 
 CAMLprim value native_cvc5_stub_mk_bv(value v, uint32_t size, int64_t i){
-  std::cout << i << std::endl;
   cvc5::TermManager* term_manager = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
