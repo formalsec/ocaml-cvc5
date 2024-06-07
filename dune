@@ -15,7 +15,7 @@
      vendor/cadical
      (progn
       (run ./configure)
-      (run make -j 4)))
+      (run make -j 1)))
     (copy vendor/cadical/build/libcadical.a libcadical.a)
     (chdir
      vendor/libpoly
@@ -28,7 +28,7 @@
        -DCMAKE_INSTALL_PREFIX=$prefix)
       (chdir
        build
-       (run make -j 4))
+       (run make -j 1))
       (run mv include poly)))
     (copy vendor/libpoly/build/src/libpicpoly.a libpicpoly.a)
     (copy vendor/libpoly/build/src/libpicpolyxx.a libpicpolyxx.a)
@@ -36,7 +36,7 @@
      vendor/cvc5
      (progn
       (run ./configure.sh --static)
-      (run make -C build -j 4)))
+      (run make -C build -j 1)))
     (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
     (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
 
