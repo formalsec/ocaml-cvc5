@@ -24,4 +24,5 @@
    (conf-g++ :build)
    (conf-gmp :build)
    (conf-cmake :build)
-   (conf-python-3 :build)))
+   (conf-python-3 :build)
+   (conf-python-3-dev :build)))
