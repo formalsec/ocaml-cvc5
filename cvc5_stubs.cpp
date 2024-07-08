@@ -22,7 +22,7 @@
 #include <caml/memory.h>
 #include <caml/fail.h>
 #include <caml/custom.h>
-
+#include <atomic>
 #include <string.h>
 #include <iostream>
 
@@ -37,6 +37,15 @@
 
 extern "C" 
 {
+
+int compare_pointers(void* pt1, void* pt2) {
+  if (pt1 == pt2)
+    return 0;
+  else if ((intnat)pt1 < (intnat)pt2)
+    return -1;
+  else
+    return +1;
+}
 
 /*============================================================================
  *                              Solver            
@@ -71,7 +80,9 @@ static struct custom_operations solver_operations =
 
 class TermManager : public cvc5::TermManager {
 public:
-  TermManager() : cvc5::TermManager() {}
+  /* Used for API-level reference counting */
+  std::atomic<unsigned long> rc;
+  TermManager() : cvc5::TermManager() { rc = 1; }
   ~TermManager() {}
   void * operator new(size_t size,
         struct custom_operations *ops,
@@ -80,21 +91,38 @@ public:
     return Data_custom_val(*custom);
   }
   void operator delete(void *ptr) {}
+  void addRef() { rc.fetch_add(1, std::memory_order_release); }
 };
 
 #define TermManager_val(v) ((TermManager*)Data_custom_val(v))
 
-static void term_manager_delete(value v){
-  delete TermManager_val(v);
+int cvc5_tm_compare(value v1, value v2){
+  TermManager* tm1 = TermManager_val(v1);
+  TermManager* tm2 = TermManager_val(v2);
+  return compare_pointers(tm1, tm2);
 }
 
+intnat cvc5_tm_hash(value v){
+  TermManager* tm = TermManager_val(v);
+  return (intnat)tm;
+}
+
+static void try_delete_tm(TermManager* tm){
+  if (tm->rc == 0) { delete tm; }
+}
+
+static void delete_tm(value v){
+  TermManager* tm = TermManager_val(v);
+  tm->rc--;
+  try_delete_tm(tm);
+}
 
 static struct custom_operations term_manager_operations =
 {
    "https://cvc5.github.io/",
-   &term_manager_delete,
-   custom_compare_default,
-   custom_hash_default,
+   &delete_tm,
+   cvc5_tm_compare,
+   cvc5_tm_hash,
    custom_serialize_default,
    custom_deserialize_default,
    custom_compare_ext_default,
@@ -107,7 +135,11 @@ static struct custom_operations term_manager_operations =
 
 class Term : public cvc5::Term {
 public:
-  Term(cvc5::Term t) : cvc5::Term(t) {}
+  TermManager* _tm;
+  Term(cvc5::Term t, TermManager* tm) : cvc5::Term(t) { 
+    if (tm != NULL) { _tm = tm; tm->addRef(); }
+    else { _tm = NULL; }
+  }
   ~Term() {}
   void * operator new(size_t size,
         struct custom_operations *ops,
@@ -121,7 +153,13 @@ public:
 #define Term_val(v) ((Term*)Data_custom_val(v))
 
 static void term_delete(value v){
-  delete Term_val(v);
+  Term* term = Term_val(v);
+  if (term->_tm != NULL) {
+    // decrement the reference count of the term manager
+    term->_tm->rc--;
+    try_delete_tm(term->_tm);
+  }
+  delete term;
 }
 
 static struct custom_operations term_operations =
@@ -142,7 +180,11 @@ static struct custom_operations term_operations =
 
 class Sort : public cvc5::Sort {
 public:
-  Sort(cvc5::Sort t) : cvc5::Sort(t) {}
+  TermManager* _tm;
+  Sort(cvc5::Sort t, TermManager* tm) : cvc5::Sort(t) {
+    if (tm != NULL) { _tm = tm; tm->addRef(); }
+    else { _tm = NULL; }
+  }
   ~Sort() {}
   void * operator new(size_t size,
         struct custom_operations *ops,
@@ -156,7 +198,13 @@ public:
 #define Sort_val(v) ((Sort*)Data_custom_val(v))
 
 static void sort_delete(value v){
-  delete Sort_val(v);
+  Sort* sort = Sort_val(v);
+  if (sort->_tm != NULL) {
+    // decrement the reference count of the term manager
+    sort->_tm->rc--;
+    try_delete_tm(sort->_tm);
+  }
+  delete sort;
 }
 
 static struct custom_operations sort_operations =
@@ -246,8 +294,8 @@ static struct custom_operations op_operations =
  ============================================================================*/
 
 CAMLprim value ocaml_cvc5_stub_new_solver(value v){
-  cvc5::TermManager* term_manager = TermManager_val(v);
-  cvc5::Solver* solver = new cvc5::Solver(*term_manager);
+  TermManager* tm = TermManager_val(v);
+  cvc5::Solver* solver = new cvc5::Solver(*tm);
   value r = caml_alloc_custom(&solver_operations, sizeof(cvc5::Solver*), 0, 1);
   Solver_val(r) = solver;
   return r;
@@ -270,7 +318,7 @@ CAMLprim value ocaml_cvc5_stub_new_term_manager(){
 
 CAMLprim value ocaml_cvc5_stub_delete_term_manager(value v){
   CVC5_TRY_CATCH_BEGIN;
-  term_manager_delete(v);
+  delete_tm(v);
   return Val_unit;
   CVC5_TRY_CATCH_END;
 }
@@ -319,62 +367,62 @@ CAMLprim value ocaml_cvc5_stub_term_kind(value v){
 CAMLprim value ocaml_cvc5_stub_term_sort(value v){
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&sort_operations, &custom) 
-    Sort(Term_val(v)->getSort());
+  new(&sort_operations, &custom)
+    Sort(Term_val(v)->getSort(), NULL);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_true(value v){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkTrue());
+  new(&term_operations, &custom) Term(tm->mkTrue(), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_false(value v){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkFalse());
+  new(&term_operations, &custom) Term(tm->mkFalse(), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_bool(value v, value b){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkBoolean(Bool_val(b)));
+  new(&term_operations, &custom) Term(tm->mkBoolean(Bool_val(b)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_int(value v, value i){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkInteger(Int_val(i)));
+  new(&term_operations, &custom) Term(tm->mkInteger(Int_val(i)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_real_s(value v, value r){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkReal(String_val(r)));
+  new(&term_operations, &custom) Term(tm->mkReal(String_val(r)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value native_cvc5_stub_mk_real_i(value v, int64_t i){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkReal(i));
+  new(&term_operations, &custom) Term(tm->mkReal(i), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -384,10 +432,10 @@ CAMLprim value ocaml_cvc5_stub_mk_real_i(value v, value i){
 }
 
 CAMLprim value native_cvc5_stub_mk_real(value v, int64_t num, int64_t den){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkReal(num, den));
+  new(&term_operations, &custom) Term(tm->mkReal(num, den), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -397,11 +445,11 @@ CAMLprim value ocaml_cvc5_stub_mk_real(value v, value num, value den){
 }
 
 CAMLprim value native_cvc5_stub_mk_bv(value v, uint32_t size, int64_t i){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkBitVector(size, i));
+    Term(tm->mkBitVector(size, i), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -411,11 +459,11 @@ CAMLprim value ocaml_cvc5_stub_mk_bv(value v, value size, value i){
 }
 
 CAMLprim value native_cvc5_stub_mk_bv_s(value v, uint32_t size, value s, uint32_t base){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkBitVector(size, String_val(s), base));
+    Term(tm->mkBitVector(size, String_val(s), base), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -429,16 +477,16 @@ CAMLprim value ocaml_cvc5_stub_term_to_string(value v){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_string(value v, value s, value b){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom) Term(term_manager->mkString(String_val(s), Bool_val(b)));
+  new(&term_operations, &custom) Term(tm->mkString(String_val(s), Bool_val(b)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_term(value v, value kind, value t){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   std::vector<cvc5::Term> args;
@@ -449,46 +497,46 @@ CAMLprim value ocaml_cvc5_stub_mk_term(value v, value kind, value t){
     args.emplace_back(*Term_val(Field(t, i)));
 
   new(&term_operations, &custom) 
-    Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+    Term(tm->mkTerm((cvc5::Kind)Int_val(kind), args), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_term_1(value v, value kind, value t){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   std::vector<cvc5::Term> args = {*Term_val(t)};
   new(&term_operations, &custom) 
-    Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+    Term(tm->mkTerm((cvc5::Kind)Int_val(kind), args), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_term_2(value v, value kind, value t1, value t2){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   std::vector<cvc5::Term> args = {*Term_val(t1), *Term_val(t2)};
   new(&term_operations, &custom) 
-    Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+    Term(tm->mkTerm((cvc5::Kind)Int_val(kind), args), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_term_3(value v, value kind, value t1, value t2, value t3){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   std::vector<cvc5::Term> args = {*Term_val(t1), *Term_val(t2), *Term_val(t3)};
   new(&term_operations, &custom) 
-    Term(term_manager->mkTerm((cvc5::Kind)Int_val(kind), args));
+    Term(tm->mkTerm((cvc5::Kind)Int_val(kind), args), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_term_with_op(value v, value op, value t){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   std::vector<cvc5::Term> args;
@@ -499,7 +547,7 @@ CAMLprim value ocaml_cvc5_stub_mk_term_with_op(value v, value op, value t){
     args.emplace_back(*Term_val(Field(t, i)));
 
   new(&term_operations, &custom) 
-    Term(term_manager->mkTerm(*OP_val(op), args));
+    Term(tm->mkTerm(*OP_val(op), args), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -516,29 +564,29 @@ CAMLprim value ocaml_cvc5_stub_declare_fun(value slv, value symbol, value sorts,
     sort_vec.emplace_back(*Sort_val(Field(sorts, i)));
 
   new(&term_operations, &custom) 
-    Term(solver->declareFun(String_val(symbol), sort_vec, *Sort_val(r)));
+    Term(solver->declareFun(String_val(symbol), sort_vec, *Sort_val(r)), NULL);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_var_s(value v, value s, value n){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   cvc5::Sort* sort = Sort_val(s);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkVar(*sort, String_val(n)));
+    Term(tm->mkVar(*sort, String_val(n)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_var(value v, value s){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   cvc5::Sort* sort = Sort_val(s);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkVar(*sort));
+    Term(tm->mkVar(*sort), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -556,7 +604,7 @@ ocaml_cvc5_stub_define_fun(value slv, value symbol, value vars, value s, value b
     var_vec.emplace_back(*Term_val(Field(vars, i)));
 
   new(&term_operations, &custom) 
-    Term(solver->defineFun(String_val(symbol), var_vec, *Sort_val(s), *Term_val(body)));
+    Term(solver->defineFun(String_val(symbol), var_vec, *Sort_val(s), *Term_val(body)), NULL);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -671,71 +719,71 @@ CAMLprim value ocaml_cvc5_stub_get_bool_value(value t){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_rounding_mode(value v, value rm){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkRoundingMode((cvc5::RoundingMode)Int_val(rm)));
+    Term(tm->mkRoundingMode((cvc5::RoundingMode)Int_val(rm)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_get_boolean_sort(value v){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->getBooleanSort());
+    Sort(tm->getBooleanSort(), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_get_integer_sort(value v){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->getIntegerSort());
+    Sort(tm->getIntegerSort(), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_bitvector_sort(value v, value size){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->mkBitVectorSort(Int_val(size)));
+    Sort(tm->mkBitVectorSort(Int_val(size)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_get_real_sort(value v){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->getRealSort());
+    Sort(tm->getRealSort(), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_get_string_sort(value v){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->getStringSort());
+    Sort(tm->getStringSort(), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_get_rm_sort(value v){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->getRoundingModeSort());
+    Sort(tm->getRoundingModeSort(), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -747,11 +795,11 @@ CAMLprim value ocaml_cvc5_stub_sort_get_bv_size(value v){
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_sort(value v, uint32_t exp, uint32_t sig){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->mkFloatingPointSort(exp, sig));
+    Sort(tm->mkFloatingPointSort(exp, sig), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -761,21 +809,21 @@ CAMLprim value ocaml_cvc5_stub_mk_fp_sort(value v, value exp, value sig){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_seq_sort(value v, value sort){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->mkSequenceSort(*Sort_val(sort)));
+    Sort(tm->mkSequenceSort(*Sort_val(sort)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_uninterpreted_sort(value v, value s){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom) 
-    Sort(term_manager->mkUninterpretedSort(String_val(s)));
+    Sort(tm->mkUninterpretedSort(String_val(s)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -785,23 +833,23 @@ CAMLprim value ocaml_cvc5_stub_sort_to_string(value v){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_const_s(value v, value sort, value n){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   cvc5::Sort* s = Sort_val(sort);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkConst(*s, String_val(n)));
+    Term(tm->mkConst(*s, String_val(n)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_const(value v, value sort){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   cvc5::Sort* s = Sort_val(sort);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkConst(*s));
+    Term(tm->mkConst(*s), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -879,7 +927,7 @@ CAMLprim value ocaml_cvc5_stub_simplify(value v, value t){
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(Solver_val(v)->simplify(*Term_val(t)));
+    Term(Solver_val(v)->simplify(*Term_val(t)), NULL);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -909,7 +957,7 @@ CAMLprim value ocaml_cvc5_stub_solver_get_value(value v, value t){
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(Solver_val(v)->getValue(*Term_val(t)));
+    Term(Solver_val(v)->getValue(*Term_val(t)), NULL);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -931,7 +979,7 @@ CAMLprim value ocaml_cvc5_stub_solver_get_values(value v, value ts){
   result = caml_alloc(n, 0);
   for (size_t i = 0; i < n; i += 1) {
     value custom = Val_unit;
-    new(&sort_operations, &custom) Term(values[i]);
+    new(&term_manager_operations, &custom) Term(values[i], NULL);
     caml_modify(&Field(result, i), custom);
   }
   CAMLreturn(result);
@@ -948,7 +996,7 @@ CAMLprim value ocaml_cvc5_stub_get_model_domain_elements(value v, value s){
   result = caml_alloc(n, 0);
   for (size_t i = 0; i < n; i += 1) {
     value custom = Val_unit;
-    new(&sort_operations, &custom) Term(elements[i]);
+    new(&term_operations, &custom) Term(elements[i], NULL);
     caml_modify(&Field(result, i), custom);
   }
   CAMLreturn(result);
@@ -965,7 +1013,7 @@ CAMLprim value ocaml_cvc5_stub_get_unsat_core(value v){
   result = caml_alloc(n, 0);
   for (size_t i = 0; i < n; i += 1) {
     value custom = Val_unit;
-    new(&sort_operations, &custom) Term(core[i]);
+    new(&term_operations, &custom) Term(core[i], NULL);
     caml_modify(&Field(result, i), custom);
   }
   CAMLreturn(result);
@@ -973,21 +1021,21 @@ CAMLprim value ocaml_cvc5_stub_get_unsat_core(value v){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_fp_from_terms(value v, value sign, value exp, value sig){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPoint(*Term_val(sign), *Term_val(exp), *Term_val(sig)));
+    Term(tm->mkFloatingPoint(*Term_val(sign), *Term_val(exp), *Term_val(sig)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value native_cvc5_stub_mk_fp(value v, uint32_t exp, uint32_t sig, value val){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPoint(exp, sig, *Term_val(val)));
+    Term(tm->mkFloatingPoint(exp, sig, *Term_val(val)), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -997,11 +1045,11 @@ CAMLprim value ocaml_cvc5_stub_mk_fp(value v, value sign, value exp, value sig){
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_pos_inf(value v, uint32_t sign, uint32_t exp){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointPosInf(sign, exp));
+    Term(tm->mkFloatingPointPosInf(sign, exp), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -1011,11 +1059,11 @@ CAMLprim value ocaml_cvc5_stub_mk_fp_pos_inf(value v, value sign, value exp){
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_neg_inf(value v, uint32_t sign, uint32_t exp){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointNegInf(sign, exp));
+    Term(tm->mkFloatingPointNegInf(sign, exp), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -1025,11 +1073,11 @@ CAMLprim value ocaml_cvc5_stub_mk_fp_neg_inf(value v, value sign, value exp){
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_nan(value v, uint32_t sign, uint32_t exp){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointNaN(sign, exp));
+    Term(tm->mkFloatingPointNaN(sign, exp), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -1039,11 +1087,11 @@ CAMLprim value ocaml_cvc5_stub_mk_fp_nan(value v, value sign, value exp){
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_pos_zero(value v, uint32_t sign, uint32_t exp){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointPosZero(sign, exp));
+    Term(tm->mkFloatingPointPosZero(sign, exp), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -1053,11 +1101,11 @@ CAMLprim value ocaml_cvc5_stub_mk_fp_pos_zero(value v, value sign, value exp){
 }
 
 CAMLprim value native_cvc5_stub_mk_fp_neg_zero(value v, uint32_t sign, uint32_t exp){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   new(&term_operations, &custom) 
-    Term(term_manager->mkFloatingPointNegZero(sign, exp));
+    Term(tm->mkFloatingPointNegZero(sign, exp), tm);
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -1085,7 +1133,7 @@ CAMLprim value ocaml_cvc5_stub_get_model(value v, value sorts, value vars){
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_op(value v, value kind, value args){
-  cvc5::TermManager* term_manager = TermManager_val(v);
+  TermManager* tm = TermManager_val(v);
   value custom = Val_unit;
   CVC5_TRY_CATCH_BEGIN;
   std::vector<uint32_t> term_vec;
@@ -1096,7 +1144,7 @@ CAMLprim value ocaml_cvc5_stub_mk_op(value v, value kind, value args){
     term_vec.emplace_back(Int_val(Field(args, i)));
 
   new(&op_operations, &custom) 
-    Op(term_manager->mkOp((cvc5::Kind)Int_val(kind), term_vec));
+    Op(tm->mkOp((cvc5::Kind)Int_val(kind), term_vec));
   return custom;
   CVC5_TRY_CATCH_END;
 }
@@ -1123,7 +1171,7 @@ CAMLprim value ocaml_cvc5_stub_op_get_index(value v, value i){
   cvc5::Op op = *OP_val(v);
   size_t index = Int_val(i);
   new(&term_operations, &custom) 
-    Term(op[index]);
+    Term(op[index], NULL);
   return custom;
   CVC5_TRY_CATCH_END;
 }
