@@ -1,4 +1,14 @@
-## 1.1.3 (2024-06-08)
+## Unreleased
+
+### Added
+
+Stub-side reference counting to deal with GC collection order
+
+### Changed
+
+### Fixed
+
+## 1.1.3
 
 Initial release.
 
@@ -19,7 +29,5 @@ Stubs with support for the following cvc5 API classes:
 - Sort
 
 ### Changed
-
-### Deprecated
 
 ### Fixed
