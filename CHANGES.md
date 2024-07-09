@@ -2,7 +2,8 @@
 
 ### Added
 
-Stub-side reference counting to deal with GC collection order
+- Stub-side reference counting to deal with GC collection order
+- Refactor stubs to include `CAMLparam`, `CAMLlocal`, and `CAMLreturn` directives to safeguard GC interactions
 
 ### Changed
 
