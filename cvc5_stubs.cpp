@@ -25,6 +25,7 @@
 #include <atomic>
 #include <string.h>
 #include <iostream>
+#include <algorithm>
 
 #include <cvc5/cvc5.h>
 
@@ -48,7 +49,7 @@ int compare_pointers(void* pt1, void* pt2) {
 }
 
 /*============================================================================
- *                              Solver            
+ *                              Solver
  ============================================================================*/
 
 #define Solver_val(v) (*((cvc5::Solver**)Data_custom_val(v)))
@@ -75,7 +76,7 @@ static struct custom_operations solver_operations =
 };
 
 /*============================================================================
- *                              Term Manager            
+ *                              Term Manager
  ============================================================================*/
 
 class TermManager : public cvc5::TermManager {
@@ -130,13 +131,13 @@ static struct custom_operations term_manager_operations =
 };
 
 /*============================================================================
- *                              Term            
+ *                              Term
  ============================================================================*/
 
 class Term : public cvc5::Term {
 public:
   TermManager* _tm;
-  Term(cvc5::Term t, TermManager* tm) : cvc5::Term(t) { 
+  Term(cvc5::Term t, TermManager* tm) : cvc5::Term(t) {
     if (tm != NULL) { _tm = tm; tm->addRef(); }
     else { _tm = NULL; }
   }
@@ -175,7 +176,7 @@ static struct custom_operations term_operations =
 };
 
 /*============================================================================
- *                              Sort            
+ *                              Sort
  ============================================================================*/
 
 class Sort : public cvc5::Sort {
@@ -220,7 +221,7 @@ static struct custom_operations sort_operations =
 };
 
 /*============================================================================
- *                              Result            
+ *                              Result
  ============================================================================*/
 
 class Result : public cvc5::Result {
@@ -255,7 +256,7 @@ static struct custom_operations result_operations =
 };
 
 /*============================================================================
- *                              Op            
+ *                              Op
  ============================================================================*/
 
 class Op : public cvc5::Op {
