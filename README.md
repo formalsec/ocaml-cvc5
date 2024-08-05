@@ -7,6 +7,24 @@ OCaml bindings for the [cvc5] Satisfiability Modulo Theories (SMT) solver
 
 ## Installation
 
+### Opam
+
+---
+- Install [opam](https://opam.ocaml.org/doc/Install.html).
+- Bootstrap the OCaml compiler:
+
+```sh
+opam init
+opam switch create 5.2.0 5.2.0
+```
+
+- Install cvc5's OCaml bindings:
+
+```sh
+opam install cvc5
+```
+:warning:   Installation via Opam is only available for Linux systems.
+
 ### Build from source
 
 ---
