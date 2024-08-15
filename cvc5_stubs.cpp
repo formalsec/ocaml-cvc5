@@ -40,7 +40,7 @@
 extern "C"
 {
 
-int compare_pointers(void* pt1, void* pt2) {
+int compare_ptrs(void* pt1, void* pt2) {
   if (pt1 == pt2)
     return 0;
   else if ((intnat)pt1 < (intnat)pt2)
@@ -101,7 +101,7 @@ public:
 int cvc5_tm_compare(value v1, value v2){
   TermManager* tm1 = TermManager_val(v1);
   TermManager* tm2 = TermManager_val(v2);
-  return compare_pointers(tm1, tm2);
+  return compare_ptrs(tm1, tm2);
 }
 
 intnat cvc5_tm_hash(value v){
