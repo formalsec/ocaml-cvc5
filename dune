@@ -14,7 +14,7 @@
     (chdir
      vendor/cadical
      (progn
-      (bash "./configure")
+      (bash "CXXFLAGS=-fPIC ./configure")
       (bash "make -j $(opam var jobs)")))
     (copy vendor/cadical/build/libcadical.a libcadical.a)
     (chdir
