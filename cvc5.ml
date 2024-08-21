@@ -116,7 +116,8 @@ module Term = struct
   let mk_term_2 (tm : TermManager.tm) (k : Kind.t) (t1 : term) (t2 : term) =
     Cvc5_external.mk_term_2 tm (Kind.to_cpp k) t1 t2
 
-  let mk_term_3 (tm : TermManager.tm) (k : Kind.t) (t1 : term) (t2 : term) (t3 : term) =
+  let mk_term_3 (tm : TermManager.tm) (k : Kind.t) (t1 : term) (t2 : term)
+    (t3 : term) =
     Cvc5_external.mk_term_3 tm (Kind.to_cpp k) t1 t2 t3
 
   let mk_term_op (tm : TermManager.tm) (op : Op.op) (terms : term array) =
@@ -178,6 +179,8 @@ module Term = struct
 
   let is_rm = Cvc5_external.term_is_rm_val
 
+  let is_fp = Cvc5_external.term_is_fp_val
+
   let is_bool = Cvc5_external.term_is_bool_val
 
   let get_int t = int_of_string (Cvc5_external.term_get_int_val t)
@@ -208,6 +211,8 @@ module Term = struct
   let get_uint64 = Cvc5_external.term_get_uint64_val
 
   let get_rm t = RoundingMode.of_cpp @@ Cvc5_external.term_get_rm_val t
+
+  let get_fp = Cvc5_external.term_get_fp_val
 
   let get_bool = Cvc5_external.term_get_bool_val
 end

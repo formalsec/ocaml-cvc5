@@ -171,6 +171,9 @@ module Term : sig
 
   val is_rm : term -> bool
 
+  (** Determine if a given term is a floating-point value. *)
+  val is_fp : term -> bool
+
   val get_int : term -> int
 
   val get_real : term -> float
@@ -190,6 +193,10 @@ module Term : sig
   val get_bv : term -> int -> string
 
   val get_rm : term -> RoundingMode.t
+
+  (** Get the representation of a floating-point value as a tuple of its
+      exponent width, significand width and a bit-vector value term. *)
+  val get_fp : term -> int * int * term
 end
 
 module Result : sig

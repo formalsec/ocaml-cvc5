@@ -16,7 +16,6 @@
      (progn
       (bash "./configure")
       (bash "make -j $(opam var jobs)")))
-
     (copy vendor/cadical/build/libcadical.a libcadical.a)
     (chdir
      vendor/libpoly
