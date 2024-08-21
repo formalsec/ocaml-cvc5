@@ -23,57 +23,57 @@
 
 type ptr
 
-and result = ptr
+type result = ptr
 
-and synth_result = ptr
+type synth_result = ptr
 
-and sort = ptr
+type sort = ptr
 
-and term = ptr
+type term = ptr
 
-and op = ptr
+type op = ptr
 
-and datatype = ptr
+type datatype = ptr
 
-and datatype_constructor_decl = ptr
+type datatype_constructor_decl = ptr
 
-and datatype_decl = ptr
+type datatype_decl = ptr
 
-and datatype_selector = ptr
+type datatype_selector = ptr
 
-and datatype_constructor = ptr
+type datatype_constructor = ptr
 
-and grammar = ptr
+type grammar = ptr
 
-and solver = ptr
+type solver = ptr
 
-and term_manager = ptr
+type term_manager = ptr
 
-and option_info = ptr
+type option_info = ptr
 
-and proof = ptr
+type proof = ptr
 
-and proof_rule = ptr
+type proof_rule = ptr
 
-and statistics = ptr
+type statistics = ptr
 
-and unknown_explanation = ptr
+type unknown_explanation = ptr
 
-and sort_kind = ptr
+type sort_kind = ptr
 
-and kind = ptr
+type kind = ptr
 
-and rounding_mode = ptr
+type rounding_mode = ptr
 
-and proof_format = ptr
+type proof_format = ptr
 
-and proof_component = ptr
+type proof_component = ptr
 
-and learned_lit_type = ptr
+type learned_lit_type = ptr
 
-and block_model_mode = ptr
+type block_model_mode = ptr
 
-and find_synth_target = ptr
+type find_synth_target = ptr
 
 external result_is_sat : result -> bool = "ocaml_cvc5_stub_result_is_sat"
 
