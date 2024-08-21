@@ -102,7 +102,8 @@ external mk_real_s : term_manager -> string -> term
 external mk_real_i : term_manager -> (int64[@unboxed]) -> term
   = "ocaml_cvc5_stub_mk_real_i" "native_cvc5_stub_mk_real_i"
 
-external mk_real : term_manager -> (int64[@unboxed]) -> (int64[@unboxed]) -> term
+external mk_real :
+  term_manager -> (int64[@unboxed]) -> (int64[@unboxed]) -> term
   = "ocaml_cvc5_stub_mk_real" "native_cvc5_stub_mk_real"
 
 external mk_bv : term_manager -> (int[@untagged]) -> (int64[@unboxed]) -> term
@@ -185,6 +186,11 @@ external term_get_bv_val : term -> (int[@untagged]) -> string
 external term_is_rm_val : term -> bool = "ocaml_cvc5_stub_is_rm_value"
 
 external term_get_rm_val : term -> int = "ocaml_cvc5_stub_get_rm_value"
+
+external term_is_fp_val : term -> bool = "ocaml_cvc5_stub_is_fp_value"
+
+external term_get_fp_val : term -> int * int * term
+  = "ocaml_cvc5_stub_get_fp_value"
 
 external term_is_bool_val : term -> bool = "ocaml_cvc5_stub_is_bool_value"
 
@@ -330,8 +336,7 @@ external mk_term_1 : term_manager -> int -> term -> term
 external mk_term_2 : term_manager -> int -> term -> term -> term
   = "ocaml_cvc5_stub_mk_term_2"
 
-external mk_term_3 :
-  term_manager -> int -> term -> term -> term -> term
+external mk_term_3 : term_manager -> int -> term -> term -> term -> term
   = "ocaml_cvc5_stub_mk_term_3"
 
 (**/**)

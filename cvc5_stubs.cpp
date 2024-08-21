@@ -26,6 +26,7 @@
 #include <string.h>
 #include <iostream>
 #include <algorithm>
+#include <tuple>
 
 #include <cvc5/cvc5.h>
 
@@ -743,11 +744,35 @@ CAMLprim value ocaml_cvc5_stub_is_rm_value(value t){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_is_fp_value(value t) {
+  CAMLparam1(t);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(Val_bool(Term_val(t)->isFloatingPointValue()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_fp_value(value t) {
+  CAMLparam1(t);
+  CAMLlocal2(custom, term);
+  TermManager *tm = TermManager_val(t);
+  const auto fp = Term_val(t)->getFloatingPointValue();
+  int ebits = std::get<0>(fp);
+  int sbits = std::get<1>(fp);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &term) Term(std::get<2>(fp), tm);
+  custom = caml_alloc_tuple(3);
+  Store_field (custom, 0, Val_int(ebits));
+  Store_field (custom, 1, Val_int(sbits));
+  Store_field (custom, 2, term);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_is_bool_value(value t){
   CAMLparam1(t);
   CVC5_TRY_CATCH_BEGIN;
   CAMLreturn(Val_bool(Term_val(t)->isBooleanValue()));
-  CVC5_TRY_CATCH_END
+  CVC5_TRY_CATCH_END;
 }
 
 CAMLprim value ocaml_cvc5_stub_get_bool_value(value t){
