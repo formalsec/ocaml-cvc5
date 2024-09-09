@@ -1,13 +1,18 @@
-## Unreleased
+## 1.2.0
 
 ### Added
 
 - Stub-side reference counting to deal with GC collection order
 - Refactor stubs to include `CAMLparam`, `CAMLlocal`, and `CAMLreturn` directives to safeguard GC interactions
+- Documentation for module interfaces
 
 ### Changed
 
+- Updated the version of cvc5 supported to v1.2.0
+
 ### Fixed
+
+- Changed number of Opam jobs used during compilation to avoid excessive memory use 
 
 ## 1.1.3
 
