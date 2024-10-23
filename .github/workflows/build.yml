@@ -31,7 +31,10 @@ jobs:
           dune-cache: true
           allow-prerelease-opam: true
       - name: Install dependencies
-        run: opam install -y . --deps-only --with-test
+        run: |
+          sudo apt update
+          sudo apt install -y libsparsehash-dev
+          opam install -y . --deps-only --with-test
       - name: Build
         run: opam exec -- dune build @install
       - name: Test
