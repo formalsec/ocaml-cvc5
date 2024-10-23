@@ -23,6 +23,7 @@
 #include <caml/fail.h>
 #include <caml/custom.h>
 #include <atomic>
+#include <google/dense_hash_map>
 #include <string.h>
 #include <iostream>
 #include <algorithm>
@@ -83,8 +84,14 @@ static struct custom_operations solver_operations =
 class TermManager : public cvc5::TermManager {
 public:
   /* Used for API-level reference counting */
+  google::dense_hash_map<std::string, cvc5::Term*> *termMap;
   std::atomic<unsigned long> rc;
-  TermManager() : cvc5::TermManager() { rc = 1; }
+  TermManager() : cvc5::TermManager() { 
+    rc = 1;
+    termMap = new google::dense_hash_map<std::string, cvc5::Term*>();
+    termMap->set_empty_key("");
+    termMap->set_deleted_key("DELETED");
+  }
   ~TermManager() {}
   void * operator new(size_t size,
         struct custom_operations *ops,
@@ -94,6 +101,17 @@ public:
   }
   void operator delete(void *ptr) {}
   void addRef() { rc.fetch_add(1, std::memory_order_release); }
+  void addTerm(const std::string &key, cvc5::Term* term) {
+    (*termMap)[key] = term;
+  }
+
+  cvc5::Term* getTerm(const std::string &key) const {
+    auto it = termMap->find(key);
+    if (it != termMap->end()) {
+      return it->second;
+    }
+    return nullptr; 
+  }
 };
 
 #define TermManager_val(v) ((TermManager*)Data_custom_val(v))
@@ -908,16 +926,26 @@ CAMLprim value ocaml_cvc5_stub_sort_to_string(value v){
   CVC5_TRY_CATCH_END;
 }
 
-CAMLprim value ocaml_cvc5_stub_mk_const_s(value v, value sort, value n){
+CAMLprim value ocaml_cvc5_stub_mk_const_s(value v, value sort, value n) {
   CAMLparam3(v, sort, n);
   CAMLlocal1(custom);
+
   TermManager* tm = TermManager_val(v);
-  cvc5::Sort* s = Sort_val(sort);
-  CVC5_TRY_CATCH_BEGIN;
-  new(&term_operations, &custom)
-    Term(tm->mkConst(*s, String_val(n)), tm);
-  CAMLreturn(custom);
-  CVC5_TRY_CATCH_END;
+  cvc5::Sort* s = Sort_val(sort);    
+  std::string termName = String_val(n);
+  auto existingTerm = tm->getTerm(termName);
+  
+  if (existingTerm != nullptr) {
+    new(&term_operations, &custom) Term(*existingTerm, tm);
+    CAMLreturn(custom);
+  } else {
+    CVC5_TRY_CATCH_BEGIN;
+    cvc5::Term* newTerm = new cvc5::Term(tm->mkConst(*s, termName));
+    tm->addTerm(termName, newTerm);
+    new(&term_operations, &custom) Term(*newTerm, tm);
+    CAMLreturn(custom);
+    CVC5_TRY_CATCH_END;
+  }
 }
 
 CAMLprim value ocaml_cvc5_stub_mk_const(value v, value sort){
