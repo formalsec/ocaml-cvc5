@@ -865,6 +865,17 @@ CAMLprim value ocaml_cvc5_stub_get_string_sort(value v){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_get_regexp_sort(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  TermManager* tm = TermManager_val(v);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(tm->getRegExpSort(), tm);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_get_rm_sort(value v){
   CAMLparam1(v);
   CAMLlocal1(custom);
