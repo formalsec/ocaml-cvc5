@@ -49,6 +49,8 @@ module Sort = struct
 
   let mk_string_sort = Cvc5_external.get_string_sort
 
+  let mk_regexp_sort = Cvc5_external.get_regexp_sort
+
   let mk_bv_sort = Cvc5_external.mk_bitvector_sort
 
   let bv_size = Cvc5_external.sort_get_bv_size

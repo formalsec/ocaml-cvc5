@@ -207,6 +207,9 @@ external get_real_sort : term_manager -> sort = "ocaml_cvc5_stub_get_real_sort"
 external get_string_sort : term_manager -> sort
   = "ocaml_cvc5_stub_get_string_sort"
 
+external get_regexp_sort : term_manager -> sort
+  = "ocaml_cvc5_stub_get_regexp_sort"
+
 external mk_bitvector_sort : term_manager -> int -> sort
   = "ocaml_cvc5_stub_mk_bitvector_sort"
 

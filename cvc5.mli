@@ -56,6 +56,9 @@ module Sort : sig
   (** Get the String sort. *)
   val mk_string_sort : TermManager.tm -> sort
 
+  (** Get the RegExp sort. *)
+  val mk_regexp_sort : TermManager.tm -> sort
+
   (** Create a bit-vector sort.
 
       Parameters: - The bit-width of the bit-vector sort. *)
