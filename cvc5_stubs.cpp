@@ -23,7 +23,6 @@
 #include <caml/fail.h>
 #include <caml/custom.h>
 #include <atomic>
-#include <google/dense_hash_map>
 #include <string.h>
 #include <iostream>
 #include <algorithm>
@@ -84,13 +83,11 @@ static struct custom_operations solver_operations =
 class TermManager : public cvc5::TermManager {
 public:
   /* Used for API-level reference counting */
-  google::dense_hash_map<std::string, cvc5::Term*> *termMap;
+  std::unordered_map<std::string, cvc5::Term*> *termMap;
   std::atomic<unsigned long> rc;
   TermManager() : cvc5::TermManager() { 
     rc = 1;
-    termMap = new google::dense_hash_map<std::string, cvc5::Term*>();
-    termMap->set_empty_key("");
-    termMap->set_deleted_key("DELETED");
+    termMap = new std::unordered_map<std::string, cvc5::Term*>();
   }
   ~TermManager() {}
   void * operator new(size_t size,
@@ -102,7 +99,7 @@ public:
   void operator delete(void *ptr) {}
   void addRef() { rc.fetch_add(1, std::memory_order_release); }
   void addTerm(const std::string &key, cvc5::Term* term) {
-    (*termMap)[key] = term;
+    termMap->emplace(key, term);
   }
 
   cvc5::Term* getTerm(const std::string &key) const {
