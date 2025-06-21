@@ -1,3 +1,18 @@
+## 1.3.0
+
+### Added
+
+- Stub to create RegExp sort
+
+### Changed
+
+- Updated cvc5's version to v1.3.0
+- Updated CaDiCaL's version to v2.1.3
+- Updated LibPoly's version to v0.2.0
+- Changed LICENSE to MIT
+
+### Fixed
+
 ## 1.2.0
 
 ### Added
