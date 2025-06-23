@@ -11,7 +11,7 @@
 
 (maintainers "João Pereira <joaomhmpereira@tecnico.ulisboa.pt>")
 
-(license "GPL-3.0-only")
+(license "MIT")
 
 (package
   (name cvc5)
