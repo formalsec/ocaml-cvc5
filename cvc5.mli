@@ -395,6 +395,26 @@ module Result : sig
   val is_unknown : result -> bool
 end
 
+module Grammar : sig
+  type grammar
+
+  val add_rules : grammar -> Term.term -> Term.term array -> unit
+end
+
+module SynthResult : sig
+  type synthresult
+
+  val is_null : synthresult -> bool
+
+  val has_solution : synthresult -> bool
+
+  val has_no_solution : synthresult -> bool
+
+  val is_unknown : synthresult -> bool
+
+  val to_string : synthresult -> string
+end
+
 module Solver : sig
   type solver
 
@@ -485,4 +505,20 @@ module Solver : sig
       - The function body *)
   val define_fun :
     solver -> string -> Term.term array -> Sort.sort -> Term.term -> Term.term
+
+  val mk_grammar :
+    solver -> Term.term array -> Term.term array -> Grammar.grammar
+
+  val synth_fun :
+    solver -> TermManager.tm -> string -> Term.term array -> Sort.sort -> Grammar.grammar option -> Term.term
+
+  val declare_sygus_var : solver -> string -> Sort.sort -> Term.term
+
+  val add_sygus_constraint : solver -> Term.term -> unit
+
+  val check_synth : solver -> SynthResult.synthresult
+
+  val get_synth_solution : solver -> Term.term -> Term.term
+
+  val get_synth_solutions : solver -> Term.term array -> Term.term array
 end

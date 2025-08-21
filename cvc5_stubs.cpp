@@ -69,6 +69,31 @@ struct TermManagerHandle {
   cvc5::TermManager* tm;
   std::atomic<unsigned long> rc;
   std::unordered_map<std::string, cvc5::Term*> const_map;
+  TermManager() : cvc5::TermManager() { 
+    rc = 2;
+    termMap = new std::unordered_map<std::string, cvc5::Term*>();
+  }
+  ~TermManager() {}
+  void * operator new(size_t size,
+        struct custom_operations *ops,
+        value *custom){
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void *ptr) {}
+  void addRef() { rc.fetch_add(1, std::memory_order_release); }
+  void addTerm(const std::string &key, cvc5::Term* term) {
+    termMap->emplace(key, term);
+  }
+
+  cvc5::Term* getTerm(const std::string &key) const {
+    auto it = termMap->find(key);
+    if (it != termMap->end()) {
+      return it->second;
+    }
+    return nullptr; 
+  }
+>>>>>>> 573b291 (working sygus interface!)
 };
 
 #define TermManager_val(v) ((*(TermManagerHandle **)Data_custom_val(v))->tm)
@@ -148,6 +173,81 @@ static struct custom_operations term_operations =
    custom_compare_ext_default,
    custom_fixed_length_default
 };
+
+/*============================================================================
+ *                              Grammar
+ ============================================================================*/
+
+class Grammar : public cvc5::Grammar {
+public:
+  Grammar(cvc5::Grammar t) : cvc5::Grammar(t) {}
+
+  ~Grammar() {}
+
+  void * operator new(size_t size,
+        struct custom_operations *ops,
+        value *custom){
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void *ptr) {}
+};
+
+#define Grammar_val(v) ((Grammar*)Data_custom_val(v))
+
+static void grammar_delete(value v){
+  delete Grammar_val(v);
+}
+
+static struct custom_operations grammar_operations =
+{
+  "https://cvc5.github.io/",
+  &grammar_delete,
+  custom_compare_default,
+  custom_hash_default,
+  custom_serialize_default,
+  custom_deserialize_default,
+  custom_compare_ext_default,
+  custom_fixed_length_default
+};
+
+
+/*============================================================================
+ *                             SynthResult
+ ============================================================================*/
+
+class SynthResult : public cvc5::SynthResult {
+public:
+  SynthResult(cvc5::SynthResult t) : cvc5::SynthResult(t) {}
+  ~SynthResult() {}
+
+  void * operator new(size_t size,
+        struct custom_operations *ops,
+        value *custom){
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void *ptr) {}
+};
+
+#define Synthresult_val(v) ((SynthResult*)Data_custom_val(v))
+
+static void synth_delete(value v) {
+  delete Synthresult_val(v);
+}
+
+static struct custom_operations synthresult_operations =
+{
+  "https://cvc5.github.io/",
+  &synth_delete,
+  custom_compare_default,
+  custom_hash_default,
+  custom_serialize_default,
+  custom_deserialize_default,
+  custom_compare_ext_default,
+  custom_fixed_length_default
+};
+
 
 /*============================================================================
  *                              Sort
@@ -1264,6 +1364,169 @@ CAMLprim value ocaml_cvc5_stub_op_delete(value v){
   CVC5_TRY_CATCH_BEGIN;
   op_delete(v);
   return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_mk_grammar(value s, value t1, value t2){
+  CAMLparam3(s, t1, t2);
+  CAMLlocal1(custom);
+  cvc5::Solver* solver = Solver_val(s);
+  CVC5_TRY_CATCH_BEGIN;
+
+  std::vector<cvc5::Term> nonterminal_vec;
+  size_t arity1 = Wosize_val(t1);
+  nonterminal_vec.reserve(arity1);
+  for (size_t i = 0; i < arity1; i++) {
+    nonterminal_vec.emplace_back(*Term_val(Field(t1, i)));
+  }
+
+  std::vector<cvc5::Term> rules_vec;
+  size_t arity2 = Wosize_val(t2);
+  rules_vec.reserve(arity2);
+  for (size_t i = 0; i < arity2; i++) {
+    rules_vec.emplace_back(*Term_val(Field(t2, i)));
+  }
+
+  new(&grammar_operations, &custom)
+    Grammar(solver->mkGrammar(nonterminal_vec, rules_vec));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_synth_fun_grammar(value s, value tm, value name, value terms, value sort, value gram) {
+  CAMLparam5(s, name, terms, sort, gram);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+
+  std::vector<cvc5::Term> inputs;
+  size_t arity = Wosize_val(terms);
+  inputs.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++) {
+    inputs.emplace_back(*Term_val(Field(terms, i)));
+  }
+
+  cvc5::Term fun = Solver_val(s)->synthFun(String_val(name), inputs, *(Sort_val(sort)), *(Grammar_val(gram)));
+
+  new(&term_operations, &custom) Term(fun, TermManager_val(tm));
+
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_synth_fun_unpack(value* argv, int argc) {
+  return ocaml_cvc5_stub_solver_synth_fun_grammar(argv[0], argv[1], argv[2], argv[3], argv[4], argv[5]);
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_synth_fun(value s, value tm, value name, value terms, value sort) {
+  CAMLparam4(s, name, terms, sort);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+
+  std::vector<cvc5::Term> inputs;
+  size_t arity = Wosize_val(terms);
+  inputs.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++) {
+    inputs.emplace_back(*Term_val(Field(terms, i)));
+  }
+
+  cvc5::Term fun = Solver_val(s)->synthFun(String_val(name), inputs, *(Sort_val(sort)));
+
+  new(&term_operations, &custom) Term(fun, TermManager_val(tm));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_declare_sygus_var(value s, value name, value sort) {
+  CAMLparam3(s, name, sort);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+
+  cvc5::Term var = Solver_val(s)->declareSygusVar(String_val(name), *(Sort_val(sort)));
+
+  new(&term_operations, &custom) Term(var, NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_add_sygus_constraint(value s, value term) {
+  CAMLparam2(s, term);
+  CVC5_TRY_CATCH_BEGIN;
+  Solver_val(s)->addSygusConstraint(*(Term_val(term)));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_check_synth(value s) {
+  CAMLparam1(s);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&synthresult_operations, &custom) SynthResult(Solver_val(s)->checkSynth());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_grammar_add_rules(value gram, value term, value terms) {
+  CAMLparam3(gram, term, terms);
+  Grammar* grammar = Grammar_val(gram);
+  CVC5_TRY_CATCH_BEGIN;
+
+  std::vector<cvc5::Term> rules;
+  size_t arity = Wosize_val(terms);
+  rules.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++) {
+    rules.emplace_back(*Term_val(Field(terms, i)));
+  }
+
+  grammar->addRules(*Term_val(term), rules);
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_get_synth_solution(value s, value term) {
+  CAMLparam2(s, term);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  cvc5::Term sol = Solver_val(s)->getSynthSolution(*(Term_val(term)));
+  new(&term_operations, &custom) Term(sol, NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_synthresult_is_null(value res) {
+  CAMLparam1(res);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(Val_bool(Synthresult_val(res)->isNull()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_synthresult_has_solution(value res) {
+  CAMLparam1(res);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(Val_bool(Synthresult_val(res)->hasSolution()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_synthresult_no_solution(value res) {
+  CAMLparam1(res);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(Val_bool(Synthresult_val(res)->hasNoSolution()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_synthresult_is_unknown(value res) {
+  CAMLparam1(res);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(Val_bool(Synthresult_val(res)->isUnknown()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_synthresult_to_string(value res) {
+  CAMLparam1(res);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Synthresult_val(res)->toString().data()));
   CVC5_TRY_CATCH_END;
 }
 
