@@ -220,6 +220,26 @@ module Result = struct
   let is_unknown = Cvc5_external.result_is_unknown
 end
 
+module Grammar = struct
+  type grammar = Cvc5_external.grammar
+
+  let add_rules = Cvc5_external.grammar_add_rules
+end
+
+module SynthResult = struct
+  type synthresult = Cvc5_external.synthresult
+
+  let is_null = Cvc5_external.synth_is_null
+
+  let has_solution = Cvc5_external.synth_has_solution
+
+  let has_no_solution = Cvc5_external.synth_has_no_solution
+
+  let is_unknown = Cvc5_external.synth_is_unknown
+
+  let to_string = Cvc5_external.synth_to_string
+end
+
 module Solver = struct
   type solver = Cvc5_external.solver
 
@@ -264,4 +284,20 @@ module Solver = struct
   let declare_fun = Cvc5_external.solver_declare_fun
 
   let define_fun = Cvc5_external.solver_define_fun
+
+  let mk_grammar = Cvc5_external.solver_mk_grammar
+
+  let synth_fun (a: solver) (b : TermManager.tm) (c : string) (d : Term.term array) (e : Sort.sort) (grammar : Grammar.grammar option) = match grammar with
+  | Some f -> Cvc5_external.solver_synth_fun_with_grammar a b c d e f
+  | None -> Cvc5_external.solver_synth_fun_no_grammar a b c d e
+
+  let declare_sygus_var = Cvc5_external.solver_declare_sygus_var
+
+  let add_sygus_constraint = Cvc5_external.solver_add_sygus_constraint
+
+  let check_synth = Cvc5_external.solver_check_synth
+
+  let get_synth_solution = Cvc5_external.solver_get_synth_solution
+
+  let get_synth_solutions solver = Array.map (get_synth_solution solver)
 end

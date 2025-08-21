@@ -60,6 +60,8 @@ type block_model_mode = ptr
 
 type find_synth_target = ptr
 
+type synthresult = ptr
+
 external result_is_sat : result -> bool = "ocaml_cvc5_stub_result_is_sat"
 
 external result_is_unsat : result -> bool = "ocaml_cvc5_stub_result_is_unsat"
@@ -326,5 +328,45 @@ external mk_term_2 : term_manager -> int -> term -> term -> term
 
 external mk_term_3 : term_manager -> int -> term -> term -> term -> term
   = "ocaml_cvc5_stub_mk_term_3"
+
+external solver_mk_grammar : solver -> term array -> term array -> grammar
+  = "ocaml_cvc5_stub_solver_mk_grammar"
+
+external solver_synth_fun_with_grammar :
+    solver -> term_manager -> string -> term array -> sort -> grammar -> term
+  = "ocaml_cvc5_stub_synth_fun_unpack" "ocaml_cvc5_stub_solver_synth_fun_grammar"
+
+external solver_synth_fun_no_grammar : solver -> term_manager -> string -> term array -> sort -> term
+  = "ocaml_cvc5_stub_solver_synth_fun"
+
+external solver_declare_sygus_var : solver -> string -> sort -> term
+  = "ocaml_cvc5_stub_solver_declare_sygus_var"
+
+external solver_add_sygus_constraint : solver -> term -> unit
+  = "ocaml_cvc5_stub_solver_add_sygus_constraint"
+
+external solver_check_synth : solver -> synthresult
+  = "ocaml_cvc5_stub_solver_check_synth"
+
+external solver_get_synth_solution : solver -> term -> term
+  = "ocaml_cvc5_stub_solver_get_synth_solution"
+
+external grammar_add_rules : grammar -> term -> term array -> unit
+  = "ocaml_cvc5_stub_grammar_add_rules"
+
+external synth_is_null : synthresult -> bool
+  = "ocaml_cvc5_stub_synthresult_is_null"
+
+external synth_has_solution : synthresult -> bool
+  = "ocaml_cvc5_stub_synthresult_has_solution"
+
+external synth_has_no_solution : synthresult -> bool
+  = "ocaml_cvc5_stub_synthresult_no_solution"
+
+external synth_is_unknown : synthresult -> bool
+  = "ocaml_cvc5_stub_synthresult_is_unknown"
+
+external synth_to_string : synthresult -> string
+  = "ocaml_cvc5_stub_synthresult_to_string"
 
 (**/**)
