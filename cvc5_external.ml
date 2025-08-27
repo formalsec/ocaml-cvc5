@@ -333,10 +333,12 @@ external solver_mk_grammar : solver -> term array -> term array -> grammar
   = "ocaml_cvc5_stub_solver_mk_grammar"
 
 external solver_synth_fun_with_grammar :
-    solver -> term_manager -> string -> term array -> sort -> grammar -> term
-  = "ocaml_cvc5_stub_synth_fun_unpack" "ocaml_cvc5_stub_solver_synth_fun_grammar"
+  solver -> term_manager -> string -> term array -> sort -> grammar -> term
+  = "ocaml_cvc5_stub_synth_fun_unpack"
+    "ocaml_cvc5_stub_solver_synth_fun_grammar"
 
-external solver_synth_fun_no_grammar : solver -> term_manager -> string -> term array -> sort -> term
+external solver_synth_fun_no_grammar :
+  solver -> term_manager -> string -> term array -> sort -> term
   = "ocaml_cvc5_stub_solver_synth_fun"
 
 external solver_declare_sygus_var : solver -> string -> sort -> term
