@@ -510,7 +510,13 @@ module Solver : sig
     solver -> Term.term array -> Term.term array -> Grammar.grammar
 
   val synth_fun :
-    solver -> TermManager.tm -> string -> Term.term array -> Sort.sort -> Grammar.grammar option -> Term.term
+       solver
+    -> TermManager.tm
+    -> string
+    -> Term.term array
+    -> Sort.sort
+    -> Grammar.grammar option
+    -> Term.term
 
   val declare_sygus_var : solver -> string -> Sort.sort -> Term.term
 

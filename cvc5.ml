@@ -287,9 +287,11 @@ module Solver = struct
 
   let mk_grammar = Cvc5_external.solver_mk_grammar
 
-  let synth_fun (a: solver) (b : TermManager.tm) (c : string) (d : Term.term array) (e : Sort.sort) (grammar : Grammar.grammar option) = match grammar with
-  | Some f -> Cvc5_external.solver_synth_fun_with_grammar a b c d e f
-  | None -> Cvc5_external.solver_synth_fun_no_grammar a b c d e
+  let synth_fun (a : solver) (b : TermManager.tm) (c : string)
+    (d : Term.term array) (e : Sort.sort) (grammar : Grammar.grammar option) =
+    match grammar with
+    | Some f -> Cvc5_external.solver_synth_fun_with_grammar a b c d e f
+    | None -> Cvc5_external.solver_synth_fun_no_grammar a b c d e
 
   let declare_sygus_var = Cvc5_external.solver_declare_sygus_var
 
