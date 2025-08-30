@@ -516,11 +516,6 @@ CAMLprim value ocaml_cvc5_stub_mk_term_2(value v, value kind, value t1, value t2
   TermManagerHandle* handle = TermManager_handle_val(v);
   CVC5_TRY_CATCH_BEGIN;
   std::vector<cvc5::Term> args = {*Term_val(t1), *Term_val(t2)};
-  cvc5::Term* x = Term_val(t1);
-  if (x->isNull()) {
-    std::cout << "Term 1 is null" << std::endl;
-    std::fflush(stdout);
-  }
   new(&term_operations, &custom)
     Term(handle->tm->mkTerm((cvc5::Kind)Int_val(kind), args), handle);
   CAMLreturn(custom);
