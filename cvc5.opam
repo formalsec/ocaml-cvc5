@@ -8,7 +8,7 @@ license: "MIT"
 homepage: "https://github.com/formalsec/ocaml-cvc5"
 bug-reports: "https://github.com/formalsec/ocaml-cvc5/issues"
 depends: [
-  "dune" {>= "3.10"}
+  "dune" {>= "3.19"}
   "ocaml" {>= "4.12"}
   "conf-gcc" {build}
   "conf-g++" {build}
@@ -35,3 +35,4 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/formalsec/ocaml-cvc5.git"
+x-maintenance-intent: ["(latest)" "(latest).(latest-1).(any)"]

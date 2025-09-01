@@ -1,4 +1,4 @@
-(lang dune 3.10)
+(lang dune 3.19)
 
 (name cvc5)
 
@@ -10,6 +10,8 @@
 (authors "João Pereira <joaomhmpereira@tecnico.ulisboa.pt>")
 
 (maintainers "João Pereira <joaomhmpereira@tecnico.ulisboa.pt>")
+
+(maintenance_intent "(latest)" "(latest).(latest-1).(any)")
 
 (license "MIT")
 
