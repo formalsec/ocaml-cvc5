@@ -286,7 +286,6 @@ CAMLprim value ocaml_cvc5_stub_new_term_manager(){
     1
   };
 
-  cvc5::TermManager* tm = new cvc5::TermManager();
   value vt = caml_alloc_custom(&term_manager_operations,
              sizeof(TermManagerHandle*), 0, 1);
   *(TermManagerHandle**)Data_custom_val(vt) = handle;

@@ -25,7 +25,7 @@ extern "C" void build_enums(){
     ss << (Kind)i;
     std::string ln(ss.str());
     std::string name(ln);
-    for (int j = 1; j < name.length(); j += 1)
+    for (long unsigned int j = 1; j < name.length(); j += 1)
       name[j] = std::tolower(name[j]);
     type_stream << "  | " << name << std::endl;
     to_string_stream <<
@@ -55,7 +55,7 @@ extern "C" void build_enums(){
     ss << (RoundingMode)i;
     std::string ln(ss.str());
     std::string name(ln);
-    for (int j = 1; j < name.length(); j += 1)
+    for (long unsigned int j = 1; j < name.length(); j += 1)
       name[j] = std::tolower(name[j]);
     type_stream << "  | " << name << std::endl;
     to_string_stream <<
@@ -85,7 +85,7 @@ extern "C" void build_enums(){
     ss << (UnknownExplanation)i;
     std::string ln(ss.str());
     std::string name(ln);
-    for (int j = 1; j < name.length(); j += 1)
+    for (long unsigned int j = 1; j < name.length(); j += 1)
       name[j] = std::tolower(name[j]);
     type_stream << "  | " << name << std::endl;
     to_string_stream <<
