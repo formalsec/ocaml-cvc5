@@ -86,7 +86,7 @@ intnat cvc5_tm_hash(value v){
 }
 
 static void delete_tm(value v) {
-  TermManagerHandle* handle = *(TermManagerHandle**)Data_custom_val(v);
+  TermManagerHandle* handle = TermManager_handle_val(v);
   handle->rc.fetch_sub(1, std::memory_order_release);
   if (handle->rc == 0) {
     delete handle->tm;
@@ -116,12 +116,8 @@ public:
       : cvc5::Term(t), manager(handle) {
     if(manager) manager->rc.fetch_add(1, std::memory_order_release);
   }
-  ~Term() {
-    if(manager) {
-      manager->rc.fetch_sub(1, std::memory_order_release);
-      if(manager->rc == 0) { delete manager->tm; delete manager; }
-    }
-  }
+  ~Term() { }
+
   void* operator new(size_t size, struct custom_operations *ops, value *custom){
     *custom = caml_alloc_custom(ops, size, 0, 1);
     return Data_custom_val(*custom);
