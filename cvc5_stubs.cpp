@@ -1458,6 +1458,14 @@ CAMLprim value ocaml_cvc5_stub_solver_add_sygus_constraint(value s, value term) 
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_solver_add_sygus_assume(value s, value term) {
+  CAMLparam2(s, term);
+  CVC5_TRY_CATCH_BEGIN;
+  Solver_val(s)->addSygusAssume(*(Term_val(term)));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_solver_check_synth(value s) {
   CAMLparam1(s);
   CAMLlocal1(custom);

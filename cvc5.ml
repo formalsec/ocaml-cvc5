@@ -297,6 +297,8 @@ module Solver = struct
 
   let add_sygus_constraint = Cvc5_external.solver_add_sygus_constraint
 
+  let add_sygus_assume = Cvc5_external.solver_add_sygus_assume
+
   let check_synth = Cvc5_external.solver_check_synth
 
   let get_synth_solution = Cvc5_external.solver_get_synth_solution

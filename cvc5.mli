@@ -522,6 +522,8 @@ module Solver : sig
 
   val add_sygus_constraint : solver -> Term.term -> unit
 
+  val add_sygus_assume : solver -> Term.term -> unit
+
   val check_synth : solver -> SynthResult.synthresult
 
   val get_synth_solution : solver -> Term.term -> Term.term
