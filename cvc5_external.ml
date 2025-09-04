@@ -347,6 +347,9 @@ external solver_declare_sygus_var : solver -> string -> sort -> term
 external solver_add_sygus_constraint : solver -> term -> unit
   = "ocaml_cvc5_stub_solver_add_sygus_constraint"
 
+external solver_add_sygus_assume : solver -> term -> unit
+  = "ocaml_cvc5_stub_solver_add_sygus_assume"
+
 external solver_check_synth : solver -> synthresult
   = "ocaml_cvc5_stub_solver_check_synth"
 
