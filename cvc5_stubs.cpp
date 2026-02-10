@@ -69,31 +69,6 @@ struct TermManagerHandle {
   cvc5::TermManager* tm;
   std::atomic<unsigned long> rc;
   std::unordered_map<std::string, cvc5::Term*> const_map;
-  TermManager() : cvc5::TermManager() { 
-    rc = 2;
-    termMap = new std::unordered_map<std::string, cvc5::Term*>();
-  }
-  ~TermManager() {}
-  void * operator new(size_t size,
-        struct custom_operations *ops,
-        value *custom){
-    *custom = caml_alloc_custom(ops, size, 0, 1);
-    return Data_custom_val(*custom);
-  }
-  void operator delete(void *ptr) {}
-  void addRef() { rc.fetch_add(1, std::memory_order_release); }
-  void addTerm(const std::string &key, cvc5::Term* term) {
-    termMap->emplace(key, term);
-  }
-
-  cvc5::Term* getTerm(const std::string &key) const {
-    auto it = termMap->find(key);
-    if (it != termMap->end()) {
-      return it->second;
-    }
-    return nullptr; 
-  }
->>>>>>> 573b291 (working sygus interface!)
 };
 
 #define TermManager_val(v) ((*(TermManagerHandle **)Data_custom_val(v))->tm)
@@ -1408,7 +1383,7 @@ CAMLprim value ocaml_cvc5_stub_solver_synth_fun_grammar(value s, value tm, value
 
   cvc5::Term fun = Solver_val(s)->synthFun(String_val(name), inputs, *(Sort_val(sort)), *(Grammar_val(gram)));
 
-  new(&term_operations, &custom) Term(fun, TermManager_val(tm));
+  new(&term_operations, &custom) Term(fun, TermManager_handle_val(tm));
 
   CAMLreturn(custom);
   CVC5_TRY_CATCH_END;
@@ -1433,7 +1408,7 @@ CAMLprim value ocaml_cvc5_stub_solver_synth_fun(value s, value tm, value name, v
 
   cvc5::Term fun = Solver_val(s)->synthFun(String_val(name), inputs, *(Sort_val(sort)));
 
-  new(&term_operations, &custom) Term(fun, TermManager_val(tm));
+  new(&term_operations, &custom) Term(fun, TermManager_handle_val(tm));
   CAMLreturn(custom);
   CVC5_TRY_CATCH_END;
 }
