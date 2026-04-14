@@ -4,67 +4,163 @@
    (CMAKE_INCLUDE_PATH "../../cadical/src/:../../libpoly/:../../")
    (CMAKE_LIBRARY_PATH "../../cadical/build/:../../libpoly/build/src/"))))
 
-(rule
- (deps
-  (source_tree vendor))
- (targets libpicpolyxx.a libpicpoly.a libcadical.a libcvc5.a cvc5_export.h)
- (action
-  (no-infer
-   (progn
-    (chdir
-     vendor/cadical
-     (progn
-      (bash "CXXFLAGS=-fPIC ./configure")
-      (bash "make -j $(opam var jobs)")))
-    (copy vendor/cadical/build/libcadical.a libcadical.a)
-    (chdir
-     vendor/libpoly
-     (progn
-      (run
-       cmake
-       -B
-       build
-       -DCMAKE_BUILD_TYPE=$type
-       -DCMAKE_INSTALL_PREFIX=$prefix)
-      (chdir
-       build
-       (bash "make -j $(opam var jobs)"))
-      (run mv include poly)))
-    (copy vendor/libpoly/build/src/libpicpoly.a libpicpoly.a)
-    (copy vendor/libpoly/build/src/libpicpolyxx.a libpicpolyxx.a)
-    (chdir
-     vendor/cvc5
-     (progn
-      (bash "./configure.sh --static")
-      (bash "make -C build -j $(opam var jobs)")))
-    (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
-    (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
+(subdir
+ vendor/cadical
+ (include_subdirs unqualified)
+ (dirs src)
+ (foreign_library
+  (archive_name cadical)
+  (language cxx)
+  (names :standard \ mobical cadical)
+  (include_dirs src)
+  (flags :standard -std=c++11 -DNDEBUG -DNBUILD -DNCLOSEFORM)))
 
 (subdir
- vendor/cvc5/include/cvc5
- (rule
-  (deps ../../../../cvc5_export.h)
-  (targets cvc5_export.h)
-  (action
-   (copy %{deps} %{targets}))))
+ vendor/libpoly
+ (dirs include src)
+ (subdir
+  src/utils
+  (foreign_library
+   (archive_name polyutils)
+   (language c)
+   (names :standard)
+   (flags :standard -std=gnu99 -Wall -Werror -Wextra -I..)
+   (include_dirs ../../include)))
+ (subdir
+  src/variable
+  (foreign_library
+   (archive_name polyvariable)
+   (language c)
+   (names :standard)
+   (flags :standard -std=gnu99 -Wall -Werror -Wextra -I..)
+   (include_dirs ../../include)))
+ (subdir
+  src/number
+  (foreign_library
+   (archive_name polynumber)
+   (language c)
+   (names :standard)
+   (flags :standard -std=gnu99 -Wall -Werror -Wextra -I..)
+   (include_dirs ../../include)))
+ (subdir
+  src/interval
+  (foreign_library
+   (archive_name polyinterval)
+   (language c)
+   (names :standard)
+   (flags :standard -std=gnu99 -Wall -Werror -Wextra -I..)
+   (include_dirs ../../include)))
+ (subdir
+  src/polynomial
+  (foreign_library
+   (archive_name polypolynomial)
+   (language c)
+   (names :standard)
+   (flags :standard -std=gnu99 -Wall -Werror -Wextra -I..)
+   (include_dirs ../../include)))
+ (subdir
+  src/upolynomial
+  (foreign_library
+   (archive_name polyupolynomial)
+   (language c)
+   (names :standard)
+   (flags :standard -std=gnu99 -Wall -Werror -Wextra -I..)
+   (include_dirs ../../include)))
+ (subdir
+  src/polyxx
+  (foreign_library
+   (archive_name polyxx)
+   (language cxx)
+   (names :standard)
+   (flags :standard -std=c++11 -Wall -Werror -Wextra)
+   (include_dirs ../../include)))
+ (subdir
+  src
+  (foreign_library
+    (archive_name poly)
+    (language c)
+    (names :standard)
+    (flags :standard -std=gnu99 -Wall -Werror -Wextra -I.)
+    (include_dirs ../include)))
+ )
 
 (library
- (public_name cvc5)
- (name cvc5)
- (modules cvc5 cvc5_enums cvc5_external)
- (no_dynlink)
- (foreign_stubs
-  (language cxx)
-  (names cvc5_stubs)
-  (flags :standard -std=c++17 -I/opt/homebrew/include)
-  (include_dirs vendor/cvc5/include vendor/cvc5/src vendor/cvc5/src/lib))
- (foreign_archives cvc5 cadical picpoly picpolyxx)
- (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
+ (name poly)
+ (modules ())
+ (foreign_archives
+  vendor/libpoly/src/utils/polyutils
+  vendor/libpoly/src/variable/polyvariable
+  vendor/libpoly/src/number/polynumber
+  vendor/libpoly/src/interval/polyinterval
+  vendor/libpoly/src/polynomial/polypolynomial
+  vendor/libpoly/src/upolynomial/polyupolynomial
+  vendor/libpoly/src/poly)
+ (c_library_flags :standard -lgmp))
 
-(rule
- (deps ./api/cvc5_enums.exe)
- (target cvc5_enums.ml)
- (action
-  (with-stdout-to
-   %{target}
-   (run %{deps}))))
+
+; (rule
+;  (deps
+;   (source_tree vendor))
+;  (targets libpicpoly.a libcvc5.a cvc5_export.h)
+;  (action
+;   (no-infer
+   ; (progn
+    ; (chdir
+    ;  vendor/cadical
+    ;  (progn
+    ;   (bash "CXXFLAGS=-fPIC ./configure")
+    ;   (bash "make -j $(opam var jobs)")))
+    ; (copy vendor/cadical/build/libcadical.a libcadical.a)
+    ; (chdir
+    ;  vendor/libpoly
+    ;  (progn
+    ;   (run
+    ;    cmake
+    ;    -B
+    ;    build
+    ;    -DCMAKE_BUILD_TYPE=$type
+    ;    -DCMAKE_INSTALL_PREFIX=$prefix)
+    ;   (chdir
+    ;    build
+    ;    (bash "make -j $(opam var jobs)"))
+    ;   (run mv include poly)))
+    ; (copy vendor/libpoly/build/src/libpicpoly.a libpicpoly.a)
+    ; (copy vendor/libpoly/build/src/libpicpolyxx.a libpicpolyxx.a)
+    ; (chdir
+    ;  vendor/cvc5
+    ;  (progn
+    ;   (bash "./configure.sh --static")
+    ;   (bash "make -C build -j $(opam var jobs)")))
+    ; (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
+    ; (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
+
+; (subdir
+;  vendor/cvc5/include/cvc5
+;  (rule
+;   (deps ../../../../cvc5_export.h)
+;   (targets cvc5_export.h)
+;   (action
+;    (copy %{deps} %{targets}))))
+
+; (library
+;  (public_name cvc5)
+;  (name cvc5)
+;  (modules cvc5 cvc5_enums cvc5_external)
+;  (no_dynlink)
+;  (foreign_stubs
+;   (language cxx)
+;   (names cvc5_stubs)
+;   (flags :standard -std=c++17 -I/opt/homebrew/include)
+;   (include_dirs vendor/cvc5/include vendor/cvc5/src vendor/cvc5/src/lib))
+;  (foreign_archives
+;     cadical
+;     vendor/libpoly/src/interval/picpolyinterval)
+;  (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
+
+; (rule
+;  (deps ./api/cvc5_enums.exe)
+;  (target cvc5_enums.ml)
+;  (action
+;   (with-stdout-to
+;    %{target}
+;    (run %{deps}))))

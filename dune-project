@@ -16,6 +16,7 @@
 (license "MIT")
 
 (package
+  (allow_empty)
   (name cvc5)
   (synopsis "OCaml bindings for the cvc5 SMT solver")
   (description "OCaml bindings for the cvc5 SMT solver")

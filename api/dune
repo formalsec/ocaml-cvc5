@@ -1,17 +1,21 @@
-(executable
- (name cvc5_enums)
- (modules cvc5_enums)
- (libraries build_enums))
+; (executable
+;  (name cvc5_enums)
+;  (modules cvc5_enums)
+;  (libraries build_enums))
 
-(library
- (name build_enums)
- (modules build_enums)
- (no_dynlink)
- (foreign_stubs
-  (language cxx)
-  (names build_enums)
-  (extra_deps ../vendor/cvc5/include/cvc5/cvc5_export.h)
-  (flags :standard -std=c++17 -I/opt/homebrew/include)
-  (include_dirs ../vendor/cvc5/include))
- (foreign_archives ../cvc5 ../cadical ../picpoly ../picpolyxx)
- (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
+; (library
+;  (name build_enums)
+;  (modules build_enums)
+;  (no_dynlink)
+;  (foreign_stubs
+;   (language cxx)
+;   (names build_enums)
+;   (extra_deps ../vendor/cvc5/include/cvc5/cvc5_export.h)
+;   (flags :standard -std=c++17 -I/opt/homebrew/include)
+;   (include_dirs ../vendor/cvc5/include))
+;  (foreign_archives
+;    ../cvc5
+;    ../vendor/cadical/cadical
+;    ../picpoly
+;    ../vendor/libpoly/src/polyxx/picpolyxx)
+;  (c_library_flags :standard -std=c++17 -L/opt/homebrew/lib -lgmp))
