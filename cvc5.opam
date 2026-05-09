@@ -13,11 +13,11 @@ depends: [
   "conf-gcc" {build}
   "conf-g++" {build}
   "conf-gmp" {build}
+  "conf-pkg-config" {build}
   "conf-cmake" {build}
   "conf-python-3" {build}
   "conf-python-3-dev" {build}
   "conf-python3-pyparsing" {build}
-  "conf-python3-tomli" {build}
   "odoc" {with-doc}
 ]
 build: [
