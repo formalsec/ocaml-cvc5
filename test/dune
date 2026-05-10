@@ -1,7 +1,14 @@
 (executables
  (names run_tests)
+ (modules run_tests)
  (libraries cvc5 alcotest))
 
 (rule
  (alias runtest)
- (action (run ./run_tests.exe)))
+ (action
+  (run ./run_tests.exe)))
+
+(test
+ (name test_api)
+ (modules test_api)
+ (libraries cvc5))

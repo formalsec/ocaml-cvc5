@@ -31,8 +31,8 @@ _opam/
 # VSCode
 .vscode/
 
-# Python scripts
-*.py
+# Python cache
+__pycache__/
 
 *.h
 *.pre
