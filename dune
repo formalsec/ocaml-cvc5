@@ -37,7 +37,8 @@
     (chdir
      vendor/cvc5
      (progn
-      (bash "gmp_cflags=\"$(pkg-config --cflags gmp)\"; ./configure.sh --static -DCMAKE_C_FLAGS=\"$gmp_cflags\" -DCMAKE_CXX_FLAGS=\"$gmp_cflags\"")
+      (bash
+       "gmp_cflags=\"$(pkg-config --cflags gmp)\"; ./configure.sh --static -DCMAKE_C_FLAGS=\"$gmp_cflags\" -DCMAKE_CXX_FLAGS=\"$gmp_cflags\"")
       (bash "make -C build -j $(opam var jobs)")))
     (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
     (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))

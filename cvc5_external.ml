@@ -40,6 +40,8 @@ type proof = ptr
 
 type proof_rule = ptr
 
+type stat = ptr
+
 type statistics = ptr
 
 type unknown_explanation = ptr
@@ -68,6 +70,11 @@ external result_is_unsat : result -> bool = "ocaml_cvc5_stub_result_is_unsat"
 
 external result_is_unknown : result -> bool
   = "ocaml_cvc5_stub_result_is_unknown"
+
+external result_is_null : result -> bool = "ocaml_cvc5_stub_result_is_null"
+
+external result_get_unknown_explanation : result -> int
+  = "ocaml_cvc5_stub_result_get_unknown_explanation"
 
 external result_equal : result -> result -> bool
   = "ocaml_cvc5_stub_result_equal"
@@ -244,6 +251,26 @@ external new_term_manager : unit -> term_manager
 external delete_term_manager : term_manager -> unit
   = "ocaml_cvc5_stub_delete_term_manager"
 
+external tm_get_statistics : term_manager -> statistics
+  = "ocaml_cvc5_stub_tm_get_statistics"
+
+external tm_mk_param_sort : term_manager -> string option -> sort
+  = "ocaml_cvc5_stub_mk_param_sort"
+
+external tm_mk_unresolved_datatype_sort : term_manager -> string -> int -> sort
+  = "ocaml_cvc5_stub_mk_unresolved_datatype_sort"
+
+external tm_mk_datatype_constructor_decl :
+  term_manager -> string -> datatype_constructor_decl
+  = "ocaml_cvc5_stub_mk_datatype_constructor_decl"
+
+external tm_mk_datatype_decl : term_manager -> string -> bool -> datatype_decl
+  = "ocaml_cvc5_stub_mk_datatype_decl"
+
+external tm_mk_datatype_decl_with_params :
+  term_manager -> string -> sort array -> bool -> datatype_decl
+  = "ocaml_cvc5_stub_mk_datatype_decl_with_params"
+
 external delete : solver -> unit = "ocaml_cvc5_stub_delete"
 
 external assert_formula : solver -> term -> unit
@@ -258,6 +285,14 @@ external set_logic : solver -> string -> unit = "ocaml_cvc5_stub_set_logic"
 
 external set_option : solver -> string -> string -> unit
   = "ocaml_cvc5_stub_set_option"
+
+external set_info : solver -> string -> string -> unit
+  = "ocaml_cvc5_stub_set_info"
+
+external solver_is_logic_set : solver -> bool
+  = "ocaml_cvc5_stub_is_logic_set"
+
+external solver_get_logic : solver -> string = "ocaml_cvc5_stub_get_logic"
 
 external simplify : solver -> term -> term = "ocaml_cvc5_stub_simplify"
 
@@ -284,6 +319,93 @@ external solver_get_model_domain_elements : solver -> sort -> term array
 
 external solver_get_unsat_core : solver -> term array
   = "ocaml_cvc5_stub_get_unsat_core"
+
+external solver_get_assertions : solver -> term array
+  = "ocaml_cvc5_stub_get_assertions"
+
+external solver_get_info : solver -> string -> string
+  = "ocaml_cvc5_stub_get_info"
+
+external solver_get_option : solver -> string -> string
+  = "ocaml_cvc5_stub_get_option"
+
+external solver_get_option_names : solver -> string array
+  = "ocaml_cvc5_stub_get_option_names"
+
+external solver_get_option_info : solver -> string -> option_info
+  = "ocaml_cvc5_stub_get_option_info"
+
+external solver_get_unsat_assumptions : solver -> term array
+  = "ocaml_cvc5_stub_get_unsat_assumptions"
+
+external solver_get_unsat_core_lemmas : solver -> term array
+  = "ocaml_cvc5_stub_get_unsat_core_lemmas"
+
+external solver_get_difficulty : solver -> (term * term) array
+  = "ocaml_cvc5_stub_get_difficulty"
+
+external solver_get_timeout_core : solver -> result * term array
+  = "ocaml_cvc5_stub_get_timeout_core"
+
+external solver_get_timeout_core_assuming : solver -> term array -> result * term array
+  = "ocaml_cvc5_stub_get_timeout_core_assuming"
+
+external solver_get_proof : solver -> int -> proof array
+  = "ocaml_cvc5_stub_get_proof"
+
+external solver_proof_to_string : solver -> proof -> int -> string
+  = "ocaml_cvc5_stub_proof_to_string"
+
+external solver_get_learned_literals : solver -> int -> term array
+  = "ocaml_cvc5_stub_get_learned_literals"
+
+external solver_get_quantifier_elimination : solver -> term -> term
+  = "ocaml_cvc5_stub_get_quantifier_elimination"
+
+external solver_get_quantifier_elimination_disjunct : solver -> term -> term
+  = "ocaml_cvc5_stub_get_quantifier_elimination_disjunct"
+
+external solver_declare_sep_heap : solver -> sort -> sort -> unit
+  = "ocaml_cvc5_stub_declare_sep_heap"
+
+external solver_get_value_sep_heap : solver -> term
+  = "ocaml_cvc5_stub_get_value_sep_heap"
+
+external solver_get_value_sep_nil : solver -> term
+  = "ocaml_cvc5_stub_get_value_sep_nil"
+
+external solver_declare_pool : solver -> string -> sort -> term array -> term
+  = "ocaml_cvc5_stub_declare_pool"
+
+external solver_block_model : solver -> int -> unit
+  = "ocaml_cvc5_stub_block_model"
+
+external solver_block_model_values : solver -> term array -> unit
+  = "ocaml_cvc5_stub_block_model_values"
+
+external solver_get_instantiations : solver -> string
+  = "ocaml_cvc5_stub_get_instantiations"
+
+external solver_get_interpolant : solver -> term -> term
+  = "ocaml_cvc5_stub_get_interpolant"
+
+external solver_get_interpolant_grammar : solver -> term -> grammar -> term
+  = "ocaml_cvc5_stub_get_interpolant_grammar"
+
+external solver_get_interpolant_next : solver -> term
+  = "ocaml_cvc5_stub_get_interpolant_next"
+
+external solver_get_abduct : solver -> term -> term
+  = "ocaml_cvc5_stub_get_abduct"
+
+external solver_get_abduct_grammar : solver -> term -> grammar -> term
+  = "ocaml_cvc5_stub_get_abduct_grammar"
+
+external solver_get_abduct_next : solver -> term
+  = "ocaml_cvc5_stub_get_abduct_next"
+
+external solver_get_statistics : solver -> statistics
+  = "ocaml_cvc5_stub_solver_get_statistics"
 
 external solver_get_model : solver -> sort array -> term array -> string
   = "ocaml_cvc5_stub_get_model"
@@ -320,6 +442,26 @@ external solver_define_fun :
   solver -> string -> term array -> sort -> term -> term
   = "ocaml_cvc5_stub_define_fun"
 
+external solver_define_fun_rec :
+  solver -> string -> term array -> sort -> term -> bool -> term
+  = "ocaml_cvc5_stub_define_fun_rec_bytecode"
+    "ocaml_cvc5_stub_define_fun_rec"
+
+external solver_define_fun_rec_term :
+  solver -> term -> term array -> term -> bool -> term
+  = "ocaml_cvc5_stub_define_fun_rec_term"
+
+external solver_define_funs_rec :
+  solver -> term array -> term array array -> term array -> bool -> unit
+  = "ocaml_cvc5_stub_define_funs_rec"
+
+external solver_declare_sort : solver -> string -> int -> bool -> sort
+  = "ocaml_cvc5_stub_declare_sort"
+
+external solver_declare_datatype :
+  solver -> string -> datatype_constructor_decl array -> sort
+  = "ocaml_cvc5_stub_declare_datatype"
+
 external mk_term_1 : term_manager -> int -> term -> term
   = "ocaml_cvc5_stub_mk_term_1"
 
@@ -347,17 +489,435 @@ external solver_declare_sygus_var : solver -> string -> sort -> term
 external solver_add_sygus_constraint : solver -> term -> unit
   = "ocaml_cvc5_stub_solver_add_sygus_constraint"
 
+external solver_get_sygus_constraints : solver -> term array
+  = "ocaml_cvc5_stub_solver_get_sygus_constraints"
+
 external solver_add_sygus_assume : solver -> term -> unit
   = "ocaml_cvc5_stub_solver_add_sygus_assume"
+
+external solver_get_sygus_assumptions : solver -> term array
+  = "ocaml_cvc5_stub_solver_get_sygus_assumptions"
+
+external solver_add_sygus_inv_constraint :
+  solver -> term -> term -> term -> term -> unit
+  = "ocaml_cvc5_stub_solver_add_sygus_inv_constraint"
 
 external solver_check_synth : solver -> synthresult
   = "ocaml_cvc5_stub_solver_check_synth"
 
+external solver_check_synth_next : solver -> synthresult
+  = "ocaml_cvc5_stub_solver_check_synth_next"
+
 external solver_get_synth_solution : solver -> term -> term
   = "ocaml_cvc5_stub_solver_get_synth_solution"
 
+external solver_get_synth_solutions : solver -> term array -> term array
+  = "ocaml_cvc5_stub_solver_get_synth_solutions"
+
+external solver_find_synth : solver -> int -> term
+  = "ocaml_cvc5_stub_solver_find_synth"
+
+external solver_find_synth_grammar : solver -> int -> grammar -> term
+  = "ocaml_cvc5_stub_solver_find_synth_grammar"
+
 external grammar_add_rules : grammar -> term -> term array -> unit
   = "ocaml_cvc5_stub_grammar_add_rules"
+
+external grammar_add_rule : grammar -> term -> term -> unit
+  = "ocaml_cvc5_stub_grammar_add_rule"
+
+external grammar_add_any_constant : grammar -> term -> unit
+  = "ocaml_cvc5_stub_grammar_add_any_constant"
+
+external grammar_add_any_variable : grammar -> term -> unit
+  = "ocaml_cvc5_stub_grammar_add_any_variable"
+
+external grammar_is_null : grammar -> bool = "ocaml_cvc5_stub_grammar_is_null"
+
+external grammar_to_string : grammar -> string
+  = "ocaml_cvc5_stub_grammar_to_string"
+
+external sort_is_null : sort -> bool = "ocaml_cvc5_stub_sort_is_null"
+
+external sort_is_boolean : sort -> bool = "ocaml_cvc5_stub_sort_is_boolean"
+
+external sort_is_integer : sort -> bool = "ocaml_cvc5_stub_sort_is_integer"
+
+external sort_is_real : sort -> bool = "ocaml_cvc5_stub_sort_is_real"
+
+external sort_is_string : sort -> bool = "ocaml_cvc5_stub_sort_is_string"
+
+external sort_is_regexp : sort -> bool = "ocaml_cvc5_stub_sort_is_regexp"
+
+external sort_is_rm : sort -> bool = "ocaml_cvc5_stub_sort_is_rm"
+
+external sort_is_bv : sort -> bool = "ocaml_cvc5_stub_sort_is_bv"
+
+external sort_is_fp : sort -> bool = "ocaml_cvc5_stub_sort_is_fp"
+
+external sort_is_datatype : sort -> bool = "ocaml_cvc5_stub_sort_is_datatype"
+
+external sort_is_datatype_constructor : sort -> bool
+  = "ocaml_cvc5_stub_sort_is_datatype_constructor"
+
+external sort_is_datatype_selector : sort -> bool
+  = "ocaml_cvc5_stub_sort_is_datatype_selector"
+
+external sort_is_datatype_tester : sort -> bool
+  = "ocaml_cvc5_stub_sort_is_datatype_tester"
+
+external sort_is_function : sort -> bool = "ocaml_cvc5_stub_sort_is_function"
+
+external sort_is_predicate : sort -> bool
+  = "ocaml_cvc5_stub_sort_is_predicate"
+
+external sort_is_tuple : sort -> bool = "ocaml_cvc5_stub_sort_is_tuple"
+
+external sort_is_nullable : sort -> bool = "ocaml_cvc5_stub_sort_is_nullable"
+
+external sort_is_record : sort -> bool = "ocaml_cvc5_stub_sort_is_record"
+
+external sort_is_array : sort -> bool = "ocaml_cvc5_stub_sort_is_array"
+
+external sort_is_finite_field : sort -> bool
+  = "ocaml_cvc5_stub_sort_is_finite_field"
+
+external sort_is_set : sort -> bool = "ocaml_cvc5_stub_sort_is_set"
+
+external sort_is_bag : sort -> bool = "ocaml_cvc5_stub_sort_is_bag"
+
+external sort_is_sequence : sort -> bool = "ocaml_cvc5_stub_sort_is_sequence"
+
+external sort_is_abstract : sort -> bool = "ocaml_cvc5_stub_sort_is_abstract"
+
+external sort_is_uninterpreted_sort : sort -> bool
+  = "ocaml_cvc5_stub_sort_is_uninterpreted_sort"
+
+external sort_is_uninterpreted_sort_constructor : sort -> bool
+  = "ocaml_cvc5_stub_sort_is_uninterpreted_sort_constructor"
+
+external sort_is_instantiated : sort -> bool
+  = "ocaml_cvc5_stub_sort_is_instantiated"
+
+external sort_get_uninterpreted_sort_constructor : sort -> sort
+  = "ocaml_cvc5_stub_sort_get_uninterpreted_sort_constructor"
+
+external sort_get_datatype : sort -> datatype = "ocaml_cvc5_stub_sort_get_datatype"
+
+external sort_instantiate : sort -> sort array -> sort
+  = "ocaml_cvc5_stub_sort_instantiate"
+
+external sort_get_instantiated_parameters : sort -> sort array
+  = "ocaml_cvc5_stub_sort_get_instantiated_parameters"
+
+external sort_substitute : sort -> sort -> sort -> sort
+  = "ocaml_cvc5_stub_sort_substitute"
+
+external sort_substitute_many : sort -> sort array -> sort array -> sort
+  = "ocaml_cvc5_stub_sort_substitute_many"
+
+external term_get_num_children : term -> int
+  = "ocaml_cvc5_stub_term_get_num_children"
+
+external term_get_child : term -> int -> term = "ocaml_cvc5_stub_term_get_child"
+
+external term_substitute : term -> term -> term -> term
+  = "ocaml_cvc5_stub_term_substitute"
+
+external term_substitute_many : term -> term array -> term array -> term
+  = "ocaml_cvc5_stub_term_substitute_many"
+
+external term_has_op : term -> bool = "ocaml_cvc5_stub_term_has_op"
+
+external term_get_op : term -> op = "ocaml_cvc5_stub_term_get_op"
+
+external term_has_symbol : term -> bool = "ocaml_cvc5_stub_term_has_symbol"
+
+external term_get_symbol : term -> string = "ocaml_cvc5_stub_term_get_symbol"
+
+external term_is_null : term -> bool = "ocaml_cvc5_stub_term_is_null"
+
+external term_not_term : term -> term = "ocaml_cvc5_stub_term_not_term"
+
+external term_and_term : term -> term -> term = "ocaml_cvc5_stub_term_and_term"
+
+external term_or_term : term -> term -> term = "ocaml_cvc5_stub_term_or_term"
+
+external term_xor_term : term -> term -> term = "ocaml_cvc5_stub_term_xor_term"
+
+external term_eq_term : term -> term -> term = "ocaml_cvc5_stub_term_eq_term"
+
+external term_imp_term : term -> term -> term = "ocaml_cvc5_stub_term_imp_term"
+
+external term_ite_term : term -> term -> term -> term
+  = "ocaml_cvc5_stub_term_ite_term"
+
+external delete_datatype_constructor_decl : datatype_constructor_decl -> unit
+  = "ocaml_cvc5_stub_delete_datatype_constructor_decl"
+
+external datatype_constructor_decl_equal :
+  datatype_constructor_decl -> datatype_constructor_decl -> bool
+  = "ocaml_cvc5_stub_datatype_constructor_decl_equal"
+
+external datatype_constructor_decl_add_selector :
+  datatype_constructor_decl -> string -> sort -> unit
+  = "ocaml_cvc5_stub_datatype_constructor_decl_add_selector"
+
+external datatype_constructor_decl_add_selector_self :
+  datatype_constructor_decl -> string -> unit
+  = "ocaml_cvc5_stub_datatype_constructor_decl_add_selector_self"
+
+external datatype_constructor_decl_add_selector_unresolved :
+  datatype_constructor_decl -> string -> string -> unit
+  = "ocaml_cvc5_stub_datatype_constructor_decl_add_selector_unresolved"
+
+external datatype_constructor_decl_is_null :
+  datatype_constructor_decl -> bool
+  = "ocaml_cvc5_stub_datatype_constructor_decl_is_null"
+
+external datatype_constructor_decl_to_string :
+  datatype_constructor_decl -> string
+  = "ocaml_cvc5_stub_datatype_constructor_decl_to_string"
+
+external delete_datatype_decl : datatype_decl -> unit
+  = "ocaml_cvc5_stub_delete_datatype_decl"
+
+external datatype_decl_equal : datatype_decl -> datatype_decl -> bool
+  = "ocaml_cvc5_stub_datatype_decl_equal"
+
+external datatype_decl_add_constructor :
+  datatype_decl -> datatype_constructor_decl -> unit
+  = "ocaml_cvc5_stub_datatype_decl_add_constructor"
+
+external datatype_decl_get_num_constructors : datatype_decl -> int
+  = "ocaml_cvc5_stub_datatype_decl_get_num_constructors"
+
+external datatype_decl_is_parametric : datatype_decl -> bool
+  = "ocaml_cvc5_stub_datatype_decl_is_parametric"
+
+external datatype_decl_is_resolved : datatype_decl -> bool
+  = "ocaml_cvc5_stub_datatype_decl_is_resolved"
+
+external datatype_decl_is_null : datatype_decl -> bool
+  = "ocaml_cvc5_stub_datatype_decl_is_null"
+
+external datatype_decl_to_string : datatype_decl -> string
+  = "ocaml_cvc5_stub_datatype_decl_to_string"
+
+external datatype_decl_get_name : datatype_decl -> string
+  = "ocaml_cvc5_stub_datatype_decl_get_name"
+
+external delete_datatype_selector : datatype_selector -> unit
+  = "ocaml_cvc5_stub_delete_datatype_selector"
+
+external datatype_selector_equal : datatype_selector -> datatype_selector -> bool
+  = "ocaml_cvc5_stub_datatype_selector_equal"
+
+external datatype_selector_get_name : datatype_selector -> string
+  = "ocaml_cvc5_stub_datatype_selector_get_name"
+
+external datatype_selector_get_term : datatype_selector -> term
+  = "ocaml_cvc5_stub_datatype_selector_get_term"
+
+external datatype_selector_get_updater_term : datatype_selector -> term
+  = "ocaml_cvc5_stub_datatype_selector_get_updater_term"
+
+external datatype_selector_get_codomain_sort : datatype_selector -> sort
+  = "ocaml_cvc5_stub_datatype_selector_get_codomain_sort"
+
+external datatype_selector_is_null : datatype_selector -> bool
+  = "ocaml_cvc5_stub_datatype_selector_is_null"
+
+external datatype_selector_to_string : datatype_selector -> string
+  = "ocaml_cvc5_stub_datatype_selector_to_string"
+
+external delete_datatype_constructor : datatype_constructor -> unit
+  = "ocaml_cvc5_stub_delete_datatype_constructor"
+
+external datatype_constructor_equal :
+  datatype_constructor -> datatype_constructor -> bool
+  = "ocaml_cvc5_stub_datatype_constructor_equal"
+
+external datatype_constructor_get_name : datatype_constructor -> string
+  = "ocaml_cvc5_stub_datatype_constructor_get_name"
+
+external datatype_constructor_get_term : datatype_constructor -> term
+  = "ocaml_cvc5_stub_datatype_constructor_get_term"
+
+external datatype_constructor_get_instantiated_term :
+  datatype_constructor -> sort -> term
+  = "ocaml_cvc5_stub_datatype_constructor_get_instantiated_term"
+
+external datatype_constructor_get_tester_term : datatype_constructor -> term
+  = "ocaml_cvc5_stub_datatype_constructor_get_tester_term"
+
+external datatype_constructor_get_num_selectors : datatype_constructor -> int
+  = "ocaml_cvc5_stub_datatype_constructor_get_num_selectors"
+
+external datatype_constructor_get_selector_at :
+  datatype_constructor -> int -> datatype_selector
+  = "ocaml_cvc5_stub_datatype_constructor_get_selector_at"
+
+external datatype_constructor_get_selector :
+  datatype_constructor -> string -> datatype_selector
+  = "ocaml_cvc5_stub_datatype_constructor_get_selector"
+
+external datatype_constructor_is_null : datatype_constructor -> bool
+  = "ocaml_cvc5_stub_datatype_constructor_is_null"
+
+external datatype_constructor_to_string : datatype_constructor -> string
+  = "ocaml_cvc5_stub_datatype_constructor_to_string"
+
+external delete_datatype : datatype -> unit = "ocaml_cvc5_stub_delete_datatype"
+
+external datatype_equal : datatype -> datatype -> bool
+  = "ocaml_cvc5_stub_datatype_equal"
+
+external datatype_get_constructor_at : datatype -> int -> datatype_constructor
+  = "ocaml_cvc5_stub_datatype_get_constructor_at"
+
+external datatype_get_constructor : datatype -> string -> datatype_constructor
+  = "ocaml_cvc5_stub_datatype_get_constructor"
+
+external datatype_get_selector : datatype -> string -> datatype_selector
+  = "ocaml_cvc5_stub_datatype_get_selector"
+
+external datatype_get_name : datatype -> string = "ocaml_cvc5_stub_datatype_get_name"
+
+external datatype_get_num_constructors : datatype -> int
+  = "ocaml_cvc5_stub_datatype_get_num_constructors"
+
+external datatype_get_parameters : datatype -> sort array
+  = "ocaml_cvc5_stub_datatype_get_parameters"
+
+external datatype_is_parametric : datatype -> bool
+  = "ocaml_cvc5_stub_datatype_is_parametric"
+
+external datatype_is_codatatype : datatype -> bool
+  = "ocaml_cvc5_stub_datatype_is_codatatype"
+
+external datatype_is_tuple : datatype -> bool
+  = "ocaml_cvc5_stub_datatype_is_tuple"
+
+external datatype_is_record : datatype -> bool
+  = "ocaml_cvc5_stub_datatype_is_record"
+
+external datatype_is_finite : datatype -> bool
+  = "ocaml_cvc5_stub_datatype_is_finite"
+
+external datatype_is_well_founded : datatype -> bool
+  = "ocaml_cvc5_stub_datatype_is_well_founded"
+
+external datatype_is_null : datatype -> bool = "ocaml_cvc5_stub_datatype_is_null"
+
+external datatype_to_string : datatype -> string
+  = "ocaml_cvc5_stub_datatype_to_string"
+
+external delete_proof : proof -> unit = "ocaml_cvc5_stub_delete_proof"
+
+external proof_equal : proof -> proof -> bool = "ocaml_cvc5_stub_proof_equal"
+
+external proof_is_null : proof -> bool = "ocaml_cvc5_stub_proof_is_null"
+
+external proof_get_result : proof -> term = "ocaml_cvc5_stub_proof_get_result"
+
+external proof_get_children : proof -> proof array
+  = "ocaml_cvc5_stub_proof_get_children"
+
+external proof_get_arguments : proof -> term array
+  = "ocaml_cvc5_stub_proof_get_arguments"
+
+external delete_option_info : option_info -> unit
+  = "ocaml_cvc5_stub_delete_option_info"
+
+external option_info_to_string : option_info -> string
+  = "ocaml_cvc5_stub_option_info_to_string"
+
+external option_info_name : option_info -> string
+  = "ocaml_cvc5_stub_option_info_name"
+
+external option_info_aliases : option_info -> string array
+  = "ocaml_cvc5_stub_option_info_aliases"
+
+external option_info_no_supports : option_info -> string array
+  = "ocaml_cvc5_stub_option_info_no_supports"
+
+external option_info_set_by_user : option_info -> bool
+  = "ocaml_cvc5_stub_option_info_set_by_user"
+
+external option_info_category : option_info -> int
+  = "ocaml_cvc5_stub_option_info_category"
+
+external option_info_is_bool : option_info -> bool
+  = "ocaml_cvc5_stub_option_info_is_bool"
+
+external option_info_is_string : option_info -> bool
+  = "ocaml_cvc5_stub_option_info_is_string"
+
+external option_info_is_int : option_info -> bool
+  = "ocaml_cvc5_stub_option_info_is_int"
+
+external option_info_is_uint : option_info -> bool
+  = "ocaml_cvc5_stub_option_info_is_uint"
+
+external option_info_is_double : option_info -> bool
+  = "ocaml_cvc5_stub_option_info_is_double"
+
+external option_info_is_mode : option_info -> bool
+  = "ocaml_cvc5_stub_option_info_is_mode"
+
+external option_info_bool_value : option_info -> bool
+  = "ocaml_cvc5_stub_option_info_bool_value"
+
+external option_info_string_value : option_info -> string
+  = "ocaml_cvc5_stub_option_info_string_value"
+
+external option_info_int_value : option_info -> int64
+  = "ocaml_cvc5_stub_option_info_int_value"
+
+external option_info_uint_value : option_info -> int64
+  = "ocaml_cvc5_stub_option_info_uint_value"
+
+external option_info_double_value : option_info -> float
+  = "ocaml_cvc5_stub_option_info_double_value"
+
+external delete_stat : stat -> unit = "ocaml_cvc5_stub_delete_stat"
+
+external stat_to_string : stat -> string = "ocaml_cvc5_stub_stat_to_string"
+
+external stat_is_internal : stat -> bool = "ocaml_cvc5_stub_stat_is_internal"
+
+external stat_is_default : stat -> bool = "ocaml_cvc5_stub_stat_is_default"
+
+external stat_is_int : stat -> bool = "ocaml_cvc5_stub_stat_is_int"
+
+external stat_get_int : stat -> int64 = "ocaml_cvc5_stub_stat_get_int"
+
+external stat_is_double : stat -> bool = "ocaml_cvc5_stub_stat_is_double"
+
+external stat_get_double : stat -> float = "ocaml_cvc5_stub_stat_get_double"
+
+external stat_is_string : stat -> bool = "ocaml_cvc5_stub_stat_is_string"
+
+external stat_get_string : stat -> string = "ocaml_cvc5_stub_stat_get_string"
+
+external stat_is_histogram : stat -> bool
+  = "ocaml_cvc5_stub_stat_is_histogram"
+
+external stat_get_histogram : stat -> (string * int64) array
+  = "ocaml_cvc5_stub_stat_get_histogram"
+
+external delete_statistics : statistics -> unit
+  = "ocaml_cvc5_stub_delete_statistics"
+
+external statistics_to_string : statistics -> string
+  = "ocaml_cvc5_stub_statistics_to_string"
+
+external statistics_get : statistics -> string -> stat
+  = "ocaml_cvc5_stub_statistics_get"
+
+external statistics_entries : statistics -> (string * stat) array
+  = "ocaml_cvc5_stub_statistics_entries"
 
 external synth_is_null : synthresult -> bool
   = "ocaml_cvc5_stub_synthresult_is_null"

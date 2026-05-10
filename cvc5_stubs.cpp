@@ -124,6 +124,8 @@ public:
   }
 
   void operator delete(void* ptr) {}
+
+  TermManagerHandle* getManager() const { return manager; }
 private:
   TermManagerHandle* manager;
 };
@@ -332,8 +334,296 @@ static struct custom_operations op_operations =
 };
 
 /*============================================================================
+ *                              Datatypes
+ ============================================================================*/
+
+class DatatypeConstructorDecl : public cvc5::DatatypeConstructorDecl {
+public:
+  DatatypeConstructorDecl(cvc5::DatatypeConstructorDecl t)
+      : cvc5::DatatypeConstructorDecl(t) {}
+  ~DatatypeConstructorDecl() {}
+  void* operator new(size_t size, struct custom_operations* ops, value* custom) {
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void* ptr) {}
+};
+
+#define DatatypeConstructorDecl_val(v) ((DatatypeConstructorDecl*)Data_custom_val(v))
+
+static void datatype_constructor_decl_delete(value v) {
+  delete DatatypeConstructorDecl_val(v);
+}
+
+static struct custom_operations datatype_constructor_decl_operations =
+{
+   "https://cvc5.github.io/",
+   &datatype_constructor_decl_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+class DatatypeDecl : public cvc5::DatatypeDecl {
+public:
+  DatatypeDecl(cvc5::DatatypeDecl t) : cvc5::DatatypeDecl(t) {}
+  ~DatatypeDecl() {}
+  void* operator new(size_t size, struct custom_operations* ops, value* custom) {
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void* ptr) {}
+};
+
+#define DatatypeDecl_val(v) ((DatatypeDecl*)Data_custom_val(v))
+
+static void datatype_decl_delete(value v) { delete DatatypeDecl_val(v); }
+
+static struct custom_operations datatype_decl_operations =
+{
+   "https://cvc5.github.io/",
+   &datatype_decl_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+class DatatypeSelector : public cvc5::DatatypeSelector {
+public:
+  DatatypeSelector(cvc5::DatatypeSelector t) : cvc5::DatatypeSelector(t) {}
+  ~DatatypeSelector() {}
+  void* operator new(size_t size, struct custom_operations* ops, value* custom) {
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void* ptr) {}
+};
+
+#define DatatypeSelector_val(v) ((DatatypeSelector*)Data_custom_val(v))
+
+static void datatype_selector_delete(value v) { delete DatatypeSelector_val(v); }
+
+static struct custom_operations datatype_selector_operations =
+{
+   "https://cvc5.github.io/",
+   &datatype_selector_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+class DatatypeConstructor : public cvc5::DatatypeConstructor {
+public:
+  DatatypeConstructor(cvc5::DatatypeConstructor t)
+      : cvc5::DatatypeConstructor(t) {}
+  ~DatatypeConstructor() {}
+  void* operator new(size_t size, struct custom_operations* ops, value* custom) {
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void* ptr) {}
+};
+
+#define DatatypeConstructor_val(v) ((DatatypeConstructor*)Data_custom_val(v))
+
+static void datatype_constructor_delete(value v) {
+  delete DatatypeConstructor_val(v);
+}
+
+static struct custom_operations datatype_constructor_operations =
+{
+   "https://cvc5.github.io/",
+   &datatype_constructor_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+class Datatype : public cvc5::Datatype {
+public:
+  Datatype(cvc5::Datatype t) : cvc5::Datatype(t) {}
+  ~Datatype() {}
+  void* operator new(size_t size, struct custom_operations* ops, value* custom) {
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void* ptr) {}
+};
+
+#define Datatype_val(v) ((Datatype*)Data_custom_val(v))
+
+static void datatype_delete(value v) { delete Datatype_val(v); }
+
+static struct custom_operations datatype_operations =
+{
+   "https://cvc5.github.io/",
+   &datatype_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+/*============================================================================
+ *                              Proof / Options / Stats
+ ============================================================================*/
+
+class Proof : public cvc5::Proof {
+public:
+  Proof(cvc5::Proof t) : cvc5::Proof(t) {}
+  ~Proof() {}
+  void* operator new(size_t size, struct custom_operations* ops, value* custom) {
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void* ptr) {}
+};
+
+#define Proof_val(v) ((Proof*)Data_custom_val(v))
+
+static void proof_delete(value v) { delete Proof_val(v); }
+
+static struct custom_operations proof_operations =
+{
+   "https://cvc5.github.io/",
+   &proof_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+struct OptionInfo {
+  cvc5::OptionInfo* info;
+};
+
+#define OptionInfo_val(v) (((OptionInfo*)Data_custom_val(v))->info)
+
+static void option_info_delete(value v) {
+  cvc5::OptionInfo* info = OptionInfo_val(v);
+  ((OptionInfo*)Data_custom_val(v))->info = nullptr;
+  delete info;
+}
+
+static struct custom_operations option_info_operations =
+{
+   "https://cvc5.github.io/",
+   &option_info_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+class Stat : public cvc5::Stat {
+public:
+  Stat(cvc5::Stat t) : cvc5::Stat(t) {}
+  ~Stat() {}
+  void* operator new(size_t size, struct custom_operations* ops, value* custom) {
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void* ptr) {}
+};
+
+#define Stat_val(v) ((Stat*)Data_custom_val(v))
+
+static void stat_delete(value v) { delete Stat_val(v); }
+
+static struct custom_operations stat_operations =
+{
+   "https://cvc5.github.io/",
+   &stat_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+class Statistics : public cvc5::Statistics {
+public:
+  Statistics(cvc5::Statistics t) : cvc5::Statistics(t) {}
+  ~Statistics() {}
+  void* operator new(size_t size, struct custom_operations* ops, value* custom) {
+    *custom = caml_alloc_custom(ops, size, 0, 1);
+    return Data_custom_val(*custom);
+  }
+  void operator delete(void* ptr) {}
+};
+
+#define Statistics_val(v) ((Statistics*)Data_custom_val(v))
+
+static void statistics_delete(value v) { delete Statistics_val(v); }
+
+static struct custom_operations statistics_operations =
+{
+   "https://cvc5.github.io/",
+   &statistics_delete,
+   custom_compare_default,
+   custom_hash_default,
+   custom_serialize_default,
+   custom_deserialize_default,
+   custom_compare_ext_default,
+   custom_fixed_length_default
+};
+
+/*============================================================================
  *                              Stubs
  ============================================================================*/
+
+#define DEFINE_SORT_BOOL_STUB(name, method) \
+  CAMLprim value name(value v){ \
+    CVC5_TRY_CATCH_BEGIN; \
+    return Val_bool(Sort_val(v)->method()); \
+    CVC5_TRY_CATCH_END; \
+  }
+
+#define DEFINE_TERM_BOOL_STUB(name, method) \
+  CAMLprim value name(value v){ \
+    CVC5_TRY_CATCH_BEGIN; \
+    return Val_bool(Term_val(v)->method()); \
+    CVC5_TRY_CATCH_END; \
+  }
+
+#define DEFINE_TERM_UNARY_STUB(name, method) \
+  CAMLprim value name(value v){ \
+    CAMLparam1(v); \
+    CAMLlocal1(custom); \
+    CVC5_TRY_CATCH_BEGIN; \
+    new(&term_operations, &custom) Term(Term_val(v)->method(), Term_val(v)->getManager()); \
+    CAMLreturn(custom); \
+    CVC5_TRY_CATCH_END; \
+  }
+
+#define DEFINE_TERM_BINARY_STUB(name, method) \
+  CAMLprim value name(value v1, value v2){ \
+    CAMLparam2(v1, v2); \
+    CAMLlocal1(custom); \
+    CVC5_TRY_CATCH_BEGIN; \
+    new(&term_operations, &custom) Term(Term_val(v1)->method(*Term_val(v2)), Term_val(v1)->getManager()); \
+    CAMLreturn(custom); \
+    CVC5_TRY_CATCH_END; \
+  }
 
 CAMLprim value ocaml_cvc5_stub_new_solver(value v){
   CAMLparam1(v);
@@ -711,7 +1001,7 @@ CAMLprim value ocaml_cvc5_stub_is_string_value(value t){
 
 CAMLprim value ocaml_cvc5_stub_get_string_value(value t){
   CVC5_TRY_CATCH_BEGIN;
-  std::wstring ws = Term_val(t)->getStringValue();
+  std::u32string ws = Term_val(t)->getU32StringValue();
   std::string to_return;
   std::transform(ws.begin(), ws.end(), std::back_inserter(to_return), [] (wchar_t c) {
     return (char)c;
@@ -945,7 +1235,6 @@ CAMLprim value ocaml_cvc5_stub_mk_uninterpreted_sort(value v, value s){
 }
 
 CAMLprim value ocaml_cvc5_stub_sort_to_string(value v){
-  CAMLparam1(v);
   CVC5_TRY_CATCH_BEGIN;
   return caml_copy_string(Sort_val(v)->toString().c_str());
   CVC5_TRY_CATCH_END;
@@ -1510,6 +1799,1468 @@ CAMLprim value ocaml_cvc5_stub_synthresult_to_string(value res) {
   CAMLparam1(res);
   CVC5_TRY_CATCH_BEGIN;
   CAMLreturn(caml_copy_string(Synthresult_val(res)->toString().data()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_result_is_null(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Result_val(v)->isNull());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_result_get_unknown_explanation(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_int((int)Result_val(v)->getUnknownExplanation());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_tm_get_statistics(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&statistics_operations, &custom) Statistics(TermManager_val(v)->getStatistics());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_param_sort(value tm, value name_opt){
+  CAMLparam2(tm, name_opt);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::optional<std::string> name = std::nullopt;
+  if (Is_block(name_opt)) {
+    name = std::string(String_val(Field(name_opt, 0)));
+  }
+  new(&sort_operations, &custom) Sort(TermManager_val(tm)->mkParamSort(name));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_unresolved_datatype_sort(value tm, value name, value arity){
+  CAMLparam3(tm, name, arity);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkUnresolvedDatatypeSort(String_val(name), Int_val(arity)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_datatype_constructor_decl(value tm, value name){
+  CAMLparam2(tm, name);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&datatype_constructor_decl_operations, &custom)
+    DatatypeConstructorDecl(TermManager_val(tm)->mkDatatypeConstructorDecl(String_val(name)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_datatype_decl(value tm, value name, value is_codt){
+  CAMLparam3(tm, name, is_codt);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&datatype_decl_operations, &custom)
+    DatatypeDecl(TermManager_val(tm)->mkDatatypeDecl(String_val(name), Bool_val(is_codt)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_datatype_decl_with_params(value tm, value name, value params, value is_codt){
+  CAMLparam4(tm, name, params, is_codt);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec;
+  size_t arity = Wosize_val(params);
+  sort_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    sort_vec.emplace_back(*Sort_val(Field(params, i)));
+  }
+  new(&datatype_decl_operations, &custom)
+    DatatypeDecl(TermManager_val(tm)->mkDatatypeDecl(String_val(name), sort_vec, Bool_val(is_codt)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_null, isNull)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_boolean, isBoolean)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_integer, isInteger)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_real, isReal)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_string, isString)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_regexp, isRegExp)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_rm, isRoundingMode)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_bv, isBitVector)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_fp, isFloatingPoint)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_datatype, isDatatype)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_datatype_constructor, isDatatypeConstructor)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_datatype_selector, isDatatypeSelector)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_datatype_tester, isDatatypeTester)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_function, isFunction)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_predicate, isPredicate)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_tuple, isTuple)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_nullable, isNullable)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_finite_field, isFiniteField)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_record, isRecord)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_array, isArray)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_set, isSet)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_bag, isBag)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_sequence, isSequence)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_abstract, isAbstract)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_uninterpreted_sort, isUninterpretedSort)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_uninterpreted_sort_constructor, isUninterpretedSortConstructor)
+DEFINE_SORT_BOOL_STUB(ocaml_cvc5_stub_sort_is_instantiated, isInstantiated)
+
+CAMLprim value ocaml_cvc5_stub_sort_get_uninterpreted_sort_constructor(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom) Sort(Sort_val(v)->getUninterpretedSortConstructor());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_get_datatype(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&datatype_operations, &custom) Datatype(Sort_val(v)->getDatatype());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_instantiate(value v, value params){
+  CAMLparam2(v, params);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec;
+  size_t arity = Wosize_val(params);
+  sort_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    sort_vec.emplace_back(*Sort_val(Field(params, i)));
+  }
+  new(&sort_operations, &custom) Sort(Sort_val(v)->instantiate(sort_vec));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_get_instantiated_parameters(value v){
+  CAMLparam1(v);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> params = Sort_val(v)->getInstantiatedParameters();
+  size_t n = params.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&sort_operations, &custom) Sort(params[i]);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_substitute(value v, value s, value repl){
+  CAMLparam3(v, s, repl);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(Sort_val(v)->substitute(*Sort_val(s), *Sort_val(repl)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_substitute_many(value v, value sorts, value repls){
+  CAMLparam3(v, sorts, repls);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec, repl_vec;
+  size_t arity = Wosize_val(sorts);
+  sort_vec.reserve(arity);
+  repl_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    sort_vec.emplace_back(*Sort_val(Field(sorts, i)));
+    repl_vec.emplace_back(*Sort_val(Field(repls, i)));
+  }
+  new(&sort_operations, &custom)
+    Sort(Sort_val(v)->substitute(sort_vec, repl_vec));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_get_num_children(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_int(Term_val(v)->getNumChildren());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_get_child(value v, value i){
+  CAMLparam2(v, i);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom)
+    Term((*Term_val(v))[Int_val(i)], Term_val(v)->getManager());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_substitute(value v, value t, value repl){
+  CAMLparam3(v, t, repl);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom)
+    Term(Term_val(v)->substitute(*Term_val(t), *Term_val(repl)), Term_val(v)->getManager());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_substitute_many(value v, value terms, value repls){
+  CAMLparam3(v, terms, repls);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> term_vec, repl_vec;
+  size_t arity = Wosize_val(terms);
+  term_vec.reserve(arity);
+  repl_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    term_vec.emplace_back(*Term_val(Field(terms, i)));
+    repl_vec.emplace_back(*Term_val(Field(repls, i)));
+  }
+  new(&term_operations, &custom)
+    Term(Term_val(v)->substitute(term_vec, repl_vec), Term_val(v)->getManager());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+DEFINE_TERM_BOOL_STUB(ocaml_cvc5_stub_term_has_op, hasOp)
+DEFINE_TERM_BOOL_STUB(ocaml_cvc5_stub_term_has_symbol, hasSymbol)
+DEFINE_TERM_BOOL_STUB(ocaml_cvc5_stub_term_is_null, isNull)
+DEFINE_TERM_UNARY_STUB(ocaml_cvc5_stub_term_not_term, notTerm)
+DEFINE_TERM_BINARY_STUB(ocaml_cvc5_stub_term_and_term, andTerm)
+DEFINE_TERM_BINARY_STUB(ocaml_cvc5_stub_term_or_term, orTerm)
+DEFINE_TERM_BINARY_STUB(ocaml_cvc5_stub_term_xor_term, xorTerm)
+DEFINE_TERM_BINARY_STUB(ocaml_cvc5_stub_term_eq_term, eqTerm)
+DEFINE_TERM_BINARY_STUB(ocaml_cvc5_stub_term_imp_term, impTerm)
+
+CAMLprim value ocaml_cvc5_stub_term_get_op(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&op_operations, &custom) Op(Term_val(v)->getOp());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_get_symbol(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Term_val(v)->getSymbol().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_ite_term(value v, value t, value e){
+  CAMLparam3(v, t, e);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom)
+    Term(Term_val(v)->iteTerm(*Term_val(t), *Term_val(e)), Term_val(v)->getManager());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_grammar_add_rule(value gram, value term, value rule) {
+  CAMLparam3(gram, term, rule);
+  CVC5_TRY_CATCH_BEGIN;
+  Grammar_val(gram)->addRule(*Term_val(term), *Term_val(rule));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_grammar_add_any_constant(value gram, value term) {
+  CAMLparam2(gram, term);
+  CVC5_TRY_CATCH_BEGIN;
+  Grammar_val(gram)->addAnyConstant(*Term_val(term));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_grammar_add_any_variable(value gram, value term) {
+  CAMLparam2(gram, term);
+  CVC5_TRY_CATCH_BEGIN;
+  Grammar_val(gram)->addAnyVariable(*Term_val(term));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_grammar_is_null(value gram) {
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Grammar_val(gram)->isNull());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_grammar_to_string(value gram) {
+  CAMLparam1(gram);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Grammar_val(gram)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_datatype_constructor_decl(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  datatype_constructor_decl_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_decl_equal(value v1, value v2){
+  return Val_bool(*DatatypeConstructorDecl_val(v1) == *DatatypeConstructorDecl_val(v2));
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_decl_add_selector(value v, value name, value sort){
+  CAMLparam3(v, name, sort);
+  CVC5_TRY_CATCH_BEGIN;
+  DatatypeConstructorDecl_val(v)->addSelector(String_val(name), *Sort_val(sort));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_decl_add_selector_self(value v, value name){
+  CAMLparam2(v, name);
+  CVC5_TRY_CATCH_BEGIN;
+  DatatypeConstructorDecl_val(v)->addSelectorSelf(String_val(name));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_decl_add_selector_unresolved(value v, value name, value dtname){
+  CAMLparam3(v, name, dtname);
+  CVC5_TRY_CATCH_BEGIN;
+  DatatypeConstructorDecl_val(v)->addSelectorUnresolved(String_val(name), String_val(dtname));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_decl_is_null(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(DatatypeConstructorDecl_val(v)->isNull());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_decl_to_string(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(DatatypeConstructorDecl_val(v)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_datatype_decl(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  datatype_decl_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_decl_equal(value v1, value v2){
+  return Val_bool(*DatatypeDecl_val(v1) == *DatatypeDecl_val(v2));
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_decl_add_constructor(value v, value ctor){
+  CAMLparam2(v, ctor);
+  CVC5_TRY_CATCH_BEGIN;
+  DatatypeDecl_val(v)->addConstructor(*DatatypeConstructorDecl_val(ctor));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_decl_get_num_constructors(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_int(DatatypeDecl_val(v)->getNumConstructors());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_decl_is_parametric(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(DatatypeDecl_val(v)->isParametric());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_decl_is_resolved(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(DatatypeDecl_val(v)->isResolved());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_decl_is_null(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(DatatypeDecl_val(v)->isNull());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_decl_to_string(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(DatatypeDecl_val(v)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_decl_get_name(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(DatatypeDecl_val(v)->getName().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_datatype_selector(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  datatype_selector_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_selector_equal(value v1, value v2){
+  return Val_bool(*DatatypeSelector_val(v1) == *DatatypeSelector_val(v2));
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_selector_get_name(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(DatatypeSelector_val(v)->getName().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_selector_get_term(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(DatatypeSelector_val(v)->getTerm(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_selector_get_updater_term(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(DatatypeSelector_val(v)->getUpdaterTerm(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_selector_get_codomain_sort(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom) Sort(DatatypeSelector_val(v)->getCodomainSort());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_selector_is_null(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(DatatypeSelector_val(v)->isNull());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_selector_to_string(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(DatatypeSelector_val(v)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_datatype_constructor(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  datatype_constructor_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_equal(value v1, value v2){
+  return Val_bool(*DatatypeConstructor_val(v1) == *DatatypeConstructor_val(v2));
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_get_name(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(DatatypeConstructor_val(v)->getName().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_get_term(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(DatatypeConstructor_val(v)->getTerm(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_get_instantiated_term(value v, value sort){
+  CAMLparam2(v, sort);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom)
+    Term(DatatypeConstructor_val(v)->getInstantiatedTerm(*Sort_val(sort)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_get_tester_term(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(DatatypeConstructor_val(v)->getTesterTerm(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_get_num_selectors(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_int(DatatypeConstructor_val(v)->getNumSelectors());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_get_selector_at(value v, value i){
+  CAMLparam2(v, i);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&datatype_selector_operations, &custom)
+    DatatypeSelector((*DatatypeConstructor_val(v))[Int_val(i)]);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_get_selector(value v, value name){
+  CAMLparam2(v, name);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&datatype_selector_operations, &custom)
+    DatatypeSelector(DatatypeConstructor_val(v)->getSelector(String_val(name)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_is_null(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(DatatypeConstructor_val(v)->isNull());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_constructor_to_string(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(DatatypeConstructor_val(v)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_datatype(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  datatype_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_equal(value v1, value v2){
+  return Val_bool(*Datatype_val(v1) == *Datatype_val(v2));
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_get_constructor_at(value v, value i){
+  CAMLparam2(v, i);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&datatype_constructor_operations, &custom)
+    DatatypeConstructor((*Datatype_val(v))[Int_val(i)]);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_get_constructor(value v, value name){
+  CAMLparam2(v, name);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&datatype_constructor_operations, &custom)
+    DatatypeConstructor(Datatype_val(v)->getConstructor(String_val(name)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_get_selector(value v, value name){
+  CAMLparam2(v, name);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&datatype_selector_operations, &custom)
+    DatatypeSelector(Datatype_val(v)->getSelector(String_val(name)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_get_name(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Datatype_val(v)->getName().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_get_num_constructors(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_int(Datatype_val(v)->getNumConstructors());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_get_parameters(value v){
+  CAMLparam1(v);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> params = Datatype_val(v)->getParameters();
+  size_t n = params.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&sort_operations, &custom) Sort(params[i]);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_is_parametric(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Datatype_val(v)->isParametric());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_is_codatatype(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Datatype_val(v)->isCodatatype());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_is_tuple(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Datatype_val(v)->isTuple());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_is_record(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Datatype_val(v)->isRecord());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_is_finite(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Datatype_val(v)->isFinite());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_is_well_founded(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Datatype_val(v)->isWellFounded());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_is_null(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Datatype_val(v)->isNull());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_datatype_to_string(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Datatype_val(v)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_declare_sort(value slv, value symbol, value arity, value fresh){
+  CAMLparam4(slv, symbol, arity, fresh);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(Solver_val(slv)->declareSort(String_val(symbol), Int_val(arity), Bool_val(fresh)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_declare_datatype(value slv, value symbol, value ctors){
+  CAMLparam3(slv, symbol, ctors);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::DatatypeConstructorDecl> ctor_vec;
+  size_t arity = Wosize_val(ctors);
+  ctor_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    ctor_vec.emplace_back(*DatatypeConstructorDecl_val(Field(ctors, i)));
+  }
+  new(&sort_operations, &custom)
+    Sort(Solver_val(slv)->declareDatatype(String_val(symbol), ctor_vec));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_define_fun_rec(value slv, value symbol, value vars, value s, value body, value global){
+  CAMLparam5(slv, symbol, vars, s, body);
+  CAMLxparam1(global);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> var_vec;
+  size_t arity = Wosize_val(vars);
+  var_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    var_vec.emplace_back(*Term_val(Field(vars, i)));
+  }
+  new(&term_operations, &custom)
+    Term(Solver_val(slv)->defineFunRec(String_val(symbol), var_vec, *Sort_val(s), *Term_val(body), Bool_val(global)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_define_fun_rec_bytecode(value* argv, int argc){
+  return ocaml_cvc5_stub_define_fun_rec(argv[0], argv[1], argv[2], argv[3], argv[4], argv[5]);
+}
+
+CAMLprim value ocaml_cvc5_stub_define_fun_rec_term(value slv, value fun, value vars, value body, value global){
+  CAMLparam5(slv, fun, vars, body, global);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> var_vec;
+  size_t arity = Wosize_val(vars);
+  var_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    var_vec.emplace_back(*Term_val(Field(vars, i)));
+  }
+  new(&term_operations, &custom)
+    Term(Solver_val(slv)->defineFunRec(*Term_val(fun), var_vec, *Term_val(body), Bool_val(global)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_define_funs_rec(value slv, value funs, value bvs, value terms, value global){
+  CAMLparam5(slv, funs, bvs, terms, global);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> fun_vec;
+  std::vector<std::vector<cvc5::Term>> bound_var_vec;
+  std::vector<cvc5::Term> term_vec;
+  size_t n = Wosize_val(funs);
+  fun_vec.reserve(n);
+  bound_var_vec.reserve(n);
+  term_vec.reserve(n);
+  for (size_t i = 0; i < n; ++i) {
+    fun_vec.emplace_back(*Term_val(Field(funs, i)));
+    value inner = Field(bvs, i);
+    std::vector<cvc5::Term> inner_vec;
+    size_t m = Wosize_val(inner);
+    inner_vec.reserve(m);
+    for (size_t j = 0; j < m; ++j) {
+      inner_vec.emplace_back(*Term_val(Field(inner, j)));
+    }
+    bound_var_vec.push_back(inner_vec);
+    term_vec.emplace_back(*Term_val(Field(terms, i)));
+  }
+  Solver_val(slv)->defineFunsRec(fun_vec, bound_var_vec, term_vec, Bool_val(global));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_assertions(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> assertions = Solver_val(slv)->getAssertions();
+  size_t n = assertions.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(assertions[i], NULL);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_info(value slv, value flag){
+  CAMLparam2(slv, flag);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Solver_val(slv)->getInfo(String_val(flag)).c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_option(value slv, value opt){
+  CAMLparam2(slv, opt);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Solver_val(slv)->getOption(String_val(opt)).c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_option_names(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<std::string> names = Solver_val(slv)->getOptionNames();
+  size_t n = names.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    Store_field(result, i, caml_copy_string(names[i].c_str()));
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_option_info(value slv, value opt){
+  CAMLparam2(slv, opt);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  custom = caml_alloc_custom(&option_info_operations, sizeof(OptionInfo), 0, 1);
+  OptionInfo_val(custom) = new cvc5::OptionInfo(Solver_val(slv)->getOptionInfo(String_val(opt)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_unsat_assumptions(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> terms = Solver_val(slv)->getUnsatAssumptions();
+  size_t n = terms.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(terms[i], NULL);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_unsat_core_lemmas(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> terms = Solver_val(slv)->getUnsatCoreLemmas();
+  size_t n = terms.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(terms[i], NULL);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_difficulty(value slv){
+  CAMLparam1(slv);
+  CAMLlocal2(result, pair);
+  CVC5_TRY_CATCH_BEGIN;
+  std::map<cvc5::Term, cvc5::Term> difficulty = Solver_val(slv)->getDifficulty();
+  result = caml_alloc(difficulty.size(), 0);
+  size_t i = 0;
+  for (const auto& entry : difficulty) {
+    value lhs = Val_unit;
+    value rhs = Val_unit;
+    new(&term_operations, &lhs) Term(entry.first, NULL);
+    new(&term_operations, &rhs) Term(entry.second, NULL);
+    pair = caml_alloc_tuple(2);
+    Store_field(pair, 0, lhs);
+    Store_field(pair, 1, rhs);
+    Store_field(result, i++, pair);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+static value alloc_timeout_core(const std::pair<cvc5::Result, std::vector<cvc5::Term>>& core){
+  CAMLparam0();
+  CAMLlocal3(result_pair, result_value, terms_value);
+  result_pair = caml_alloc_tuple(2);
+  new(&result_operations, &result_value) Result(core.first);
+  size_t n = core.second.size();
+  terms_value = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(core.second[i], NULL);
+    Store_field(terms_value, i, custom);
+  }
+  Store_field(result_pair, 0, result_value);
+  Store_field(result_pair, 1, terms_value);
+  CAMLreturn(result_pair);
+}
+
+CAMLprim value ocaml_cvc5_stub_get_timeout_core(value slv){
+  CAMLparam1(slv);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(alloc_timeout_core(Solver_val(slv)->getTimeoutCore()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_timeout_core_assuming(value slv, value assumptions){
+  CAMLparam2(slv, assumptions);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> term_vec;
+  size_t n = Wosize_val(assumptions);
+  term_vec.reserve(n);
+  for (size_t i = 0; i < n; ++i) {
+    term_vec.emplace_back(*Term_val(Field(assumptions, i)));
+  }
+  CAMLreturn(alloc_timeout_core(Solver_val(slv)->getTimeoutCoreAssuming(term_vec)));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_proof(value slv, value component){
+  CAMLparam2(slv, component);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Proof> proofs =
+    Solver_val(slv)->getProof((cvc5::modes::ProofComponent)Int_val(component));
+  size_t n = proofs.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&proof_operations, &custom) Proof(proofs[i]);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_proof_to_string(value slv, value proof, value format){
+  CAMLparam3(slv, proof, format);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(
+    Solver_val(slv)->proofToString(*Proof_val(proof), (cvc5::modes::ProofFormat)Int_val(format)).c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_learned_literals(value slv, value lit_type){
+  CAMLparam2(slv, lit_type);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> terms =
+    Solver_val(slv)->getLearnedLiterals((cvc5::modes::LearnedLitType)Int_val(lit_type));
+  size_t n = terms.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(terms[i], NULL);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_quantifier_elimination(value slv, value q){
+  CAMLparam2(slv, q);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Solver_val(slv)->getQuantifierElimination(*Term_val(q)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_quantifier_elimination_disjunct(value slv, value q){
+  CAMLparam2(slv, q);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Solver_val(slv)->getQuantifierEliminationDisjunct(*Term_val(q)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_declare_sep_heap(value slv, value loc, value data){
+  CAMLparam3(slv, loc, data);
+  CVC5_TRY_CATCH_BEGIN;
+  Solver_val(slv)->declareSepHeap(*Sort_val(loc), *Sort_val(data));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_value_sep_heap(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Solver_val(slv)->getValueSepHeap(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_value_sep_nil(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Solver_val(slv)->getValueSepNil(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_declare_pool(value slv, value symbol, value sort, value init){
+  CAMLparam4(slv, symbol, sort, init);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> init_vec;
+  size_t n = Wosize_val(init);
+  init_vec.reserve(n);
+  for (size_t i = 0; i < n; ++i) {
+    init_vec.emplace_back(*Term_val(Field(init, i)));
+  }
+  new(&term_operations, &custom)
+    Term(Solver_val(slv)->declarePool(String_val(symbol), *Sort_val(sort), init_vec), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_set_info(value slv, value key, value val){
+  CAMLparam3(slv, key, val);
+  CVC5_TRY_CATCH_BEGIN;
+  Solver_val(slv)->setInfo(String_val(key), String_val(val));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_is_logic_set(value slv){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Solver_val(slv)->isLogicSet());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_logic(value slv){
+  CAMLparam1(slv);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Solver_val(slv)->getLogic().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_interpolant(value slv, value conj){
+  CAMLparam2(slv, conj);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Solver_val(slv)->getInterpolant(*Term_val(conj)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_interpolant_grammar(value slv, value conj, value grammar){
+  CAMLparam3(slv, conj, grammar);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom)
+    Term(Solver_val(slv)->getInterpolant(*Term_val(conj), *Grammar_val(grammar)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_interpolant_next(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Solver_val(slv)->getInterpolantNext(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_abduct(value slv, value conj){
+  CAMLparam2(slv, conj);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Solver_val(slv)->getAbduct(*Term_val(conj)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_abduct_grammar(value slv, value conj, value grammar){
+  CAMLparam3(slv, conj, grammar);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom)
+    Term(Solver_val(slv)->getAbduct(*Term_val(conj), *Grammar_val(grammar)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_abduct_next(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Solver_val(slv)->getAbductNext(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_block_model(value slv, value mode){
+  CAMLparam2(slv, mode);
+  CVC5_TRY_CATCH_BEGIN;
+  Solver_val(slv)->blockModel((cvc5::modes::BlockModelsMode)Int_val(mode));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_block_model_values(value slv, value terms){
+  CAMLparam2(slv, terms);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> term_vec;
+  size_t n = Wosize_val(terms);
+  term_vec.reserve(n);
+  for (size_t i = 0; i < n; ++i) {
+    term_vec.emplace_back(*Term_val(Field(terms, i)));
+  }
+  Solver_val(slv)->blockModelValues(term_vec);
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_get_instantiations(value slv){
+  CAMLparam1(slv);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Solver_val(slv)->getInstantiations().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_get_statistics(value slv){
+  CAMLparam1(slv);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&statistics_operations, &custom) Statistics(Solver_val(slv)->getStatistics());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_get_sygus_constraints(value slv) {
+  CAMLparam1(slv);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> terms = Solver_val(slv)->getSygusConstraints();
+  size_t n = terms.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(terms[i], NULL);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_get_sygus_assumptions(value slv) {
+  CAMLparam1(slv);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> terms = Solver_val(slv)->getSygusAssumptions();
+  size_t n = terms.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(terms[i], NULL);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_add_sygus_inv_constraint(value slv, value inv, value pre, value trans, value post) {
+  CAMLparam5(slv, inv, pre, trans, post);
+  CVC5_TRY_CATCH_BEGIN;
+  Solver_val(slv)->addSygusInvConstraint(*Term_val(inv), *Term_val(pre), *Term_val(trans), *Term_val(post));
+  CAMLreturn(Val_unit);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_check_synth_next(value slv) {
+  CAMLparam1(slv);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&synthresult_operations, &custom) SynthResult(Solver_val(slv)->checkSynthNext());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_get_synth_solutions(value slv, value terms) {
+  CAMLparam2(slv, terms);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> term_vec;
+  size_t n = Wosize_val(terms);
+  term_vec.reserve(n);
+  for (size_t i = 0; i < n; ++i) {
+    term_vec.emplace_back(*Term_val(Field(terms, i)));
+  }
+  std::vector<cvc5::Term> sols = Solver_val(slv)->getSynthSolutions(term_vec);
+  result = caml_alloc(sols.size(), 0);
+  for (size_t i = 0; i < sols.size(); ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(sols[i], NULL);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_find_synth(value slv, value target) {
+  CAMLparam2(slv, target);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom)
+    Term(Solver_val(slv)->findSynth((cvc5::modes::FindSynthTarget)Int_val(target)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_solver_find_synth_grammar(value slv, value target, value grammar) {
+  CAMLparam3(slv, target, grammar);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom)
+    Term(Solver_val(slv)->findSynth((cvc5::modes::FindSynthTarget)Int_val(target), *Grammar_val(grammar)), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_proof(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  proof_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_proof_equal(value v1, value v2){
+  return Val_bool(*Proof_val(v1) == *Proof_val(v2));
+}
+
+CAMLprim value ocaml_cvc5_stub_proof_is_null(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(Proof_val(v)->isNull());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_proof_get_result(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&term_operations, &custom) Term(Proof_val(v)->getResult(), NULL);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_proof_get_children(value v){
+  CAMLparam1(v);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Proof> children = Proof_val(v)->getChildren();
+  result = caml_alloc(children.size(), 0);
+  for (size_t i = 0; i < children.size(); ++i) {
+    value custom = Val_unit;
+    new(&proof_operations, &custom) Proof(children[i]);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_proof_get_arguments(value v){
+  CAMLparam1(v);
+  CAMLlocal1(result);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> args = Proof_val(v)->getArguments();
+  result = caml_alloc(args.size(), 0);
+  for (size_t i = 0; i < args.size(); ++i) {
+    value custom = Val_unit;
+    new(&term_operations, &custom) Term(args[i], NULL);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_option_info(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  option_info_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_to_string(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(OptionInfo_val(v)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_name(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(OptionInfo_val(v)->name.c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+static value alloc_string_array(const std::vector<std::string>& vec){
+  CAMLparam0();
+  CAMLlocal1(result);
+  result = caml_alloc(vec.size(), 0);
+  for (size_t i = 0; i < vec.size(); ++i) {
+    Store_field(result, i, caml_copy_string(vec[i].c_str()));
+  }
+  CAMLreturn(result);
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_aliases(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(alloc_string_array(OptionInfo_val(v)->aliases));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_no_supports(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(alloc_string_array(OptionInfo_val(v)->noSupports));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_set_by_user(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(OptionInfo_val(v)->setByUser);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_category(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_int((int)OptionInfo_val(v)->category);
+  CVC5_TRY_CATCH_END;
+}
+
+#define OPTION_INFO_HOLDS(name, alt) \
+  CAMLprim value name(value v){ \
+    CVC5_TRY_CATCH_BEGIN; \
+    return Val_bool(std::holds_alternative<alt>(OptionInfo_val(v)->valueInfo)); \
+    CVC5_TRY_CATCH_END; \
+  }
+
+OPTION_INFO_HOLDS(ocaml_cvc5_stub_option_info_is_bool, cvc5::OptionInfo::ValueInfo<bool>)
+OPTION_INFO_HOLDS(ocaml_cvc5_stub_option_info_is_string, cvc5::OptionInfo::ValueInfo<std::string>)
+OPTION_INFO_HOLDS(ocaml_cvc5_stub_option_info_is_int, cvc5::OptionInfo::NumberInfo<int64_t>)
+OPTION_INFO_HOLDS(ocaml_cvc5_stub_option_info_is_uint, cvc5::OptionInfo::NumberInfo<uint64_t>)
+OPTION_INFO_HOLDS(ocaml_cvc5_stub_option_info_is_double, cvc5::OptionInfo::NumberInfo<double>)
+OPTION_INFO_HOLDS(ocaml_cvc5_stub_option_info_is_mode, cvc5::OptionInfo::ModeInfo)
+
+CAMLprim value ocaml_cvc5_stub_option_info_bool_value(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_bool(OptionInfo_val(v)->boolValue());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_string_value(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(OptionInfo_val(v)->stringValue().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_int_value(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_int64(OptionInfo_val(v)->intValue());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_uint_value(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  return caml_copy_int64(OptionInfo_val(v)->uintValue());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_option_info_double_value(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_double(OptionInfo_val(v)->doubleValue()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_stat(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  stat_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_stat_to_string(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Stat_val(v)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_stat_is_internal(value v){ return Val_bool(Stat_val(v)->isInternal()); }
+CAMLprim value ocaml_cvc5_stub_stat_is_default(value v){ return Val_bool(Stat_val(v)->isDefault()); }
+CAMLprim value ocaml_cvc5_stub_stat_is_int(value v){ return Val_bool(Stat_val(v)->isInt()); }
+CAMLprim value ocaml_cvc5_stub_stat_get_int(value v){ return caml_copy_int64(Stat_val(v)->getInt()); }
+CAMLprim value ocaml_cvc5_stub_stat_is_double(value v){ return Val_bool(Stat_val(v)->isDouble()); }
+
+CAMLprim value ocaml_cvc5_stub_stat_get_double(value v){
+  CAMLparam1(v);
+  CAMLreturn(caml_copy_double(Stat_val(v)->getDouble()));
+}
+
+CAMLprim value ocaml_cvc5_stub_stat_is_string(value v){ return Val_bool(Stat_val(v)->isString()); }
+
+CAMLprim value ocaml_cvc5_stub_stat_get_string(value v){
+  CAMLparam1(v);
+  CAMLreturn(caml_copy_string(Stat_val(v)->getString().c_str()));
+}
+
+CAMLprim value ocaml_cvc5_stub_stat_is_histogram(value v){ return Val_bool(Stat_val(v)->isHistogram()); }
+
+CAMLprim value ocaml_cvc5_stub_stat_get_histogram(value v){
+  CAMLparam1(v);
+  CAMLlocal2(result, pair);
+  const auto& hist = Stat_val(v)->getHistogram();
+  result = caml_alloc(hist.size(), 0);
+  size_t i = 0;
+  for (const auto& entry : hist) {
+    pair = caml_alloc_tuple(2);
+    Store_field(pair, 0, caml_copy_string(entry.first.c_str()));
+    Store_field(pair, 1, caml_copy_int64(entry.second));
+    Store_field(result, i++, pair);
+  }
+  CAMLreturn(result);
+}
+
+CAMLprim value ocaml_cvc5_stub_delete_statistics(value v){
+  CVC5_TRY_CATCH_BEGIN;
+  statistics_delete(v);
+  return Val_unit;
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_statistics_to_string(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(caml_copy_string(Statistics_val(v)->toString().c_str()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_statistics_get(value v, value name){
+  CAMLparam2(v, name);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&stat_operations, &custom) Stat(Statistics_val(v)->get(String_val(name)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_statistics_entries(value v){
+  CAMLparam1(v);
+  CAMLlocal2(result, pair);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<std::pair<std::string, cvc5::Stat>> entries;
+  for (auto it = Statistics_val(v)->begin(true, true); it != Statistics_val(v)->end(); ++it) {
+    entries.emplace_back(it->first, it->second);
+  }
+  result = caml_alloc(entries.size(), 0);
+  for (size_t i = 0; i < entries.size(); ++i) {
+    value stat_custom = Val_unit;
+    new(&stat_operations, &stat_custom) Stat(entries[i].second);
+    pair = caml_alloc_tuple(2);
+    Store_field(pair, 0, caml_copy_string(entries[i].first.c_str()));
+    Store_field(pair, 1, stat_custom);
+    Store_field(result, i, pair);
+  }
+  CAMLreturn(result);
   CVC5_TRY_CATCH_END;
 }
 
