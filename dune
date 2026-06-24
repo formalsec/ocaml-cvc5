@@ -7,7 +7,7 @@
 (rule
  (deps
   (source_tree vendor))
- (targets libpicpolyxx.a libpicpoly.a libcadical.a libcvc5.a cvc5_export.h)
+ (targets libpicpolyxx.a libpicpoly.a libcadical.a libcvc5.a cvc5_export.h dllcadical.so dllpicpoly.so dllpicpolyxx.so dllcvc5.so)
  (action
   (no-infer
    (progn
@@ -20,24 +20,31 @@
     (chdir
      vendor/libpoly
      (progn
-      (run
-       cmake
-       -B
-       build
-       -DCMAKE_BUILD_TYPE=$type
-       -DCMAKE_INSTALL_PREFIX=$prefix)
-      (chdir
-       build
-       (bash "make -j $(opam var jobs)"))
-      (run mv include poly)))
+       (run
+        cmake
+        -B
+        build
+        -DCMAKE_BUILD_TYPE=$type
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+        -DCMAKE_INSTALL_PREFIX=$prefix)
+       (chdir
+        build
+        (bash "make -j $(opam var jobs)"))
+       (run mv include poly)
+       (run ln -sf poly include)))
     (copy vendor/libpoly/build/src/libpicpoly.a libpicpoly.a)
     (copy vendor/libpoly/build/src/libpicpolyxx.a libpicpolyxx.a)
     (chdir
      vendor/cvc5
      (progn
-      (bash "./configure.sh --static")
-      (bash "make -C build -j $(opam var jobs)")))
+      (bash "sed -i 's/set(CMAKE_FIND_LIBRARY_SUFFIXES .a)/set(CMAKE_FIND_LIBRARY_SUFFIXES .so .dylib .a)/' CMakeLists.txt")
+      (bash "CFLAGS=-fPIC CXXFLAGS=-fPIC ./configure.sh --static -DCMAKE_PREFIX_PATH=$(pkg-config --variable=prefix gmp)")
+      (bash "make -C build -j $(opam var jobs) cvc5")))
     (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
+    (bash "g++ -shared -fPIC -o dllcadical.so -Wl,--whole-archive libcadical.a -Wl,--no-whole-archive")
+    (bash "g++ -shared -fPIC -o dllpicpoly.so -Wl,--whole-archive libpicpoly.a -Wl,--no-whole-archive")
+    (bash "g++ -shared -fPIC -o dllpicpolyxx.so -Wl,--whole-archive libpicpolyxx.a -Wl,--no-whole-archive ./dllpicpoly.so")
+    (bash "g++ -shared -fPIC -o dllcvc5.so -Wl,--whole-archive libcvc5.a -Wl,--no-whole-archive ./dllcadical.so ./dllpicpoly.so ./dllpicpolyxx.so -lgmp")
     (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
 
 (subdir
@@ -52,7 +59,6 @@
  (public_name cvc5)
  (name cvc5)
  (modules cvc5 cvc5_enums cvc5_external)
- (no_dynlink)
  (foreign_stubs
   (language cxx)
   (names cvc5_stubs)
