@@ -1,4 +1,4 @@
-/* SPDX-License-Identifier: MIT */ 
+/* SPDX-License-Identifier: MIT */
 /* Copyright (C) 2024-2025 formalsec */
 /* Written by Joao Pereira */
 
@@ -947,7 +947,7 @@ CAMLprim value ocaml_cvc5_stub_mk_uninterpreted_sort(value v, value s){
 CAMLprim value ocaml_cvc5_stub_sort_to_string(value v){
   CAMLparam1(v);
   CVC5_TRY_CATCH_BEGIN;
-  return caml_copy_string(Sort_val(v)->toString().c_str());
+  CAMLreturn(caml_copy_string(Sort_val(v)->toString().c_str()));
   CVC5_TRY_CATCH_END;
 }
 
