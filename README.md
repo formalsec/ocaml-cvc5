@@ -1,6 +1,6 @@
 [![Build badge](https://github.com/formalsec/ocaml-cvc5/actions/workflows/build.yml/badge.svg)](https://github.com/formalsec/ocaml-cvc5/actions) [![MIT](https://img.shields.io/github/license/formalsec/ocaml-cvc5)](LICENSE) ![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos-lightgrey)
 
-ocaml-cvc5 
+ocaml-cvc5
 ===============================================================================
 
 OCaml bindings for the [cvc5] Satisfiability Modulo Theories (SMT) solver
@@ -61,5 +61,22 @@ Run examples with:
 ```sh
 dune exec -- examples/toy.exe  #replace toy with any other example
 ```
+
+## Development
+
+### Creating a new release
+
+```sh
+# Create a new tag and push it to github
+git tag -a TAG
+git push -u origin TAG
+
+# Wait for CI to create a new release and then run publish script
+./scripts/publish.sh
+```
+
+To run the publish script you need to install `opam-publish` and create a
+github token with the scopes `repo` and `workflow`. You can then set this token
+to the env var `export OPAM_PUBLISH_GH_TOKEN=ghp_...`.
 
 [cvc5]: https://github.com/cvc5/cvc5

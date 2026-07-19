@@ -42,6 +42,8 @@
             shellHook = ''
               export PATH="${pythonWithPkgs}/bin:$PATH"
               export NIX_PYTHONPATH="${pythonWithPkgs}/lib/python3.13/site-packages"
+
+              eval $(opam env)
             '';
           };
         }
