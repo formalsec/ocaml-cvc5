@@ -47,6 +47,8 @@ module Sort = struct
   let mk_seq_sort = Cvc5_external.mk_seq_sort
 
   let mk_uninterpreted_sort = Cvc5_external.mk_uninterpreted_sort
+
+  let mk_function_sort = Cvc5_external.mk_function_sort
 end
 
 module Op = struct

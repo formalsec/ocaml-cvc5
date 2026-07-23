@@ -934,6 +934,21 @@ CAMLprim value ocaml_cvc5_stub_mk_seq_sort(value v, value sort){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_mk_function_sort(value v, value sorts, value r){
+  CAMLparam3(v, sorts, r);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec;
+  size_t arity = Wosize_val(sorts);
+  sort_vec.reserve(arity);
+  for (size_t i = 0; i < arity; i++)
+    sort_vec.emplace_back(*Sort_val(Field(sorts, i)));
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(v)->mkFunctionSort(sort_vec, *Sort_val(r)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_mk_uninterpreted_sort(value v, value s){
   CAMLparam2(v, s);
   CAMLlocal1(custom);
