@@ -9,6 +9,7 @@ homepage: "https://github.com/formalsec/ocaml-cvc5"
 bug-reports: "https://github.com/formalsec/ocaml-cvc5/issues"
 depends: [
   "dune" {>= "3.19"}
+  "alcotest" {with-test}
   "ocaml" {>= "4.12"}
   "conf-gcc" {build}
   "conf-g++" {build}

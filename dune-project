@@ -21,6 +21,7 @@
   (description "OCaml bindings for the cvc5 SMT solver")
   (depends
    dune
+   (alcotest :with-test)
    (ocaml (>= 4.12))
    (conf-gcc :build)
    (conf-g++ :build)

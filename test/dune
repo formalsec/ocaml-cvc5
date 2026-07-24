@@ -1,8 +1,7 @@
-(tests
- (names
-  test_trivial
-  test_terms
-  test_val_interp
-  test_model
-  test_function_sort)
- (libraries cvc5))
+(executables
+ (names run_tests)
+ (libraries cvc5 alcotest))
+
+(rule
+ (alias runtest)
+ (action (run ./run_tests.exe)))
