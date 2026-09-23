@@ -139,6 +139,23 @@ let test_function_sort () =
   let result = Solver.check_sat solver in
   is_true "function sort is sat" (Result.is_sat result)
 
+(* Select the index just written by a store returns the stored value *)
+let test_arrays () =
+  let tm = TermManager.mk_tm () in
+  let solver = Solver.mk_solver tm in
+  let int_sort = Sort.mk_int_sort tm in
+  let arr_sort = Sort.mk_array_sort tm int_sort int_sort in
+  let zero = Term.mk_int tm 0 in
+  let one = Term.mk_int tm 1 in
+  let i = Term.mk_const_s tm int_sort "i" in
+  let a = Term.mk_const_s tm arr_sort "a" in
+  is_true "array sort" (Sort.equal (Term.sort a) arr_sort);
+  let b = Term.mk_term tm Kind.Store [| a; i; one |] in
+  let b_i = Term.mk_term tm Kind.Select [| b; i |] in
+  Solver.assert_formula solver (Term.mk_term tm Kind.Equal [| b_i; zero |]);
+  let result = Solver.check_sat solver in
+  is_true "select after store is unsat" (Result.is_unsat result)
+
 (* Reset the assertions of a solver and checking its satisfiability should produce SAT *)
 let test_reset () =
   let tm = TermManager.mk_tm () in
@@ -167,5 +184,6 @@ let () =
     ; ("model", [ test_case "model generation" `Quick test_model ])
     ; ( "function_sort"
       , [ test_case "function sort and apply_uf" `Quick test_function_sort ] )
+    ; ("arrays", [ test_case "select, store" `Quick test_arrays ])
     ; ("reset", [ test_case "solver reset" `Quick test_reset ])
     ]

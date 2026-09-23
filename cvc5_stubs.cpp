@@ -934,6 +934,16 @@ CAMLprim value ocaml_cvc5_stub_mk_seq_sort(value v, value sort){
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_mk_array_sort(value v, value index, value elem){
+  CAMLparam3(v, index, elem);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(v)->mkArraySort(*Sort_val(index), *Sort_val(elem)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_mk_function_sort(value v, value sorts, value r){
   CAMLparam3(v, sorts, r);
   CAMLlocal1(custom);
