@@ -48,6 +48,8 @@ module Sort = struct
 
   let mk_uninterpreted_sort = Cvc5_external.mk_uninterpreted_sort
 
+  let mk_array_sort = Cvc5_external.mk_array_sort
+
   let mk_function_sort = Cvc5_external.mk_function_sort
 end
 

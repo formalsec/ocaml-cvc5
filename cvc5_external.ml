@@ -209,6 +209,9 @@ external mk_fp_sort :
 external mk_seq_sort : term_manager -> sort -> sort
   = "ocaml_cvc5_stub_mk_seq_sort"
 
+external mk_array_sort : term_manager -> sort -> sort -> sort
+  = "ocaml_cvc5_stub_mk_array_sort"
+
 external mk_function_sort : term_manager -> sort array -> sort -> sort
   = "ocaml_cvc5_stub_mk_function_sort"
 

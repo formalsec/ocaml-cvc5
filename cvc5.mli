@@ -71,6 +71,13 @@ module Sort : sig
       Parameters: - The name of the sort. *)
   val mk_uninterpreted_sort : TermManager.tm -> string -> sort
 
+  (** Create an array sort.
+
+      Parameters:
+      - The array index sort.
+      - The array element sort. *)
+  val mk_array_sort : TermManager.tm -> sort -> sort -> sort
+
   (** Create a function sort.
 
       Parameters: - The domain sorts of the function.
