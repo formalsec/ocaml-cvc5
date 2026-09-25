@@ -124,6 +124,7 @@ public:
   }
 
   void operator delete(void* ptr) {}
+  TermManagerHandle* getManager() const { return manager; }
 private:
   TermManagerHandle* manager;
 };
@@ -421,6 +422,42 @@ CAMLprim value ocaml_cvc5_stub_term_sort(value v){
   CVC5_TRY_CATCH_BEGIN;
   new(&sort_operations, &custom)
     Sort(Term_val(v)->getSort());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_get_children(value v){
+  CAMLparam1(v);
+  CAMLlocal2(result, custom);
+  CVC5_TRY_CATCH_BEGIN;
+  Term* t = Term_val(v);
+  TermManagerHandle* handle = t->getManager();
+  std::vector<cvc5::Term> children(t->begin(), t->end());
+  size_t n = children.size();
+  result = caml_alloc(n, 0);
+  for (size_t i = 0; i < n; i += 1) {
+    new(&term_operations, &custom) Term(children[i], handle);
+    Store_field(result, i, custom);
+  }
+  CAMLreturn(result);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_is_const_array(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(Val_bool(Term_val(v)->isConstArray()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_get_const_array_base(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  Term* t = Term_val(v);
+  TermManagerHandle* handle = t->getManager();
+  cvc5::Term base = t->getConstArrayBase();
+  new(&term_operations, &custom) Term(base, handle);
   CAMLreturn(custom);
   CVC5_TRY_CATCH_END;
 }
@@ -907,6 +944,31 @@ CAMLprim value ocaml_cvc5_stub_get_rm_sort(value v){
 CAMLprim value ocaml_cvc5_stub_sort_get_bv_size(value v){
   CVC5_TRY_CATCH_BEGIN;
   return Val_int(Sort_val(v)->getBitVectorSize());
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_is_array(value v){
+  CAMLparam1(v);
+  CVC5_TRY_CATCH_BEGIN;
+  CAMLreturn(Val_bool(Sort_val(v)->isArray()));
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_get_array_index_sort(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom) Sort(Sort_val(v)->getArrayIndexSort());
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_sort_get_array_element_sort(value v){
+  CAMLparam1(v);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom) Sort(Sort_val(v)->getArrayElementSort());
+  CAMLreturn(custom);
   CVC5_TRY_CATCH_END;
 }
 

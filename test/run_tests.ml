@@ -156,6 +156,32 @@ let test_arrays () =
   let result = Solver.check_sat solver in
   is_true "select after store is unsat" (Result.is_unsat result)
 
+(* The model value of an array decomposes into its entries and default value *)
+let test_array_model () =
+  let tm = TermManager.mk_tm () in
+  let solver = Solver.mk_solver tm in
+  Solver.set_option solver "produce-models" "true";
+  let int_sort = Sort.mk_int_sort tm in
+  let arr_sort = Sort.mk_array_sort tm int_sort int_sort in
+  is_true "is array sort" (Sort.is_array arr_sort);
+  is_true "index sort" (Sort.equal (Sort.array_index_sort arr_sort) int_sort);
+  is_true "element sort"
+    (Sort.equal (Sort.array_element_sort arr_sort) int_sort);
+  let a = Term.mk_const_s tm arr_sort "a" in
+  let select i = Term.mk_term tm Kind.Select [| a; Term.mk_int tm i |] in
+  let eq x y = Term.mk_term tm Kind.Equal [| x; y |] in
+  Solver.assert_formula solver (eq (select 1) (Term.mk_int tm 10));
+  Solver.assert_formula solver (eq (select 2) (Term.mk_int tm 20));
+  is_true "is sat" (Result.is_sat (Solver.check_sat solver));
+  let entries, default = Term.get_array (Solver.get_value solver a) in
+  let lookup i =
+    match List.find_opt (fun (idx, _) -> Term.get_int idx = i) entries with
+    | Some (_, v) -> Term.get_int v
+    | None -> Term.get_int default
+  in
+  check int "a[1]" 10 (lookup 1);
+  check int "a[2]" 20 (lookup 2)
+
 (* Reset the assertions of a solver and checking its satisfiability should produce SAT *)
 let test_reset () =
   let tm = TermManager.mk_tm () in
@@ -184,6 +210,9 @@ let () =
     ; ("model", [ test_case "model generation" `Quick test_model ])
     ; ( "function_sort"
       , [ test_case "function sort and apply_uf" `Quick test_function_sort ] )
-    ; ("arrays", [ test_case "select, store" `Quick test_arrays ])
+    ; ( "arrays"
+      , [ test_case "select, store" `Quick test_arrays
+        ; test_case "array model" `Quick test_array_model
+        ] )
     ; ("reset", [ test_case "solver reset" `Quick test_reset ])
     ]
