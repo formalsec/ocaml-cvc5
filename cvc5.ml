@@ -101,7 +101,7 @@ module Term = struct
   let get_const_array_base = Cvc5_external.term_get_const_array_base
 
   (* read every (store a i v), accumulate (i,v), call recursively on a, until
-     (const d) is found, return ([in, vn); ...; (i1, v1) ], d), representing an
+     (const d) is found, return ([ (in, vn); ...; (i1, v1) ], d), representing an
      array model of the form (store ... (store (const d) i1 v1) ... in vn) *)
   let rec get_array_aux acc t =
     if is_const_array t then (List.rev acc, get_const_array_base t)
