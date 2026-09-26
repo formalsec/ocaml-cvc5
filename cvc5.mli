@@ -78,6 +78,15 @@ module Sort : sig
       - The array element sort. *)
   val mk_array_sort : TermManager.tm -> sort -> sort -> sort
 
+  (** Determine if this is an array sort. *)
+  val is_array : sort -> bool
+
+  (** Get the index sort of an array sort. *)
+  val array_index_sort : sort -> sort
+
+  (** Get the element sort of an array sort. *)
+  val array_element_sort : sort -> sort
+
   (** Create a function sort.
 
       Parameters: - The domain sorts of the function.
@@ -151,6 +160,27 @@ module Term : sig
 
   (** Get the sort of the term. *)
   val sort : term -> Sort.sort
+
+  (** Get the children of the term. *)
+  val children : term -> term array
+
+  (** Determine if the term is a constant array. *)
+  val is_const_array : term -> bool
+
+  (** Get the element value of a constant array.
+
+      Requires that the term is a constant array. *)
+  val get_const_array_base : term -> term
+
+  (** Decompose an array model value, e.g. one obtained from
+      {!Solver.get_value}, into its list of entries and its default value.
+
+      An array value is a chain of stores on top of a constant array:
+      [(store ... (store ((as const (Array I E)) d) i1 v1) ... in vn)]. The
+      result is [([ (in, vn); ...; (i1, v1) ], d)].
+
+      Raises [Invalid_argument] if the term is not of that shape. *)
+  val get_array : term -> (term * term) list * term
 
   (** Get the string representation of the term. *)
   val to_string : term -> string

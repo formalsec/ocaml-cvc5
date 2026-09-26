@@ -50,6 +50,12 @@ module Sort = struct
 
   let mk_array_sort = Cvc5_external.mk_array_sort
 
+  let is_array = Cvc5_external.sort_is_array
+
+  let array_index_sort = Cvc5_external.sort_get_array_index_sort
+
+  let array_element_sort = Cvc5_external.sort_get_array_element_sort
+
   let mk_function_sort = Cvc5_external.mk_function_sort
 end
 
@@ -87,6 +93,24 @@ module Term = struct
   let kind t = Kind.of_cpp @@ Cvc5_external.term_kind t
 
   let sort = Cvc5_external.term_sort
+
+  let children = Cvc5_external.term_get_children
+
+  let is_const_array = Cvc5_external.term_is_const_array
+
+  let get_const_array_base = Cvc5_external.term_get_const_array_base
+
+  (* read every (store a i v), accumulate (i,v), call recursively on a, until
+     (const d) is found, return ([ (in, vn); ...; (i1, v1) ], d), representing an
+     array model of the form (store ... (store (const d) i1 v1) ... in vn) *)
+  let rec get_array_aux acc t =
+    if is_const_array t then (List.rev acc, get_const_array_base t)
+    else if Cvc5_external.term_kind t = Kind.to_cpp Kind.Store then
+      let c = children t in
+      get_array_aux ((c.(1), c.(2)) :: acc) c.(0)
+    else invalid_arg "Term.get_array: not an array value"
+
+  let get_array t = get_array_aux [] t
 
   let to_string = Cvc5_external.term_to_string
 

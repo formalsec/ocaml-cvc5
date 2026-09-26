@@ -220,6 +220,14 @@ external mk_uninterpreted_sort : term_manager -> string -> sort
 
 external sort_get_bv_size : sort -> int32 = "ocaml_cvc5_stub_sort_get_bv_size"
 
+external sort_is_array : sort -> bool = "ocaml_cvc5_stub_sort_is_array"
+
+external sort_get_array_index_sort : sort -> sort
+  = "ocaml_cvc5_stub_sort_get_array_index_sort"
+
+external sort_get_array_element_sort : sort -> sort
+  = "ocaml_cvc5_stub_sort_get_array_element_sort"
+
 external sort_to_string : sort -> string = "ocaml_cvc5_stub_sort_to_string"
 
 external sort_equal : sort -> sort -> bool = "ocaml_cvc5_stub_sort_equal"
@@ -241,6 +249,15 @@ external term_id : term -> int = "ocaml_cvc5_stub_term_id"
 external term_kind : term -> int = "ocaml_cvc5_stub_term_kind"
 
 external term_sort : term -> sort = "ocaml_cvc5_stub_term_sort"
+
+external term_get_children : term -> term array
+  = "ocaml_cvc5_stub_term_get_children"
+
+external term_is_const_array : term -> bool
+  = "ocaml_cvc5_stub_term_is_const_array"
+
+external term_get_const_array_base : term -> term
+  = "ocaml_cvc5_stub_term_get_const_array_base"
 
 external new_solver : term_manager -> solver = "ocaml_cvc5_stub_new_solver"
 
