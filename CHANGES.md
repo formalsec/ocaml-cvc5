@@ -1,3 +1,15 @@
+## 1.4.1
+
+### Added
+
+### Changed
+
+- Updated cvc5's version to v1.4.1
+- Updated LibPoly's version to v0.2.1
+- Updated SymFPU's version to commit 40bdec0
+
+### Fixed
+
 ## 1.3.0
 
 ### Added
