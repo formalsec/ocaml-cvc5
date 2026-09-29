@@ -1631,6 +1631,24 @@ CAMLprim value ocaml_cvc5_stub_mk_fp_neg_zero(value v, value sign, value exp){
   return native_cvc5_stub_mk_fp_neg_zero(v, Long_val(sign), Long_val(exp));
 }
 
+CAMLprim value ocaml_cvc5_stub_mk_skolem(value tm, value skolem_id, value skolem_indices){
+  CAMLparam3(tm, skolem_id, skolem_indices);
+  CAMLlocal1(custom);
+  TermManagerHandle* handle = TermManager_handle_val(tm);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Term> indices;
+  size_t arity = Wosize_val(skolem_indices);
+  indices.reserve(arity);
+
+  for (size_t i = 0; i < arity; i++)
+    indices.emplace_back(*Term_val(Field(skolem_indices, i)));
+
+  new(&term_operations, &custom)
+    Term(handle->tm->mkSkolem((cvc5::SkolemId)Int_val(skolem_id), indices), handle);
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_get_model(value v, value sorts, value vars){
   CAMLparam3(v, sorts, vars);
   CVC5_TRY_CATCH_BEGIN;
@@ -1932,6 +1950,132 @@ CAMLprim value ocaml_cvc5_stub_mk_unresolved_datatype_sort(value tm, value name,
   CVC5_TRY_CATCH_END;
 }
 
+CAMLprim value ocaml_cvc5_stub_mk_finite_field_sort(value tm, value mod, value base){
+  CAMLparam3(tm, mod, base);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkFiniteFieldSort(String_val(mod), Int_val(base)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_datatype_sort(value tm, value dtypedecls){
+  CAMLparam2(tm, dtypedecls);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkDatatypeSort(*DatatypeDecl_val(dtypedecls)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_predicate_sort(value tm, value domain_sorts){
+  CAMLparam2(tm, domain_sorts);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec;
+  size_t arity = Wosize_val(domain_sorts);
+  sort_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    sort_vec.emplace_back(*Sort_val(Field(domain_sorts, i)));
+  }
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkPredicateSort(sort_vec));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_record_sort(value tm, value fields){
+  CAMLparam2(tm, fields);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<std::pair<std::string, cvc5::Sort>> record_fields;
+  size_t arity = Wosize_val(fields);
+  record_fields.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    value field = Field(fields, i);
+    std::string field_name = String_val(Field(field, 0));
+    cvc5::Sort field_sort = *Sort_val(Field(field, 1));
+    record_fields.emplace_back(field_name, field_sort);
+  }
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkRecordSort(record_fields));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_set_sort(value tm, value elem_sort){
+  CAMLparam2(tm, elem_sort);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkSetSort(*Sort_val(elem_sort)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_bag_sort(value tm, value elem_sort){
+  CAMLparam2(tm, elem_sort);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkBagSort(*Sort_val(elem_sort)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_abstract_sort(value tm, value id){
+  CAMLparam2(tm, id);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkAbstractSort((cvc5::SortKind)Int_val(id)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+//mk_uninterpreted_sort_constructor
+CAMLprim value ocaml_cvc5_stub_mk_uninterpreted_sort_constructor_sort(value tm, value arity, value name_opt){
+  CAMLparam3(tm, arity, name_opt);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::optional<std::string> name = std::nullopt;
+  if (Is_block(name_opt)) {
+    name = std::string(String_val(Field(name_opt, 0)));
+  }
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkUninterpretedSortConstructorSort(Int_val(arity), name));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_tuple_sort(value tm, value elem_sorts){
+  CAMLparam2(tm, elem_sorts);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  std::vector<cvc5::Sort> sort_vec;
+  size_t arity = Wosize_val(elem_sorts);
+  sort_vec.reserve(arity);
+  for (size_t i = 0; i < arity; ++i) {
+    sort_vec.emplace_back(*Sort_val(Field(elem_sorts, i)));
+  }
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkTupleSort(sort_vec));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_mk_nullable_sort(value tm, value elem_sort){
+  CAMLparam2(tm, elem_sort);
+  CAMLlocal1(custom);
+  CVC5_TRY_CATCH_BEGIN;
+  new(&sort_operations, &custom)
+    Sort(TermManager_val(tm)->mkNullableSort(*Sort_val(elem_sort)));
+  CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
 CAMLprim value ocaml_cvc5_stub_mk_datatype_constructor_decl(value tm, value name){
   CAMLparam2(tm, name);
   CAMLlocal1(custom);
@@ -2085,6 +2229,12 @@ CAMLprim value ocaml_cvc5_stub_term_get_child(value v, value i){
   new(&term_operations, &custom)
     Term((*Term_val(v))[Int_val(i)], Term_val(v)->getManager());
   CAMLreturn(custom);
+  CVC5_TRY_CATCH_END;
+}
+
+CAMLprim value ocaml_cvc5_stub_term_get_num_indices_for_skolem_id(value tm, value skolem_id){
+  CVC5_TRY_CATCH_BEGIN;
+  return Val_int(TermManager_handle_val(tm)->tm->getNumIndicesForSkolemId((cvc5::SkolemId)Int_val(skolem_id)));
   CVC5_TRY_CATCH_END;
 }
 

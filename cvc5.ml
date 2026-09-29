@@ -16,6 +16,8 @@ module ProofFormat = Cvc5_enums.ProofFormat
 module FindSynthTarget = Cvc5_enums.FindSynthTarget
 module OptionCategory = Cvc5_enums.OptionCategory
 module InputLanguage = Cvc5_enums.InputLanguage
+module SkolemId = Cvc5_enums.SkolemId
+module SortKind = Cvc5_enums.SortKind
 
 module TermManager = struct
   type tm = Cvc5_external.term_manager
@@ -69,6 +71,28 @@ module Sort = struct
   let mk_param_sort tm ?name () = Cvc5_external.tm_mk_param_sort tm name
 
   let mk_unresolved_datatype_sort = Cvc5_external.tm_mk_unresolved_datatype_sort
+
+  let mk_finite_field_sort = Cvc5_external.mk_finite_field_sort
+
+  let mk_datatype_sort = Cvc5_external.mk_datatype_sort
+
+  let mk_predicate_sort = Cvc5_external.mk_predicate_sort
+
+  let mk_record_sort = Cvc5_external.mk_record_sort
+
+  let mk_set_sort = Cvc5_external.mk_set_sort
+
+  let mk_bag_sort = Cvc5_external.mk_bag_sort
+
+  let mk_abstract_sort (tm : TermManager.tm) (sk : SortKind.t) =
+    Cvc5_external.mk_abstract_sort tm (SortKind.to_cpp sk)
+
+  let mk_uninterpreted_sort_constructor_sort tm arity ?symbol () =
+    Cvc5_external.mk_uninterpreted_sort_constructor_sort tm arity symbol
+
+  let mk_tuple_sort = Cvc5_external.mk_tuple_sort
+
+  let mk_nullable_sort = Cvc5_external.mk_nullable_sort
 
   let is_null = Cvc5_external.sort_is_null
 
@@ -138,6 +162,7 @@ end
 
 module Op = struct
   type op = Cvc5_external.op
+
   type term = Cvc5_external.term
 
   let mk_op tm kind args = Cvc5_external.mk_op tm (Kind.to_cpp kind) args
@@ -254,6 +279,9 @@ module Term = struct
 
   let mk_fp_neg_zero = Cvc5_external.mk_fp_neg_zero
 
+  let mk_skolem (tm : TermManager.tm) (skid : SkolemId.t) (terms : term array) =
+    Cvc5_external.mk_skolem tm (SkolemId.to_cpp skid) terms
+
   let is_int = Cvc5_external.term_is_int_val
 
   let is_real = Cvc5_external.term_is_real_val
@@ -312,6 +340,9 @@ module Term = struct
   let get_num_children = Cvc5_external.term_get_num_children
 
   let get_child = Cvc5_external.term_get_child
+
+  let get_num_indices_for_skolem_id (tm : TermManager.tm) (skid : SkolemId.t) =
+    Cvc5_external.term_get_num_indices_for_skolem_id tm (SkolemId.to_cpp skid)
 
   let substitute = Cvc5_external.term_substitute
 
@@ -778,8 +809,7 @@ module Solver = struct
 
   let get_sygus_assumptions = Cvc5_external.solver_get_sygus_assumptions
 
-  let add_sygus_inv_constraint =
-    Cvc5_external.solver_add_sygus_inv_constraint
+  let add_sygus_inv_constraint = Cvc5_external.solver_add_sygus_inv_constraint
 
   let check_synth = Cvc5_external.solver_check_synth
 
@@ -795,7 +825,8 @@ module Solver = struct
       Cvc5_external.solver_find_synth solver (FindSynthTarget.to_cpp target)
     | Some g ->
       Cvc5_external.solver_find_synth_grammar solver
-        (FindSynthTarget.to_cpp target) g
+        (FindSynthTarget.to_cpp target)
+        g
 
   let get_statistics = Statistics.of_solver
 end

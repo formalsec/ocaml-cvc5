@@ -12,6 +12,7 @@
 #include <cvc5/cvc5_kind.h>
 #include <cvc5/cvc5_types.h>
 #include <cvc5/cvc5_proof_rule.h>
+#include <cvc5/cvc5_skolem_id.h>
 
 using namespace cvc5;
 
@@ -127,4 +128,16 @@ extern "C" void build_enums(){
                         modes::InputLanguage::SYGUS_2_1,
                         modes::InputLanguage::UNKNOWN,
                     });
+
+  std::vector<SkolemId> skolem_ids;
+  for (int i = 0; i < (int)SkolemId::NONE; i += 1){
+    skolem_ids.push_back((SkolemId)i);
+  }
+  emit_enum_module("SkolemId", skolem_ids);
+
+  std::vector<SortKind> sort_kinds;
+  for (int i = 0; i < (int)SortKind::LAST_SORT_KIND; i += 1){
+    sort_kinds.push_back((SortKind)i);
+  }
+  emit_enum_module("SortKind", sort_kinds);
 }

@@ -64,6 +64,8 @@ type find_synth_target = ptr
 
 type synthresult = ptr
 
+type skolem_id = ptr
+
 external result_is_sat : result -> bool = "ocaml_cvc5_stub_result_is_sat"
 
 external result_is_unsat : result -> bool = "ocaml_cvc5_stub_result_is_unsat"
@@ -136,6 +138,9 @@ external mk_fp_pos_zero :
 external mk_fp_neg_zero :
   term_manager -> (int[@untagged]) -> (int[@untagged]) -> term
   = "ocaml_cvc5_stub_mk_fp_neg_zero" "native_cvc5_stub_mk_fp_neg_zero"
+
+external mk_skolem : term_manager -> int -> term array -> term
+  = "ocaml_cvc5_stub_mk_skolem"
 
 external mk_term : term_manager -> int -> term array -> term
   = "ocaml_cvc5_stub_mk_term"
@@ -283,6 +288,32 @@ external tm_mk_param_sort : term_manager -> string option -> sort
 external tm_mk_unresolved_datatype_sort : term_manager -> string -> int -> sort
   = "ocaml_cvc5_stub_mk_unresolved_datatype_sort"
 
+external mk_finite_field_sort : term_manager -> string -> int -> sort
+  = "ocaml_cvc5_stub_mk_finite_field_sort"
+
+external mk_datatype_sort : term_manager -> datatype_decl -> sort
+  = "ocaml_cvc5_stub_mk_datatype_sort"
+
+external mk_predicate_sort : term_manager -> sort array -> sort
+  = "ocaml_cvc5_stub_mk_predicate_sort"
+
+external mk_record_sort : term_manager -> (string * sort) array -> sort
+  = "ocaml_cvc5_stub_mk_record_sort"
+
+external mk_set_sort : term_manager -> sort -> sort = "ocaml_cvc5_stub_mk_set_sort"
+
+external mk_bag_sort : term_manager -> sort -> sort = "ocaml_cvc5_stub_mk_bag_sort"
+
+external mk_abstract_sort : term_manager -> int -> sort
+  = "ocaml_cvc5_stub_mk_abstract_sort"
+
+external mk_uninterpreted_sort_constructor_sort : term_manager -> int -> string option -> sort
+  = "ocaml_cvc5_stub_mk_uninterpreted_sort_constructor_sort"
+
+external mk_tuple_sort : term_manager -> sort array -> sort = "ocaml_cvc5_stub_mk_tuple_sort"
+
+external mk_nullable_sort : term_manager -> sort -> sort = "ocaml_cvc5_stub_mk_nullable_sort"
+
 external tm_mk_datatype_constructor_decl :
   term_manager -> string -> datatype_constructor_decl
   = "ocaml_cvc5_stub_mk_datatype_constructor_decl"
@@ -312,8 +343,7 @@ external set_option : solver -> string -> string -> unit
 external set_info : solver -> string -> string -> unit
   = "ocaml_cvc5_stub_set_info"
 
-external solver_is_logic_set : solver -> bool
-  = "ocaml_cvc5_stub_is_logic_set"
+external solver_is_logic_set : solver -> bool = "ocaml_cvc5_stub_is_logic_set"
 
 external solver_get_logic : solver -> string = "ocaml_cvc5_stub_get_logic"
 
@@ -370,7 +400,8 @@ external solver_get_difficulty : solver -> (term * term) array
 external solver_get_timeout_core : solver -> result * term array
   = "ocaml_cvc5_stub_get_timeout_core"
 
-external solver_get_timeout_core_assuming : solver -> term array -> result * term array
+external solver_get_timeout_core_assuming :
+  solver -> term array -> result * term array
   = "ocaml_cvc5_stub_get_timeout_core_assuming"
 
 external solver_get_proof : solver -> int -> proof array
@@ -467,8 +498,7 @@ external solver_define_fun :
 
 external solver_define_fun_rec :
   solver -> string -> term array -> sort -> term -> bool -> term
-  = "ocaml_cvc5_stub_define_fun_rec_bytecode"
-    "ocaml_cvc5_stub_define_fun_rec"
+  = "ocaml_cvc5_stub_define_fun_rec_bytecode" "ocaml_cvc5_stub_define_fun_rec"
 
 external solver_define_fun_rec_term :
   solver -> term -> term array -> term -> bool -> term
@@ -591,8 +621,7 @@ external sort_is_datatype_tester : sort -> bool
 
 external sort_is_function : sort -> bool = "ocaml_cvc5_stub_sort_is_function"
 
-external sort_is_predicate : sort -> bool
-  = "ocaml_cvc5_stub_sort_is_predicate"
+external sort_is_predicate : sort -> bool = "ocaml_cvc5_stub_sort_is_predicate"
 
 external sort_is_tuple : sort -> bool = "ocaml_cvc5_stub_sort_is_tuple"
 
@@ -623,7 +652,8 @@ external sort_is_instantiated : sort -> bool
 external sort_get_uninterpreted_sort_constructor : sort -> sort
   = "ocaml_cvc5_stub_sort_get_uninterpreted_sort_constructor"
 
-external sort_get_datatype : sort -> datatype = "ocaml_cvc5_stub_sort_get_datatype"
+external sort_get_datatype : sort -> datatype
+  = "ocaml_cvc5_stub_sort_get_datatype"
 
 external sort_instantiate : sort -> sort array -> sort
   = "ocaml_cvc5_stub_sort_instantiate"
@@ -641,6 +671,9 @@ external term_get_num_children : term -> int
   = "ocaml_cvc5_stub_term_get_num_children"
 
 external term_get_child : term -> int -> term = "ocaml_cvc5_stub_term_get_child"
+
+external term_get_num_indices_for_skolem_id : term_manager -> int -> int
+  = "ocaml_cvc5_stub_term_get_num_indices_for_skolem_id"
 
 external term_substitute : term -> term -> term -> term
   = "ocaml_cvc5_stub_term_substitute"
@@ -692,8 +725,7 @@ external datatype_constructor_decl_add_selector_unresolved :
   datatype_constructor_decl -> string -> string -> unit
   = "ocaml_cvc5_stub_datatype_constructor_decl_add_selector_unresolved"
 
-external datatype_constructor_decl_is_null :
-  datatype_constructor_decl -> bool
+external datatype_constructor_decl_is_null : datatype_constructor_decl -> bool
   = "ocaml_cvc5_stub_datatype_constructor_decl_is_null"
 
 external datatype_constructor_decl_to_string :
@@ -731,7 +763,8 @@ external datatype_decl_get_name : datatype_decl -> string
 external delete_datatype_selector : datatype_selector -> unit
   = "ocaml_cvc5_stub_delete_datatype_selector"
 
-external datatype_selector_equal : datatype_selector -> datatype_selector -> bool
+external datatype_selector_equal :
+  datatype_selector -> datatype_selector -> bool
   = "ocaml_cvc5_stub_datatype_selector_equal"
 
 external datatype_selector_get_name : datatype_selector -> string
@@ -803,7 +836,8 @@ external datatype_get_constructor : datatype -> string -> datatype_constructor
 external datatype_get_selector : datatype -> string -> datatype_selector
   = "ocaml_cvc5_stub_datatype_get_selector"
 
-external datatype_get_name : datatype -> string = "ocaml_cvc5_stub_datatype_get_name"
+external datatype_get_name : datatype -> string
+  = "ocaml_cvc5_stub_datatype_get_name"
 
 external datatype_get_num_constructors : datatype -> int
   = "ocaml_cvc5_stub_datatype_get_num_constructors"
@@ -829,7 +863,8 @@ external datatype_is_finite : datatype -> bool
 external datatype_is_well_founded : datatype -> bool
   = "ocaml_cvc5_stub_datatype_is_well_founded"
 
-external datatype_is_null : datatype -> bool = "ocaml_cvc5_stub_datatype_is_null"
+external datatype_is_null : datatype -> bool
+  = "ocaml_cvc5_stub_datatype_is_null"
 
 external datatype_to_string : datatype -> string
   = "ocaml_cvc5_stub_datatype_to_string"
@@ -922,8 +957,7 @@ external stat_is_string : stat -> bool = "ocaml_cvc5_stub_stat_is_string"
 
 external stat_get_string : stat -> string = "ocaml_cvc5_stub_stat_get_string"
 
-external stat_is_histogram : stat -> bool
-  = "ocaml_cvc5_stub_stat_is_histogram"
+external stat_is_histogram : stat -> bool = "ocaml_cvc5_stub_stat_is_histogram"
 
 external stat_get_histogram : stat -> (string * int64) array
   = "ocaml_cvc5_stub_stat_get_histogram"

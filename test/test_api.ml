@@ -28,7 +28,8 @@ let one = Term.mk_int tm 1
 let () =
   assert (Sort.is_int int_sort);
   assert (Sort.is_bool bool_sort);
-  assert (String.length (Sort.to_string (Sort.mk_param_sort tm ~name:"T" ())) > 0)
+  assert (
+    String.length (Sort.to_string (Sort.mk_param_sort tm ~name:"T" ())) > 0 )
 
 let () =
   assert (Term.has_symbol x);
@@ -53,15 +54,17 @@ let () =
   let list_cons = DatatypeConstructorDecl.mk tm "cons" in
   DatatypeConstructorDecl.add_selector list_cons "head" int_sort;
   DatatypeConstructorDecl.add_selector_self list_cons "tail";
-  let list_sort = Solver.declare_datatype solver "List" [| list_nil; list_cons |] in
+  let list_sort =
+    Solver.declare_datatype solver "List" [| list_nil; list_cons |]
+  in
   let dt = Datatype.of_sort list_sort in
   assert (Datatype.get_name dt = "List");
   assert (Datatype.get_num_constructors dt = 2);
   let cons = Datatype.get_constructor dt "cons" in
   assert (DatatypeConstructor.get_num_selectors cons = 2);
-  assert
-    (DatatypeSelector.get_name (DatatypeConstructor.get_selector cons "head")
-    = "head")
+  assert (
+    DatatypeSelector.get_name (DatatypeConstructor.get_selector cons "head")
+    = "head" )
 
 let () =
   let pred = Term.mk_term tm Kind.Geq [| x; zero |] in

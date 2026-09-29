@@ -14,6 +14,8 @@ module ProofFormat = Cvc5_enums.ProofFormat
 module FindSynthTarget = Cvc5_enums.FindSynthTarget
 module OptionCategory = Cvc5_enums.OptionCategory
 module InputLanguage = Cvc5_enums.InputLanguage
+module SkolemId = Cvc5_enums.SkolemId
+module SortKind = Cvc5_enums.SortKind
 
 module TermManager : sig
   type tm
@@ -25,7 +27,7 @@ module TermManager : sig
   val delete : tm -> unit
 end
 
-module Sort : sig
+module rec Sort : sig
   type sort
 
   (** Sort instance destructor. *)
@@ -93,10 +95,73 @@ module Sort : sig
 
   (** Create an unresolved datatype sort.
 
-      This is for creating yet unresolved sort placeholders for mutually recursive parametric datatypes.
+      This is for creating yet unresolved sort placeholders for mutually
+      recursive parametric datatypes. 
       Parameters: - The symbol of the sort
       - The number of sort parameters of the sort *)
   val mk_unresolved_datatype_sort : TermManager.tm -> string -> int -> sort
+
+  (** Create a finite-field sort from a given string of base n
+
+      Parameters: - The modulus of the field. Must be prime.
+      - The base of the string representation of size. *)
+  val mk_finite_field_sort : TermManager.tm -> string -> int -> sort
+
+  (** Create a datatype sort.
+
+      Parameters: – The datatype declaration from which the sort is created. *)
+  val mk_datatype_sort : TermManager.tm -> DatatypeDecl.datatype_decl -> sort
+
+  (** Create a predicate sort.
+
+      This is equivalent to calling mkFunctionSort() with the Boolean sort as
+      the codomain. Parameters: - The list of sorts of the predicate. *)
+  val mk_predicate_sort : TermManager.tm -> sort array -> sort
+
+  (** Create a record sort.
+
+      Parameters: - The list of fields of the record. *)
+  val mk_record_sort : TermManager.tm -> (string * sort) array -> sort
+
+  (** Create a set sort.
+
+      Parameters: - The sort of the set elements. *)
+  val mk_set_sort : TermManager.tm -> sort -> sort
+
+  (** Create a bag sort.
+
+      Parameters: - The sort of the bag elements. *)
+  val mk_bag_sort : TermManager.tm -> sort -> sort
+
+  (** Create an abstract sort. An abstract sort represents a sort for a given
+      kind whose parameters and arguments are unspecified.
+
+      The kind k must be the kind of a sort that can be abstracted, i.e., a sort
+      that has indices or argument sorts. For example, ARRAY_SORT and
+      BITVECTOR_SORT can be passed as the kind k to this function, while
+      INTEGER_SORT and STRING_SORT cannot.
+
+      Parameters: - The kind of the abstract sort. *)
+  val mk_abstract_sort : TermManager.tm -> SortKind.t -> sort
+
+  (** Create an uninterpreted sort constructor sort.
+
+      An uninterpreted sort constructor is an uninterpreted sort with arity > 0.
+
+      Parameters: - The arity of the sort (must be > 0).
+      - The symbol of the sort. *)
+  val mk_uninterpreted_sort_constructor_sort :
+    TermManager.tm -> int -> ?symbol:string -> unit -> sort
+
+  (** Create a tuple sort.
+
+      Parameters: - The sorts of the elements of the tuple. *)
+  val mk_tuple_sort : TermManager.tm -> sort array -> sort
+
+  (** Create a nullable sort.
+
+      Parameters: - The sort of the element of the nullable. *)
+  val mk_nullable_sort : TermManager.tm -> sort -> sort
 
   (** Determine if this is the null sort.*)
   val is_null : sort -> bool
@@ -122,7 +187,8 @@ module Sort : sig
   (** Determine if this is a bit-vector sort (SMT-LIB: _ BitVec i). *)
   val is_bv : sort -> bool
 
-  (** Determine if this is a floating-point sort (SMT-LIB: _ FloatingPoint eb sb). *)
+  (** Determine if this is a floating-point sort (SMT-LIB: _ FloatingPoint eb
+      sb). *)
   val is_fp : sort -> bool
 
   (** Determine if this is a datatype sort. *)
@@ -140,10 +206,10 @@ module Sort : sig
   (** Determine if this is a function sort. *)
   val is_fun : sort -> bool
 
-  (** Determine if this is a predicate sort. 
-    
-      A predicate sort is a function sort that maps to the Boolean sort. 
-      All predicate sorts are also function sorts. *)
+  (** Determine if this is a predicate sort.
+
+      A predicate sort is a function sort that maps to the Boolean sort. All
+      predicate sorts are also function sorts. *)
   val is_pred : sort -> bool
 
   (** Determine if this is a tuple sort. *)
@@ -188,27 +254,29 @@ module Sort : sig
   (** Determine if this is an uninterpreted sort. *)
   val is_uninterpreted : sort -> bool
 
-  (** Determine if this is an uninterpreted sort constructor. 
-    
-      An uninterpreted sort constructor has arity > 0 and can be instantiated 
-      to construct uninterpreted sorts with given sort parameters.*)
+  (** Determine if this is an uninterpreted sort constructor.
+
+      An uninterpreted sort constructor has arity > 0 and can be instantiated to
+      construct uninterpreted sorts with given sort parameters.*)
   val is_uninterpreted_sort_constructor : sort -> bool
 
-  (** Determine if this is an instantiated 
-      (parametric datatype or uninterpreted sort constructor) sort.
-    
-      An instantiated sort is a sort that has been constructed 
-      from instantiating a sort with sort arguments. *)
+  (** Determine if this is an instantiated (parametric datatype or uninterpreted
+      sort constructor) sort.
+
+      An instantiated sort is a sort that has been constructed from
+      instantiating a sort with sort arguments. *)
   val is_instantiated : sort -> bool
 
-  (** Get the associated uninterpreted sort constructor of an instantiated uninterpreted sort. *)
+  (** Get the associated uninterpreted sort constructor of an instantiated
+      uninterpreted sort. *)
   val get_uninterpreted_sort_constructor : sort -> sort
 
-  (** Instantiate a parameterized datatype sort or uninterpreted sort constructor sort. *)
+  (** Instantiate a parameterized datatype sort or uninterpreted sort
+      constructor sort. *)
   val instantiate : sort -> sort array -> sort
 
-  (** Get the sorts used to instantiate the sort parameters of 
-      a parametric sort (parametric datatype or uninterpreted sort constructor sort) *)
+  (** Get the sorts used to instantiate the sort parameters of a parametric sort
+      (parametric datatype or uninterpreted sort constructor sort) *)
   val get_instantiated_parameters : sort -> sort array
 
   (** Substitution of Sorts.
@@ -220,15 +288,67 @@ module Sort : sig
 
   (** Simultaneous substitution of Sorts.
 
-      Note that this replacement is applied during a pre-order traversal and only once to the sort. 
-      It is not run until fix point. In the case that sorts contains duplicates, 
-      the replacement earliest in the vector takes priority.
-  *)
+      Note that this replacement is applied during a pre-order traversal and
+      only once to the sort. It is not run until fix point. In the case that
+      sorts contains duplicates, the replacement earliest in the vector takes
+      priority. *)
   val substitute_many : sort -> sort array -> sort array -> sort
+end
+
+and DatatypeDecl : sig
+  type datatype_decl
+
+  val mk :
+       ?params:Sort.sort array
+    -> ?isCoDatatype:bool
+    -> TermManager.tm
+    -> string
+    -> datatype_decl
+
+  val delete : datatype_decl -> unit
+
+  val equal : datatype_decl -> datatype_decl -> bool
+
+  val add_constructor :
+    datatype_decl -> DatatypeConstructorDecl.datatype_constructor_decl -> unit
+
+  val get_num_constructors : datatype_decl -> int
+
+  val is_parametric : datatype_decl -> bool
+
+  val is_resolved : datatype_decl -> bool
+
+  val is_null : datatype_decl -> bool
+
+  val to_string : datatype_decl -> string
+
+  val get_name : datatype_decl -> string
+end
+
+and DatatypeConstructorDecl : sig
+  type datatype_constructor_decl
+
+  val mk : TermManager.tm -> string -> datatype_constructor_decl
+
+  val delete : datatype_constructor_decl -> unit
+
+  val equal : datatype_constructor_decl -> datatype_constructor_decl -> bool
+
+  val add_selector : datatype_constructor_decl -> string -> Sort.sort -> unit
+
+  val add_selector_self : datatype_constructor_decl -> string -> unit
+
+  val add_selector_unresolved :
+    datatype_constructor_decl -> string -> string -> unit
+
+  val is_null : datatype_constructor_decl -> bool
+
+  val to_string : datatype_constructor_decl -> string
 end
 
 module Op : sig
   type op
+
   type term
 
   (** Create operator of Kind:
@@ -479,6 +599,12 @@ module Term : sig
       - Number of bits in the significand *)
   val mk_fp_neg_zero : TermManager.tm -> int -> int -> term
 
+  (** Create a skolem.
+
+      Parameters: - The skolem identifier.
+      - The indices of the skolem. *)
+  val mk_skolem : TermManager.tm -> SkolemId.t -> term array -> term
+
   (** Determine if the term is an [int] value. *)
   val is_int : term -> bool
 
@@ -552,6 +678,11 @@ module Term : sig
   val get_num_children : term -> int
 
   val get_child : term -> int -> term
+
+  (** Get the number of indices for a skolem id.
+
+      Parameters: - The skolem id. *)
+  val get_num_indices_for_skolem_id : TermManager.tm -> SkolemId.t -> int
 
   val substitute : term -> term -> term -> term
 
@@ -636,58 +767,6 @@ module SynthResult : sig
   val is_unknown : synthresult -> bool
 
   val to_string : synthresult -> string
-end
-
-module DatatypeConstructorDecl : sig
-  type datatype_constructor_decl
-
-  val mk : TermManager.tm -> string -> datatype_constructor_decl
-
-  val delete : datatype_constructor_decl -> unit
-
-  val equal :
-    datatype_constructor_decl -> datatype_constructor_decl -> bool
-
-  val add_selector : datatype_constructor_decl -> string -> Sort.sort -> unit
-
-  val add_selector_self : datatype_constructor_decl -> string -> unit
-
-  val add_selector_unresolved :
-    datatype_constructor_decl -> string -> string -> unit
-
-  val is_null : datatype_constructor_decl -> bool
-
-  val to_string : datatype_constructor_decl -> string
-end
-
-module DatatypeDecl : sig
-  type datatype_decl
-
-  val mk :
-       ?params:Sort.sort array
-    -> ?isCoDatatype:bool
-    -> TermManager.tm
-    -> string
-    -> datatype_decl
-
-  val delete : datatype_decl -> unit
-
-  val equal : datatype_decl -> datatype_decl -> bool
-
-  val add_constructor :
-    datatype_decl -> DatatypeConstructorDecl.datatype_constructor_decl -> unit
-
-  val get_num_constructors : datatype_decl -> int
-
-  val is_parametric : datatype_decl -> bool
-
-  val is_resolved : datatype_decl -> bool
-
-  val is_null : datatype_decl -> bool
-
-  val to_string : datatype_decl -> string
-
-  val get_name : datatype_decl -> string
 end
 
 module DatatypeSelector : sig
@@ -972,11 +1051,9 @@ module Solver : sig
 
   val get_proof : ?component:ProofComponent.t -> solver -> Proof.proof array
 
-  val proof_to_string :
-    ?format:ProofFormat.t -> solver -> Proof.proof -> string
+  val proof_to_string : ?format:ProofFormat.t -> solver -> Proof.proof -> string
 
-  val get_learned_literals :
-    ?kind:LearnedLitType.t -> solver -> Term.term array
+  val get_learned_literals : ?kind:LearnedLitType.t -> solver -> Term.term array
 
   (** Get the model.
 
@@ -996,7 +1073,7 @@ module Solver : sig
   val declare_sort : ?fresh:bool -> solver -> string -> int -> Sort.sort
 
   val declare_datatype :
-    solver
+       solver
     -> string
     -> DatatypeConstructorDecl.datatype_constructor_decl array
     -> Sort.sort
@@ -1059,8 +1136,7 @@ module Solver : sig
 
   val get_interpolant_next : solver -> Term.term
 
-  val get_abduct :
-    ?grammar:Grammar.grammar -> solver -> Term.term -> Term.term
+  val get_abduct : ?grammar:Grammar.grammar -> solver -> Term.term -> Term.term
 
   val get_abduct_next : solver -> Term.term
 
