@@ -6,7 +6,8 @@
 
 (rule
  (deps
-  (source_tree vendor))
+  (source_tree vendor)
+  scripts/mk_shared_lib.sh)
  (targets
   libpicpolyxx.a
   libpicpoly.a
@@ -35,7 +36,8 @@
        build
        -DCMAKE_BUILD_TYPE=$type
        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-       -DCMAKE_INSTALL_PREFIX=$prefix)
+       -DCMAKE_INSTALL_PREFIX=$prefix
+       "-DCMAKE_CXX_FLAGS=-Wno-deprecated-literal-operator -Wno-unknown-warning-option")
       (chdir
        build
        (bash "make -j $(opam var jobs)"))
@@ -47,21 +49,23 @@
      vendor/cvc5
      (progn
       (bash
-       "sed -i 's/set(CMAKE_FIND_LIBRARY_SUFFIXES .a)/set(CMAKE_FIND_LIBRARY_SUFFIXES .so .dylib .a)/' CMakeLists.txt")
+       "sed -i.bak 's/set(CMAKE_FIND_LIBRARY_SUFFIXES .a)/set(CMAKE_FIND_LIBRARY_SUFFIXES .so .dylib .a)/' CMakeLists.txt")
       (bash
        "mkdir -p cadical_include && ln -sfn ../../cadical/src cadical_include/cadical")
       (bash
        "CFLAGS=-fPIC CXXFLAGS=-fPIC ./configure.sh unrestricted --static --no-mpfr -DCaDiCaL_INCLUDE_DIR=$PWD/cadical_include -DCMAKE_PREFIX_PATH=$(pkg-config --variable=prefix gmp)")
       (bash "make -C build -j $(opam var jobs) cvc5")))
     (copy vendor/cvc5/build/src/libcvc5.a libcvc5.a)
+    (run bash scripts/mk_shared_lib.sh dllcadical.so libcadical.a)
+    (run bash scripts/mk_shared_lib.sh dllpicpoly.so libpicpoly.a)
+    (run
+     bash
+     scripts/mk_shared_lib.sh
+     dllpicpolyxx.so
+     libpicpolyxx.a
+     ./dllpicpoly.so)
     (bash
-     "g++ -shared -fPIC -o dllcadical.so -Wl,--whole-archive libcadical.a -Wl,--no-whole-archive")
-    (bash
-     "g++ -shared -fPIC -o dllpicpoly.so -Wl,--whole-archive libpicpoly.a -Wl,--no-whole-archive")
-    (bash
-     "g++ -shared -fPIC -o dllpicpolyxx.so -Wl,--whole-archive libpicpolyxx.a -Wl,--no-whole-archive ./dllpicpoly.so")
-    (bash
-     "g++ -shared -fPIC -o dllcvc5.so -Wl,--whole-archive libcvc5.a -Wl,--no-whole-archive ./dllcadical.so ./dllpicpoly.so ./dllpicpolyxx.so -lgmp")
+     "bash scripts/mk_shared_lib.sh dllcvc5.so libcvc5.a ./dllcadical.so ./dllpicpoly.so ./dllpicpolyxx.so $(pkg-config --libs gmp)")
     (copy vendor/cvc5/build/include/cvc5/cvc5_export.h cvc5_export.h)))))
 
 (subdir
